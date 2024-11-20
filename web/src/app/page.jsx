@@ -5,13 +5,14 @@ import Newsletter from "@/components/Newsletter";
 import ProductCard from "@/components/ProductCard";
 import CategoryCard from "@/components/CategoryCard";
 import Benifits from "@/components/Benifits";
+import { GiBarbedSpear } from "react-icons/gi";
 
 export default function Page() {
   return (
     <>
       <div className="h-screen relative">
-        <div className="absolute inset-0 bg-[url('/bg3.jpg')] bg-cover bg-center bg-top"></div>
-        <div className="absolute inset-0 bg-black bg-opacity-70"></div>
+        <div className="absolute inset-0 bg-[url('https://images6.alphacoders.com/134/thumb-1920-1347850.png')] bg-cover bg-center bg-top"></div>
+        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
         <div className="relative z-30">
           <Navbar />
         </div>
@@ -26,7 +27,14 @@ export default function Page() {
       {/* Featured Products  */}
       <div className="w-[80%] mx-auto py-12">
         <div className="w-full text-center">
-          <h2 className="font-bold text-3xl mb-6">Featured Products</h2>
+          <p className="font-bold text-3xl text-[#1fb025]">Featured Products</p>
+          <p className="-mt-4 mb-6">
+                    <GiBarbedSpear
+                        size={40}
+                        className="w-full py-2 h-[60px] -mt-2"
+                        style={{ transform: 'rotate(310deg)', color: '#1fb025' }}
+                    />
+                    </p>
         </div>
         <div className="flex flex-wrap gap-6 justify-center">
           <ProductCard src="https://img.freepik.com/free-photo/close-up-box-with-vegetables-hands-mature-man_329181-4600.jpg?t=st=1732103540~exp=1732107140~hmac=fd69a316e63c80f87c6c6c1aced72256b8e40a3d454e0ac94b740b6ce4f9d28d&w=1060" />
@@ -37,9 +45,16 @@ export default function Page() {
       </div>
 
       {/* Featured Categories */}
-      <div className="w-[80%] mx-auto py-12">
+      <div className="w-[80%] mx-auto pb-12">
         <div className="w-full text-center">
-          <h2 className="font-bold text-3xl mb-6">Featured Categories</h2>
+        <p className="font-bold text-3xl text-[#1fb025] pt-6">Featured Categories</p>
+        <p className="-mt-4 mb-6">
+                    <GiBarbedSpear
+                        size={40}
+                        className="w-full py-2 h-[60px] -mt-2"
+                        style={{ transform: 'rotate(310deg)', color: '#1fb025' }}
+                    />
+                    </p>
         </div>
         <div className="flex flex-wrap gap-6 justify-center">
           <CategoryCard
@@ -66,7 +81,7 @@ export default function Page() {
       </div>
 
       {/* Benefits  */}
-      <div className="py-12 bg-gray-100">
+      <div>
         <Benifits />
       </div>
 
