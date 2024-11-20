@@ -23,7 +23,7 @@ const Navbar = () => {
     }
 
     return (
-        <div className={`${bg ? 'bg-white' : 'bg-transparent'} w-full  transition-colors duration-300 fixed shadow-lg `}>
+        <div className={`${bg ? 'bg-white shadow-lg' : 'bg-transparent'} w-full  transition-colors duration-300 fixed  `}>
             <div className='mx-auto w-[80%] relative'>
 
                 <div className="flex flex-col md:flex-row gap-5 md:gap-0 justify-between items-center py-4">
@@ -43,7 +43,7 @@ const Navbar = () => {
                             Become a Seller
                         </Link>
                         <Link href='/' className={`bg-[#017d29] text-white rounded-full py-2 px-3 ${bg ? 'hover:border-2 border-[#017d29] hover:bg-white hover:text-[#017d29]' : ' hover:bg-white hover:text-[#017d29]'}`}>
-                            Rent
+                            Rent a Machine
                         </Link>
                     </div>
                     <div className="md:hidden absolute top-[50px] right-0  p-2" onClick={handleNavbar}>

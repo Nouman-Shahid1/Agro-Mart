@@ -13,9 +13,7 @@ const BenefitsSection = () => {
   return (
     <section className="bg-green-100 py-8 md:py-16 px-4">
         <div className="w-[80%] mx-auto">
-      <h2 className="text-2xl font-bold text-green-700 text-center mb-6">
-        Benefits
-      </h2>
+        <p className="font-bold text-3xl mb-6 text-[#1fb025]">Benefits</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {benefits.map((benefit) => (
           <div
