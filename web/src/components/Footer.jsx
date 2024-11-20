@@ -24,17 +24,22 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/about">
+                <Link href="/products">
+                  <div className="hover:underline">Products</div>
+                </Link>
+              </li>
+              <li>
+                <Link href="/seeds">
+                  <div className="hover:underline">Seeds</div>
+                </Link>
+              </li>
+              <li>
+                <Link href="/about-us">
                   <div className="hover:underline">About Us</div>
                 </Link>
               </li>
               <li>
-                <Link href="/services">
-                  <div className="hover:underline">Services</div>
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact">
+                <Link href="/contact-us">
                   <div className="hover:underline">Contact</div>
                 </Link>
               </li>
