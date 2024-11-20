@@ -9,15 +9,15 @@ import Benifits from "@/components/Benifits";
 export default function Page() {
   return (
     <>
-      <div className="h-[700px] relative">
+      <div className="h-screen relative">
         <div className="absolute inset-0 bg-[url('/bg3.jpg')] bg-cover bg-center bg-top"></div>
         <div className="absolute inset-0 bg-black bg-opacity-70"></div>
-        <div className="relative z-10">
+        <div className="relative z-30">
           <Navbar />
         </div>
-        <div className="relative z-20 flex flex-col items-center justify-center h-full text-center text-white px-4">
-          <h1 className="text-5xl font-bold mb-4">Welcome to AgroMart</h1>
-          <p className="text-lg max-w-3xl">
+        <div className="relative z-20 flex flex-col items-center justify-center h-full text-center text-white px-4 ">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">Welcome to AgroMart</h1>
+          <p className=" text-md md:text-lg max-w-3xl">
             Explore the best agricultural products, tools, and services. Empowering farmers with quality and sustainability.
           </p>
         </div>
@@ -71,12 +71,12 @@ export default function Page() {
       </div>
 
       {/* Testimonials */}
-      <div className="py-12">
+      <div >
         <Testimonial />
       </div>
 
       {/* Newsletter  */}
-      <div className="w-full py-12 bg-gray-50">
+      <div className="w-full">
         <Newsletter />
       </div>
 
