@@ -66,19 +66,19 @@ const Testimonial = () => {
             
             <div className="flex items-center flex-col justify-center py-8 bg-gray-100">
             <div className="w-full text-center">
-                <p className="font-bold text-3xl text-[#017d29] py-6 ">Testimonails </p>
+                <p className="font-bold text-3xl  py-6 ">Testimonails </p>
             </div>  
                 <div className="relative w-full md:w-[80%] h-[350px] bg-white shadow-lg rounded-md overflow-hidden">
                     <button
                         onClick={handlePrev}
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white p-2 rounded-full hover:bg-gray-600 transition"
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#017d29] text-white p-2 cursor-pointer rounded-full  "
                     >
-                        <FaChevronLeft size={24} />
+                        <FaChevronLeft size={24}  />
                     </button>
 
                     <button
                         onClick={handleNext}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white p-2 rounded-full hover:bg-gray-600 transition"
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#017d29]  text-white p-2 cursor-pointer rounded-full "
                     >
                         <FaChevronRight size={24} />
                     </button>

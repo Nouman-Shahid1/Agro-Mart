@@ -23,7 +23,7 @@ const Navbar = () => {
     }
 
     return (
-        <div className={`${bg ? 'bg-white' : 'bg-transparent'} w-full  transition-colors duration-300 fixed `}>
+        <div className={`${bg ? 'bg-white' : 'bg-transparent'} w-full  transition-colors duration-300 fixed shadow-lg `}>
             <div className='mx-auto w-[80%] relative'>
 
                 <div className="flex flex-col md:flex-row gap-5 md:gap-0 justify-between items-center py-4">
@@ -55,7 +55,7 @@ const Navbar = () => {
 
 
                 </div>
-                <div className={`${showNav ? 'fixed left-0 top-0 bg-white w-full sm:w-[90%] h-screen py-8 px-3 ' : 'relative md:flex flex-col md:flex-row  py-4'} ${bg?'border-t md:border-black':'border-t md:border-white'}`} >
+                <div className={`${showNav ? 'fixed left-0 top-0 bg-white w-full sm:w-[90%] h-screen py-8 px-3 ' : 'relative md:flex flex-col md:flex-row  py-1 '} ${bg?'border-t md:border-black':'border-t md:border-white'}`} >
                     <div className={`${showNav?'block absolute right-[30px] top-[30px]':'hidden'}`} onClick={handleNavbar}>
                         <ImCross  style={{ color:'#017d29',fontSize:'20px' }}/>
                     </div>
