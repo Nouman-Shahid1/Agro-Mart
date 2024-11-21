@@ -64,37 +64,37 @@ const Testimonial = () => {
     return (
         <>
 
-            <div className="flex items-center flex-col justify-center py-8 bg-gray-50">
+            <div className="flex items-center flex-col justify-center py-8 bg-black bg-opacity-50 bg-[url('https://images5.alphacoders.com/136/thumb-1920-1368839.png')]  bg-blend-multiply bg-center">
                 <div className="w-full text-center">
-                    <p className="font-bold text-3xl text-[#1fb025]">Testimonial</p>
+                    <p className="font-bold text-3xl text-white">Testimonial</p>
                     <p className="">
                     <GiBarbedSpear
                         size={40}
                         className="w-full py-2 h-[60px] -mt-4"
-                        style={{ transform: 'rotate(310deg)', color: '#1fb025' }}
+                        style={{ transform: 'rotate(310deg)', color: 'white' }}
                     />
                     </p>
 
 
                 </div>
 
-                <div className="relative w-full md:w-[80%] h-[350px] bg-white shadow-lg rounded-md overflow-hidden">
+                <div className="relative w-full md:w-[80%] h-[350px]  rounded-md overflow-hidden">
                     <button
                         onClick={handlePrev}
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#017d29] text-white p-2 cursor-pointer rounded-full  "
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white text-[#017d29] p-2 cursor-pointer rounded-full  "
                     >
                         <FaChevronLeft size={24} />
                     </button>
 
                     <button
                         onClick={handleNext}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#017d29]  text-white p-2 cursor-pointer rounded-full "
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white text-[#017d29] p-2 cursor-pointer rounded-full "
                     >
                         <FaChevronRight size={24} />
                     </button>
-                    <div className="flex items-center justify-center w-full h-full text-center px-4">
-                        <div className="border border-green-700 w-[80%] flex flex-col justify-center items-center h-[80%] rounded-lg">
-                            <p className="text-4xl font-bold">
+                    <div className="flex items-center justify-center w-full h-full shadow-3xl text-center px-4">
+                        <div className="border-2 border-white w-[80%]  flex flex-col justify-center items-center h-[80%] rounded-lg text-white ">
+                            <p className="text-4xl font-bold ">
                                 {testimonials[currentIndex].name}
                             </p>
                             <p className="font-bold text-xl ">
