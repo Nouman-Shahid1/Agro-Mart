@@ -1,115 +1,81 @@
-'use client'
-import React, { useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { GiBarbedSpear } from "react-icons/gi";
-const Testimonial = () => {
-    const [currentIndex, setCurrentIndex] = useState(0);
+// components/Testimonials.js
+import { FaQuoteLeft, FaStar } from "react-icons/fa";
 
+const Testimonials = () => {
     const testimonials = [
         {
             id: 1,
-            name: "John Doe",
-            designation: "Software Engineer",
-            company: "Tech Solutions",
-            testimonial: "This service exceeded my expectations! The team was highly professional, and their attention to detail was remarkable.",
-
+            name: "Sarah Johnson",
+            role: "Health Enthusiast",
+            feedback:
+                "AgroMart has completely transformed my lifestyle. The freshness of their products is unmatched, and I love that everything is 100% organic.",
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-iQOSjEHvkWlDyRSHHVW3sBuYxBEXGZomLdgxPi68oI7Bzxmta2D_S3KuU4o6p-wWTqQ&usqp=CAU",
+            rating: 5,
         },
         {
             id: 2,
-            name: "Jane Smith",
-            designation: "Marketing Manager",
-            company: "Creative Agency",
-            testimonial: "Working with this company was a game-changer. Their innovative approach and prompt delivery stood out!",
-
+            name: "Michael Lee",
+            role: "Chef & Restauranteur",
+            feedback:
+                "I rely on AgroMart for the finest ingredients. Their locally sourced produce has elevated the quality of my dishes. Highly recommended!",
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNR7FvvC_9X1l2xqi2rdkStAHaSRMmg89O_g&s",
+            rating: 5,
         },
         {
             id: 3,
-            name: "Michael Brown",
-            designation: "Entrepreneur",
-            company: "Startup Co.",
-            testimonial: "I highly recommend their services! They truly understood our needs and delivered beyond our expectations.",
-
-        },
-        {
-            id: 4,
-            name: "Sarah Wilson",
-            designation: "HR Manager",
-            company: "Global Corp.",
-            testimonial: "The level of expertise and commitment demonstrated was truly outstanding. A great experience overall!",
-
-        },
-        {
-            id: 5,
-            name: "David Lee",
-            designation: "Freelancer",
-            company: "Self-Employed",
-            testimonial: "Amazing experience! The quality of work and the professional communication were top-notch.",
-
+            name: "Emma Watson",
+            role: "Eco-Conscious Shopper",
+            feedback:
+                "Knowing that AgroMart uses eco-friendly packaging gives me peace of mind. It's great to support a brand that cares for the planet.",
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcrIPUVHe81YZpOiRUNwRq32b7QEpEVP6YeuAImz3FaOtVYPTNNkRveATsieLpH2_kr4g&usqp=CAU",
+            rating: 4.5,
         },
     ];
 
-
-    const handlePrev = () => {
-        setCurrentIndex((prevIndex) =>
-            prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
-        );
-    };
-
-    const handleNext = () => {
-        setCurrentIndex((prevIndex) =>
-            prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
-        );
-    };
-
     return (
-        <>
-
-            <div className="flex items-center flex-col justify-center py-8 bg-black bg-opacity-50 bg-[url('https://images5.alphacoders.com/136/thumb-1920-1368839.png')]  bg-blend-multiply bg-center">
-                <div className="w-full text-center">
-                    <p className="font-bold text-3xl text-white">Testimonial</p>
-                    <p className="">
-                    <GiBarbedSpear
-                        size={40}
-                        className="w-full py-2 h-[60px] -mt-4"
-                        style={{ transform: 'rotate(310deg)', color: 'white' }}
-                    />
-                    </p>
-
-
-                </div>
-
-                <div className="relative w-full md:w-[80%] h-[350px]  rounded-md overflow-hidden">
-                    <button
-                        onClick={handlePrev}
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white text-[#017d29] p-2 cursor-pointer rounded-full  "
-                    >
-                        <FaChevronLeft size={24} />
-                    </button>
-
-                    <button
-                        onClick={handleNext}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white text-[#017d29] p-2 cursor-pointer rounded-full "
-                    >
-                        <FaChevronRight size={24} />
-                    </button>
-                    <div className="flex items-center justify-center w-full h-full shadow-3xl text-center px-4">
-                        <div className="border-2 border-white w-[80%]  flex flex-col justify-center items-center h-[80%] rounded-lg text-white ">
-                            <p className="text-4xl font-bold ">
-                                {testimonials[currentIndex].name}
+        <section className="bg-gray-50 bg-black bg-opacity-50 bg-[url('https://images5.alphacoders.com/136/thumb-1920-1368839.png')]  bg-blend-multiply py-16">
+            <div className="max-w-screen-xl mx-auto px-4 text-center">
+                <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-8">
+                    Testimonial
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {testimonials.map((testimonial) => (
+                        <div
+                            key={testimonial.id}
+                            className="bg-white p-8 rounded-lg shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105"
+                        >
+                            <FaQuoteLeft className="text-green-500 text-3xl mb-4 mx-auto" />
+                            <p className="text-gray-600 italic mb-6">
+                                "{testimonial.feedback}"
                             </p>
-                            <p className="font-bold text-xl ">
-                                {testimonials[currentIndex].designation}
-                            </p>
-                            <p>
-                                {testimonials[currentIndex].testimonial}
-                            </p>
+                            <div className="flex items-center justify-center mb-4">
+                                {Array(Math.floor(testimonial.rating))
+                                    .fill()
+                                    .map((_, i) => (
+                                        <FaStar key={i} className="text-yellow-400 text-xl" />
+                                    ))}
+                                {testimonial.rating % 1 !== 0 ? (
+                                    <FaStar className="text-yellow-400 text-xl opacity-50" />
+                                ) : null}
+
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <img
+                                    src={testimonial.image}
+                                    alt={testimonial.name}
+                                    className="w-16 h-16 rounded-full mb-2"
+                                />
+                                <h3 className="text-lg font-semibold text-gray-700">
+                                    {testimonial.name}
+                                </h3>
+                                <span className="text-sm text-gray-500">{testimonial.role}</span>
+                            </div>
                         </div>
-                    </div>
-
+                    ))}
                 </div>
             </div>
-        </>
+        </section>
     );
 };
 
-export default Testimonial;
+export default Testimonials;

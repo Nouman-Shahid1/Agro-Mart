@@ -35,39 +35,17 @@ const Navbar = () => {
                             className={`transition-all duration-300 ease-in-out drop-shadow-md ${bg ? 'hover:drop-shadow-[0_4px_20px_rgba(76,175,80,1)] ' : 'hover:drop-shadow-[0px_4px_20px_rgba(255,255,255,1)]'} rounded-lg"`}
                         />
                     </div>
-                    <div className="flex gap-4 text-xs sm:text-lg pt-0 md:pt-4">
-    <Link
-        href="/"
-        className={`bg-[#1fb025] text-white rounded-lg py-2 px-3 transition-colors duration-300 ${
-            bg
-                ? 'hover:bg-[#017d29] hover:text-white hover:border-2 border-[#1fb025]'
-                : 'hover:bg-white hover:text-[#1fb025] hover:border-2 border-[#017d29]'
-        }`}
-    >
-        Become a Buyer
-    </Link>
-    <Link
-        href="/"
-        className={`bg-[#1fb025] text-white rounded-lg py-2 px-3 transition-colors duration-300 ${
-            bg
-                ? 'hover:bg-[#017d29] hover:text-white hover:border-2 border-[#1fb025]'
-                : 'hover:bg-white hover:text-[#1fb025] hover:border-2 border-[#017d29]'
-        }`}
-    >
-        Become a Seller
-    </Link>
-    <Link
-        href="/"
-        className={`bg-[#1fb025] text-white rounded-lg py-2 px-3 transition-colors duration-300 ${
-            bg
-                ? 'hover:bg-[#017d29] hover:text-white hover:border-2 border-[#1fb025]'
-                : 'hover:bg-white hover:text-[#1fb025] hover:border-2 border-[#017d29]'
-        }`}
-    >
-        Rent a Machine
-    </Link>
-</div>
-
+                    <div className="flex  gap-4 text-md pt-0 md:pt-4 ">
+                        <Link href='/' className={`bg-[#1fb025] text-white rounded-full text-md  py-2 px-3 ${bg ? 'hover:border-2 border-[#017d29] hover:bg-white hover:text-[#017d29]' : ' hover:bg-white hover:text-[#017d29]'}`}>
+                            Become a Buyer
+                        </Link>
+                        <Link href='/' className={`bg-[#1fb025] text-white rounded-full py-2 px-3 ${bg ? 'hover:border-2 border-[#017d29] hover:bg-white hover:text-[#017d29]' : ' hover:bg-white hover:text-[#017d29]'}`}>
+                            Become a Seller
+                        </Link>
+                        <Link href='/' className={`bg-[#1fb025] text-white rounded-full py-2 px-3 ${bg ? 'hover:border-2 border-[#017d29] hover:bg-white hover:text-[#017d29]' : ' hover:bg-white hover:text-[#017d29]'}`}>
+                            Rent a Machine
+                        </Link>
+                    </div>
                     <div className="md:hidden absolute top-[50px] right-0  p-2" onClick={handleNavbar}>
                         <span className={`block w-[30px] h-1 ${bg ? 'bg-black' : 'bg-white'} mb-1 rounded-full`}></span>
                         <span className={`block w-[30px] h-1 ${bg ? 'bg-black' : 'bg-white'} mb-1 rounded-full`}></span>
