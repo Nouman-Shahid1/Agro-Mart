@@ -105,7 +105,7 @@ const ProductCatalog = ({ bground }) => {
       category: "Fertilizer",
     },
     {
-      id:11,
+      id: 11,
       name: "Pesticide",
       imageUrl:
         "https://image.made-in-china.com/2f0j00RfLqdFvkCgpV/Best-Selling-Agriculture-Pesticides-Emamectin-Benzoate-Abamectin-Insektisida-Abamectin-95-Tc-1-8c.webp",
@@ -133,7 +133,6 @@ const ProductCatalog = ({ bground }) => {
       available: true,
       category: "Seeds",
     },
-  
   ];
 
   const categories = [
@@ -181,67 +180,64 @@ const ProductCatalog = ({ bground }) => {
     <div>
       <Navbar bground={true} />
       <div className="bg-gray-100">
-        <div className="p-6 pt-6 w-[80%] mx-auto font-sans bg-white text-gray-800">
-          <h1 className="text-4xl font-bold mb-4 text-gray-800">
-            Product Catalog
-          </h1>
+        <div className="p-6 pt-6 mx-auto font-sans bg-white text-gray-800">
+          <div className="w-[80%] mx-auto">
+            <h1 className="text-4xl font-bold mb-4 text-gray-800">
+              Product Catalog
+            </h1>
 
-          <div class="sm:p-6 bg-gray-50 flex flex-col md:flex-row shadow-lg rounded-lg w-full justify-between my-6  mx-auto space-y-4">
-          
-            <div class="flex  items-center mt-8 md:ml-3 w-[100%] md:w-[400px] lg:w-[500px]" >
-              <input
-                type="text"
-                placeholder="Search..."
-                class="w-full p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-              <button
-                class="bg-green-700 text-white px-4 py-2 rounded-r-lg hover:bg-blue-600"
-              >
-                Search
-              </button>
-            </div>
-            <div className="flex flex-col md:flex-row gap-4">
-              
-              <div>
-                <h3 class="text-lg font-semibold mb-2">Categories</h3>
-                <select
-                onChange={(e) => handleFilter(e.target.value)}
-                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                >
-                  {categories.map((category, index) => (
-                    <option key={index} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
+            <div className="sm:p-6 bg-gray-50 flex flex-col md:flex-row shadow-lg rounded-lg w-full justify-between my-6  mx-auto space-y-4">
+              <div className="flex  items-center mt-8 md:ml-3 w-[100%] md:w-[400px] lg:w-[500px]">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="w-full p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+                <button className="bg-green-700 text-white px-4 py-2 rounded-r-lg hover:bg-blue-600">
+                  Search
+                </button>
               </div>
+              <div className="flex flex-col md:flex-row gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Categories</h3>
+                  <select
+                    onChange={(e) => handleFilter(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    {categories.map((category, index) => (
+                      <option key={index} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-              <div>
-                <h3 class="text-lg font-semibold mb-2">Sort by Price</h3>
-                <select
-                onChange={(e) => handleSort(e.target.value)}
-                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                >
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
-                  <option value="newest">Newest</option>
-                </select>
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Sort by Price</h3>
+                  <select
+                    onChange={(e) => handleSort(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="newest">Newest</option>
+                  </select>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex flex-wrap justify-center gap-6">
-            {filteredProducts.map((product) => (
-              <ProductCard
-                title={product.name}
-                src={product.imageUrl}
-                price={product.price}
-                rating={product.rating}
-                avai={product.available}
-                cat={product.category}
-              />
-
-            ))}
+            <div className="flex flex-wrap justify-center gap-6">
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  title={product.name}
+                  src={product.imageUrl}
+                  price={product.price}
+                  rating={product.rating}
+                  avai={product.available}
+                  cat={product.category}
+                />
+              ))}
+            </div>
           </div>
         </div>
         <Newsletter />
