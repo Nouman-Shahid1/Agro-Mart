@@ -19,3 +19,15 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+.bgCrops {
+  background-image: url("../assets/images/crops.jpg");
+  min-height: 450px;
+  background-size: cover;
+  color: #fff;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 3rem;
+  padding-left: 4rem;
+  font-size: 41px;
+}
