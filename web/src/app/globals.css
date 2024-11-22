@@ -31,3 +31,7 @@ body {
   padding-left: 4rem;
   font-size: 41px;
 }
+.bgAbout{
+  background-image: url("../Assets/images/farm2-about.jpg");
+  max-width: 780px;
+}
