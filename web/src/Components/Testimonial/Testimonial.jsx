@@ -50,8 +50,9 @@ const Testimonials = () => {
           Hear From Our Happy Customers
         </h2>
         <p className="text-lg text-green-200 mb-16">
-          At AgroMart, we’re proud to deliver fresh, organic, and sustainable
-          products that delight our customers. Here’s what they have to say.
+          At AgroMart, we&rsquo;re proud to deliver fresh, organic, and
+          sustainable products that delight our customers. Here&rsquo;s what
+          they have to say.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -62,7 +63,7 @@ const Testimonials = () => {
             >
               <FaQuoteLeft className="text-green-500 text-4xl mb-4 mx-auto" />
               <p className="text-gray-600 italic mb-6 leading-relaxed">
-                "{testimonial.feedback}"
+                &ldquo;{testimonial.feedback}&rdquo;
               </p>
               {/* Star Rating */}
               <div className="flex items-center justify-center mb-4">
