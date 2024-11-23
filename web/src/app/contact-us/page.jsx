@@ -2,12 +2,25 @@
 import React from "react";
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/Footer";
-
+import bg from "@/assets/images/crops.jpg";
 const ContactUs = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <div className="bgCrops ">
+      <div
+        style={{
+          backgroundImage: `url(${bg.src})`,
+          minHeight: "450px",
+          backgroundSize: "cover",
+          color: "#fff",
+          backgroundRepeat: "no-repeat",
+          display: "flex",
+          alignItems: "flex-end",
+          paddingBottom: "3rem",
+          paddingLeft: "4rem",
+          fontSize: "41px",
+        }}
+      >
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
           Get in touch <br />
           with us
