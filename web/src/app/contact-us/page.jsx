@@ -2,30 +2,48 @@
 import React from "react";
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/Footer";
-import bg from "@/assets/images/crops.jpg";
 const ContactUs = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <div
         style={{
-          backgroundImage: `url(${bg.src})`,
-          minHeight: "450px",
-          backgroundSize: "cover",
-          color: "#fff",
+          backgroundImage: `url('https://landema.com/bootstrap-theme/images/contact-bg.e6a96d47.png')`,
+          minHeight: "550px",
+          backgroundSize: "100% 100%",
+          backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
+          position: "relative", // To position the overlay properly
           display: "flex",
           alignItems: "flex-end",
           paddingBottom: "3rem",
           paddingLeft: "4rem",
-          fontSize: "41px",
         }}
+        className="text-white -z-50 text-left"
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+        {/* Overlay */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)", // Black overlay with 50% opacity
+            zIndex: 1, // Ensure overlay is above background
+          }}
+        ></div>
+
+        {/* Content */}
+        <h1
+          className="text-4xl md:text-5xl lg:text-6xl font-bold"
+          style={{ position: "relative", zIndex: 2 }} // Ensure content is above overlay
+        >
           Get in touch <br />
           with us
         </h1>
       </div>
+
       <div className="w-full min-h-screen flex flex-col items-center pt-10 bg-gray-100 px-4">
         <div className="text-center w-full md:w-2/3 lg:w-1/2 mt-10 mb-16">
           <p className="text-lg md:text-xl text-gray-800">
