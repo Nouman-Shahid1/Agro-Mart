@@ -1,8 +1,8 @@
 "use client";
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
-import Newsletter from "@/components/Newsletter";
-import ProductCard from "@/components/ProductCard";
+import Footer from "@/Components/Footer/Footer";
+import Navbar from "@/Components/Navbar/Navbar";
+import Newsletter from "@/Components/NewsLetter/Newsletter";
+import ProductCard from "@/Components/ProductCard/ProductCard";
 import { useState } from "react";
 
 const ProductCatalog = ({ bground }) => {
