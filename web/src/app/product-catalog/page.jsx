@@ -229,6 +229,7 @@ const ProductCatalog = ({ bground }) => {
             <div className="flex flex-wrap justify-center gap-6">
               {filteredProducts.map((product) => (
                 <ProductCard
+                  key={product.id}
                   title={product.name}
                   src={product.imageUrl}
                   price={product.price}
