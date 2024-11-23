@@ -1,5 +1,5 @@
 import { FaQuoteLeft, FaStar } from "react-icons/fa";
-import Logo from "@/assets/images/testi.jpg";
+import Testimonialbg from "@/assets/images/testi.jpg";
 
 const Testimonials = () => {
   const testimonials = [
@@ -39,10 +39,9 @@ const Testimonials = () => {
     <section
       className="relative py-20 bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: `url(${Logo.src})`,
+        backgroundImage: `url(${Testimonialbg.src})`,
       }}
     >
-      {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-green-700 via-green-800 to-black opacity-80"></div>
 
       <div className="relative z-10 max-w-screen-xl mx-auto px-6 sm:px-12 text-center">
