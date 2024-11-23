@@ -117,9 +117,14 @@ const Navbar = ({ bground }) => {
                 <strong>SEEDS</strong>
               </li>
             </Link>
-            <Link href="/training">
+            <Link href="/fertilizers">
               <li className="hover:border-b-2 border-current p-2">
-                <strong>TRAINING</strong>
+                <strong>FERTILIZERS</strong>
+              </li>
+            </Link>
+            <Link href="/machines">
+              <li className="hover:border-b-2 border-current p-2">
+                <strong>MACHINES</strong>
               </li>
             </Link>
             <Link href="/aboutUs">

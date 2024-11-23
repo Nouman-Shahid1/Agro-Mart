@@ -1,6 +1,6 @@
-// components/Testimonials.js
 import { FaQuoteLeft, FaStar } from "react-icons/fa";
-import Logo from "../assets/images/testi.jpg";
+import Logo from "@/assets/images/testi.jpg";
+
 const Testimonials = () => {
   const testimonials = [
     {
@@ -37,23 +37,26 @@ const Testimonials = () => {
 
   return (
     <section
-      className="bg-cover bg-center bg-no-repeat py-16"
+      className="relative py-20 bg-cover bg-center bg-no-repeat"
       style={{
         backgroundImage: `url(${Logo.src})`,
       }}
     >
-      <div className="max-w-screen-xl mx-auto px-4 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 drop-shadow-lg">
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-green-700 via-green-800 to-black opacity-80"></div>
+
+      <div className="relative z-10 max-w-screen-xl mx-auto px-6 sm:px-12 text-center">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-12">
           What Our Customers Say
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.id}
-              className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-transform transform hover:scale-105"
+              className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
             >
               <FaQuoteLeft className="text-green-500 text-4xl mb-4 mx-auto" />
-              <p className="text-gray-700 italic mb-6 leading-relaxed">
+              <p className="text-gray-600 italic mb-6 leading-relaxed">
                 "{testimonial.feedback}"
               </p>
               <div className="flex items-center justify-center mb-4">
@@ -72,7 +75,7 @@ const Testimonials = () => {
                   alt={testimonial.name}
                   className="w-20 h-20 rounded-full mb-4 border-4 border-green-500"
                 />
-                <h3 className="text-xl font-semibold text-gray-800">
+                <h3 className="text-xl font-bold text-gray-800">
                   {testimonial.name}
                 </h3>
                 <span className="text-sm text-gray-500">
