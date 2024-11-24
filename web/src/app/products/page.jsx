@@ -33,7 +33,6 @@ const ProductDetailsPage = () => {
       price: "$89.99",
     },
   ];
-
   const [reviews, setReviews] = useState([
     {
       id: 1,
@@ -48,9 +47,8 @@ const ProductDetailsPage = () => {
       review: "Good quality but could be cheaper.",
     },
   ]);
-
-  const [newReview, setNewReview] = useState("");
-  const [selectedRating, setSelectedRating] = useState(0);
+  const [selectedRating, setSelectedRating] = useState(0); // Rating state
+  const [newReview, setNewReview] = useState(""); // Review text state
 
   // Calculate the average rating
   const averageRating = useMemo(() => {
@@ -60,25 +58,27 @@ const ProductDetailsPage = () => {
   }, [reviews]);
 
   const handleRatingClick = (rating) => {
+    console.log(`Clicked rating: ${rating}`); // Debugging
     setSelectedRating(rating);
   };
 
   const handleAddReview = () => {
-    if (newReview.trim() === "" || selectedRating === 0) {
-      alert("Please provide a comment and a rating.");
+    if (!newReview.trim() || selectedRating === 0) {
+      alert("Please provide a valid review and rating.");
       return;
     }
 
-    const review = {
+    const newReviewObj = {
       id: reviews.length + 1,
-      name: "Anonymous",
+      name: "Anonymous", // Placeholder name
       rating: selectedRating,
       review: newReview,
     };
 
-    setReviews([...reviews, review]);
-    setNewReview("");
-    setSelectedRating(0);
+    console.log("Adding review:", newReviewObj); // Debugging
+    setReviews([...reviews, newReviewObj]); // Update state
+    setNewReview(""); // Reset review input
+    setSelectedRating(0); // Reset rating
   };
 
   return (
@@ -192,33 +192,55 @@ const ProductDetailsPage = () => {
               </div>
             </div>
           </div>
-
-          {/* Reviews Section */}
-          <section className="mt-10">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              Customer Reviews
+          <section className="mt-10 py-12 px-6 bg-gradient-to-br from-green-100 to-green-50 rounded-lg shadow-2xl">
+            {/* Customer Reviews Section */}
+            <h2 className="text-5xl font-extrabold text-green-700 mb-10 text-center tracking-wide">
+              What Our Customers Say
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-10">
               {reviews.map((review) => (
                 <div
                   key={review.id}
-                  className="flex items-center justify-between p-4 bg-white shadow-md rounded-lg"
+                  className="flex items-start p-6 bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl transition-shadow duration-300"
                 >
-                  <div>
-                    <p className="font-bold text-gray-800">{review.name}</p>
-                    <p className="text-gray-600 text-sm">{review.review}</p>
-                  </div>
-                  <div className="flex text-yellow-500">
-                    {[...Array(5)].map((_, i) => (
-                      <FaStar
-                        key={i}
-                        className={
-                          i < review.rating
-                            ? "text-yellow-500"
-                            : "text-gray-300"
-                        }
+                  {/* Profile Picture or Initials */}
+                  <div className="w-16 h-16 flex items-center justify-center rounded-full bg-green-700 text-white font-bold text-2xl mr-6 shadow-md">
+                    {review.profileImage ? (
+                      <img
+                        src={review.profileImage}
+                        alt={review.name}
+                        className="w-full h-full rounded-full object-cover"
                       />
-                    ))}
+                    ) : (
+                      review.name.charAt(0)
+                    )}
+                  </div>
+
+                  {/* Review Content */}
+                  <div className="flex-grow">
+                    <div className="flex justify-between items-center mb-4">
+                      <p className="font-bold text-gray-800 text-lg">
+                        {review.name}
+                      </p>
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <FaStar
+                            key={i}
+                            className={`${
+                              i < review.rating
+                                ? "text-yellow-400"
+                                : "text-gray-300"
+                            } text-xl`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-gray-600 text-base leading-relaxed">
+                      {review.review}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-3 italic">
+                      Verified Purchase
+                    </p>
                   </div>
                 </div>
               ))}
@@ -226,29 +248,44 @@ const ProductDetailsPage = () => {
           </section>
 
           {/* Add Review Section */}
-          <section className="mt-10 bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-2xl font-bold mb-4">Write a Review</h3>
-            <div className="flex space-x-2 mb-4">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <FaStar
-                  key={star}
-                  className={`cursor-pointer ${
-                    star <= selectedRating ? "text-yellow-500" : "text-gray-300"
-                  }`}
-                  onClick={() => handleRatingClick(star)}
-                />
-              ))}
+          <section className="mt-12 bg-white py-10 px-8 rounded-2xl shadow-2xl border border-gray-200">
+            <h3 className="text-3xl font-extrabold text-green-700 mb-6 text-center">
+              Share Your Experience
+            </h3>
+
+            {/* Star Rating Input */}
+            <div className="flex items-center justify-center mb-6">
+              <span className="font-medium text-lg text-gray-700 mr-3">
+                Rate Us:
+              </span>
+              <div className="flex">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <FaStar
+                    key={star}
+                    className={`cursor-pointer text-3xl transition-transform transform ${
+                      star <= selectedRating
+                        ? "text-yellow-400 scale-110"
+                        : "text-gray-300 hover:text-yellow-400 hover:scale-110"
+                    }`}
+                    onClick={() => handleRatingClick(star)}
+                  />
+                ))}
+              </div>
             </div>
+
+            {/* Review Input */}
             <textarea
-              value={newReview}
-              onChange={(e) => setNewReview(e.target.value)}
-              placeholder="Write your review..."
-              rows="3"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
+              value={newReview} // Controlled input tied to state
+              onChange={(e) => setNewReview(e.target.value)} // Updates state on change
+              placeholder="Tell us about your experience..."
+              rows="4"
+              className="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent resize-none"
             ></textarea>
+
+            {/* Submit Button */}
             <button
               onClick={handleAddReview}
-              className="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition"
+              className="mt-6 w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-3 rounded-lg font-bold text-lg hover:scale-105 transition-all duration-300 shadow-lg"
             >
               Submit Review
             </button>
