@@ -9,7 +9,7 @@ import { GiBarbedSpear } from "react-icons/gi";
 export default function Page() {
   return (
     <>
-      <div className="h-screen relative overflow-hidden font-sans">
+      <div className="min-h-screen relative overflow-hidden font-sans">
         <div
           className="absolute inset-0 bg-cover bg-center bg-fixed filter brightness-50"
           style={{
@@ -29,7 +29,7 @@ export default function Page() {
           <Navbar />
         </div>
 
-        <div className="relative mt-28 z-20 flex flex-col items-center justify-center h-full text-center px-6 space-y-12">
+        <div className="relative mt-72 z-20 flex flex-col items-center justify-center h-full text-center px-6 space-y-12">
           <div className="absolute top-10 left-10 w-12 h-12 bg-green-400 rounded-full blur-lg opacity-50 animate-ping"></div>
           <div className="absolute bottom-20 right-20 w-16 h-16 bg-green-500 rounded-full blur-lg opacity-30 animate-pulse"></div>
 
@@ -39,7 +39,7 @@ export default function Page() {
             </h2>
           </div>
 
-          <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold text-white leading-tight tracking-wide drop-shadow-2xl animate-slide-in">
+          <h1 className="text-[45px] sm:text-7xl lg:text-8xl font-extrabold text-white leading-tight tracking-wide drop-shadow-2xl animate-slide-in">
             Welcome to{" "}
             <span className="text-green-400 underline decoration-wavy">
               AgroMart
@@ -60,7 +60,7 @@ export default function Page() {
             <div className="w-16 h-1 bg-green-500 rounded-full animate-pulse"></div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-8 mt-6">
+          <div className="flex flex-col sm:flex-row items-center gap-8 mt-6 pb-8 ">
             <button className="bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-16 rounded-full shadow-2xl transition-transform transform hover:scale-110 hover:shadow-green-500/50 animate-fade-up">
               Shop Products
             </button>
