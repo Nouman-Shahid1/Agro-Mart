@@ -84,16 +84,24 @@ const ProductDetailsPage = () => {
   return (
     <>
       <Navbar bground={true} />
-      <main className="relative bg-gradient-to-br from-lime-200 via-lime-600 to-green-500 py-10 -z-50 overflow-hidden">
-        {/* Decorative Elements */}
-        <div className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] bg-green-400 opacity-20 rounded-full blur-3xl animate-bounce"></div>
-        <div className="absolute bottom-[-100px] right-[-100px] w-[400px] h-[400px] bg-lime-500 opacity-20 rounded-full blur-3xl animate-bounce-slow"></div>
-        <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[500px] h-[500px] bg-green-200 opacity-30 rounded-full blur-[200px]"></div>
+      <div
+        className="relative overflow-hidden py-20"
+        style={{
+          backgroundImage: `
+      linear-gradient(to bottom, rgba(0, 128, 0, 0.6), rgba(255, 255, 255, 0.8)),
+      url('https://t4.ftcdn.net/jpg/08/25/59/35/360_F_825593515_VKsf1azJx0C9OVq6myxRjewTE5J40RFy.jpg')`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+          filter: "brightness(1) contrast(1.1)",
+        }}
+      >
+        <div className="absolute top-[-50px] right-[-50px] w-72 h-72 bg-green-200 rounded-full blur-2xl opacity-30"></div>
+        <div className="absolute bottom-[-50px] left-[-50px] w-96 h-96 bg-lime-300 rounded-full blur-3xl opacity-40"></div>
         <section className="container mx-auto px-6">
-          {/* Main Product Section */}
           <div className="container mx-auto mt-28 p-10 bg-gradient-to-r from-green-100 to-white shadow-2xl rounded-2xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center min-h-[600px]">
-              {/* Product Image Section */}
               <div className="flex justify-center items-center">
                 <div className="group">
                   <img
@@ -104,9 +112,7 @@ const ProductDetailsPage = () => {
                 </div>
               </div>
 
-              {/* Product Information Section */}
               <div className="flex flex-col justify-between space-y-10 p-6">
-                {/* Title and Rating */}
                 <div>
                   <h1 className="text-5xl font-bold text-gray-900 mb-4">
                     {mainProduct.title}
@@ -128,12 +134,10 @@ const ProductDetailsPage = () => {
                   </div>
                 </div>
 
-                {/* Description */}
                 <p className="text-gray-600 text-lg leading-relaxed tracking-wide">
                   {mainProduct.description}
                 </p>
 
-                {/* Price and Discount */}
                 <div className="flex items-center space-x-6">
                   <span className="text-5xl font-extrabold text-green-600">
                     {mainProduct.price}
@@ -143,7 +147,6 @@ const ProductDetailsPage = () => {
                   </span>
                 </div>
 
-                {/* Quantity Selector */}
                 <div className="flex items-center space-x-8">
                   <div className="flex items-center space-x-4">
                     <button
@@ -174,7 +177,6 @@ const ProductDetailsPage = () => {
                   </div>
                 </div>
 
-                {/* Availability */}
                 <p
                   className={`${
                     mainProduct.availability === "Out of Stock"
@@ -185,7 +187,6 @@ const ProductDetailsPage = () => {
                   {mainProduct.availability}
                 </p>
 
-                {/* Add to Cart Button */}
                 <button className="w-full py-4 bg-green-600 text-white text-xl font-semibold rounded-lg hover:bg-green-700 shadow-xl hover:shadow-green-500/50 transition-transform hover:scale-105">
                   Add to Cart
                 </button>
@@ -193,7 +194,6 @@ const ProductDetailsPage = () => {
             </div>
           </div>
           <section className="mt-10 py-12 px-6 bg-gradient-to-br from-green-100 to-green-50 rounded-lg shadow-2xl">
-            {/* Customer Reviews Section */}
             <h2 className="text-5xl font-extrabold text-green-700 mb-10 text-center tracking-wide">
               What Our Customers Say
             </h2>
@@ -203,7 +203,6 @@ const ProductDetailsPage = () => {
                   key={review.id}
                   className="flex items-start p-6 bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl transition-shadow duration-300"
                 >
-                  {/* Profile Picture or Initials */}
                   <div className="w-16 h-16 flex items-center justify-center rounded-full bg-green-700 text-white font-bold text-2xl mr-6 shadow-md">
                     {review.profileImage ? (
                       <img
@@ -216,7 +215,6 @@ const ProductDetailsPage = () => {
                     )}
                   </div>
 
-                  {/* Review Content */}
                   <div className="flex-grow">
                     <div className="flex justify-between items-center mb-4">
                       <p className="font-bold text-gray-800 text-lg">
@@ -247,13 +245,11 @@ const ProductDetailsPage = () => {
             </div>
           </section>
 
-          {/* Add Review Section */}
           <section className="mt-12 bg-white py-10 px-8 rounded-2xl shadow-2xl border border-gray-200">
             <h3 className="text-3xl font-extrabold text-green-700 mb-6 text-center">
               Share Your Experience
             </h3>
 
-            {/* Star Rating Input */}
             <div className="flex items-center justify-center mb-6">
               <span className="font-medium text-lg text-gray-700 mr-3">
                 Rate Us:
@@ -273,16 +269,14 @@ const ProductDetailsPage = () => {
               </div>
             </div>
 
-            {/* Review Input */}
             <textarea
-              value={newReview} // Controlled input tied to state
-              onChange={(e) => setNewReview(e.target.value)} // Updates state on change
+              value={newReview}
+              onChange={(e) => setNewReview(e.target.value)}
               placeholder="Tell us about your experience..."
               rows="4"
               className="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent resize-none"
             ></textarea>
 
-            {/* Submit Button */}
             <button
               onClick={handleAddReview}
               className="mt-6 w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-3 rounded-lg font-bold text-lg hover:scale-105 transition-all duration-300 shadow-lg"
@@ -291,7 +285,6 @@ const ProductDetailsPage = () => {
             </button>
           </section>
 
-          {/* Related Products Section */}
           <section className="mt-10">
             <h2 className="text-4xl font-bold text-center mb-6">
               Related Products
@@ -318,7 +311,7 @@ const ProductDetailsPage = () => {
             </div>
           </section>
         </section>
-      </main>
+      </div>
       <Newsletter />
       <Footer />
     </>
