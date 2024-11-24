@@ -156,14 +156,6 @@ const ProductCatalog = ({ bground }) => {
     }
   };
 
-  const handleSearch = (searchTerm) => {
-    setFilteredProducts(
-      products.filter((product) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-  };
-
   const handleSort = (sortOption) => {
     const sortedProducts = [...filteredProducts];
     if (sortOption === "price-asc") {
@@ -179,30 +171,35 @@ const ProductCatalog = ({ bground }) => {
   return (
     <div>
       <Navbar bground={true} />
-      <div className="bg-gray-100">
-        <div className="p-6 pt-6 mx-auto font-sans bg-white text-gray-800">
-          <div className="w-[80%] mx-auto">
-            <h1 className="text-4xl font-bold mb-4 text-gray-800">
-              Product Catalog
+      <div className="bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen">
+        <div className="p-8 pt-36 mx-auto font-sans text-gray-800">
+          <div className="w-[90%] mx-auto">
+            <h1 className="text-5xl font-extrabold mb-8 text-center text-gray-800">
+              🌟 Discover the Best{" "}
+              <span className="text-green-600">Products</span> for Your Needs 🌱
             </h1>
 
-            <div className="sm:p-6 bg-gray-50 flex flex-col md:flex-row shadow-lg rounded-lg w-full justify-between my-6  mx-auto space-y-4">
-              <div className="flex  items-center mt-8 md:ml-3 w-[100%] md:w-[400px] lg:w-[500px]">
+            <div className="sm:p-10 bg-white flex flex-col md:flex-row justify-between shadow-xl items-center rounded-xl w-full  my-8 mx-auto gap-8">
+              <div className="flex items-center w-full md:w-[450px] lg:w-[550px]">
                 <input
                   type="text"
-                  placeholder="Search..."
-                  className="w-full p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="🔍 Search for products..."
+                  className="w-full p-3 border border-gray-300 rounded-l-full focus:outline-none focus:ring-4 focus:ring-green-500"
+                  onChange={(e) => handleSearch(e.target.value)}
                 />
-                <button className="bg-green-700 text-white px-4 py-2 rounded-r-lg hover:bg-blue-600">
+                <button className="bg-green-600 text-white px-6 py-3 rounded-r-full hover:bg-green-700 transition-all duration-300">
                   Search
                 </button>
               </div>
-              <div className="flex flex-col md:flex-row gap-4">
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Categories</h3>
+
+              <div className="flex flex-col md:flex-row gap-6 w-full md:w-auto justify-center items-center">
+                <div className="flex flex-col bg-gray-50 p-4 rounded-lg shadow-sm">
+                  <h3 className="text-lg font-semibold mb-4 text-center">
+                    Categories
+                  </h3>
                   <select
                     onChange={(e) => handleFilter(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-500"
                   >
                     {categories.map((category, index) => (
                       <option key={index} value={category}>
@@ -212,11 +209,13 @@ const ProductCatalog = ({ bground }) => {
                   </select>
                 </div>
 
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Sort by Price</h3>
+                <div className="flex flex-col bg-gray-50 p-4 rounded-lg shadow-sm">
+                  <h3 className="text-lg font-semibold mb-4 text-center">
+                    Sort by Price
+                  </h3>
                   <select
                     onChange={(e) => handleSort(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-500"
                   >
                     <option value="price-asc">Price: Low to High</option>
                     <option value="price-desc">Price: High to Low</option>
@@ -226,7 +225,7 @@ const ProductCatalog = ({ bground }) => {
               </div>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 -z-50">
               {filteredProducts.map((product) => (
                 <ProductCard
                   key={product.id}
