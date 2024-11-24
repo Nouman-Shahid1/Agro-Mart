@@ -89,7 +89,7 @@ const ProductDetailsPage = () => {
         style={{
           backgroundImage: `
       linear-gradient(to bottom, rgba(0, 128, 0, 0.6), rgba(255, 255, 255, 0.8)),
-      url('https://t4.ftcdn.net/jpg/08/25/59/35/360_F_825593515_VKsf1azJx0C9OVq6myxRjewTE5J40RFy.jpg')`,
+      url('https://static.vecteezy.com/system/resources/previews/001/431/110/non_2x/abstract-green-grass-in-bokeh-background-free-vector.jpg')`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
