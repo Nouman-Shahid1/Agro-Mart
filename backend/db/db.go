@@ -1,0 +1,42 @@
+package db
+
+import (
+	"database/sql"
+	"log"
+
+	_ "github.com/mattn/go-sqlite3" // Import SQLite driver
+)
+
+var DB *sql.DB
+
+// InitDB initializes the database connection
+func InitDB() {
+	var err error
+	DB, err = sql.Open("sqlite3", "./api.db") // Assign to the global DB
+	if err != nil {
+		log.Fatal("Could not connect to database:", err)
+	}
+	err = DB.Ping()
+	if err != nil {
+		log.Fatal("Could not establish a connection to the database:", err)
+	}
+	DB.SetMaxOpenConns(10)
+	DB.SetMaxIdleConns(5)
+}
+
+// CreateTable creates necessary tables
+func CreateTable() {
+	createUsersTable := `
+	CREATE TABLE IF NOT EXISTS users(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		email TEXT NOT NULL UNIQUE,
+		password TEXT NOT NULL,
+		username TEXT NOT NULL,
+		role TEXT NOT NULL DEFAULT 'buyer'
+	)
+	`
+	_, err := DB.Exec(createUsersTable)
+	if err != nil {
+		log.Fatal("Could not create users table:", err)
+	}
+}
