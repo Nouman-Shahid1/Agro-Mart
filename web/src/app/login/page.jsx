@@ -32,87 +32,91 @@ export default function LoginPage() {
             <div className="relative">
                 <div className="absolute top-10 left-10 w-12 h-12 bg-green-400 rounded-full blur-lg opacity-50 animate-ping"></div>
                 <div className="absolute bottom-20 right-20 w-16 h-16 bg-green-500 rounded-full blur-lg opacity-30 animate-pulse"></div>
-                
+
                 <div className="relative z-20 pt-30 my-8 flex flex-col items-center justify-center min-h-[80vh]">
-                 
-                    <div className="flex mb-4 bg-white rounded-full p-1 shadow-md">
+
+                    <div className="flex mb-4 bg-gradient-to-r from-white/10 to-transparent backdrop-blur-sm  rounded-full p-1 shadow-md">
                         <button
-                            onClick={() => setActiveForm('buyer')}
-                            className={`flex-1 px-4 py-2 rounded-full text-center font-semibold text-sm transition-all duration-300 ease-in-out transform ${
-                                activeForm === 'buyer'
-                                    ? 'bg-green-500 text-white shadow-lg '
-                                    : 'bg-white text-black opacity-75'
-                            }`}
+                            onClick={() => setActiveForm("buyer")}
+                            className={`flex-1 px-4 py-2 rounded-full text-center font-semibold text-sm transition-all duration-300 ease-in-out transform ${activeForm === "buyer"
+                                ? "bg-green-700 text-white shadow-lg "
+                                : "bg-transparent text-white "
+                                }`}
                         >
                             Buyer
                         </button>
                         <button
-                            onClick={() => setActiveForm('seller')}
-                            className={`flex-1 px-4 py-2 rounded-full text-center font-semibold text-sm transition-all duration-300 ease-in-out transform ${
-                                activeForm === 'seller'
-                                    ? 'bg-green-500 text-white shadow-lg '
-                                    : 'bg-white text-black  opacity-75'
-                            }`}
+                            onClick={() => setActiveForm("seller")}
+                            className={`flex-1 px-4 py-2 rounded-full text-center  text-sm transition-all font-bold duration-300 ease-in-out transform ${activeForm === "seller"
+                                ? "bg-green-700 text-white shadow-lg "
+                                : "bg-transparent text-white "
+                                }`}
                         >
                             Seller
                         </button>
                     </div>
 
-                    <div className="backdrop-blur-3xl shadow-2xl rounded-lg p-8 max-w-md w-full text-center space-y-6">
-                        <h2 className="text-4xl font-extrabold text-green-400">
+                    <div className="bg-gradient-to-r from-white/10 to-transparent backdrop-blur-sm border border-white/18 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] p-8 max-w-[400px] w-full text-center space-y-8 transform hover:shadow-xl transition-shadow">
+                        {/* Form Title */}
+                        <h2 className="text-3xl text-green-400 font-extrabold text-gray-800">
                             {activeForm === 'buyer' ? 'Buyer Login' : 'Seller Login'}
                         </h2>
-                        <p className="text-blue-100">
+                        <p className="text-white">
                             {activeForm === 'buyer'
-                                ? 'Welcome back, Buyer! Access your account to continue shopping seamlessly.'
-                                : 'Welcome back, Seller! Log in to manage your store and track your sales.'}
+                                ? 'Log in to explore and shop your favorite products.'
+                                : 'Log in to manage your store and track your performance.'}
                         </p>
 
+                        {/* Form Fields */}
                         <form className="space-y-6">
+                            {/* Email Input */}
                             <div>
-                                <label className="block text-left text-blue-100 font-semibold mb-1">
+                                <label className="block text-left text-white font-medium mb-1">
                                     Email Address
                                 </label>
                                 <input
                                     id="email"
                                     type="email"
-                                    className="w-full px-4 py-3 placeholder:text-gray-800 border border-green-500 rounded-md shadow-sm text-green-800 focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    placeholder="Enter your email"
+                                    className="w-full  text-gray-800 bg-transparent  border-b-2 border-white shadow-4xl focus:py-2  focus:outline-none "
                                 />
                             </div>
+
+                            {/* Password Input */}
                             <div className="relative">
-                                <label className="block text-left text-blue-100 font-semibold mb-1">
+                                <label className="block text-left text-white font-medium mb-1">
                                     Password
                                 </label>
                                 <input
                                     id="password"
                                     type={showPassword ? 'text' : 'password'}
-                                    className="w-full px-4 py-3 placeholder:text-gray-800 border border-green-500 rounded-md shadow-sm text-green-800 focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    placeholder="Enter your password"
+
+                                    className="w-full  text-gray-800 bg-transparent  border-b-2 border-white shadow-3xl focus:py-2  focus:outline-none "
                                 />
                                 <button
                                     type="button"
                                     onClick={togglePasswordVisibility}
-                                    className="absolute top-10 right-3 text-green-500 hover:text-green-700 focus:outline-none"
-                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none"
+                                    aria-label={showPassword ? 'Hide Password' : 'Show Password'}
                                 >
-                                    {showPassword ? <FaEyeSlash size={24} /> : <FaEye size={24}/>}
+                                    {showPassword ? <FaEyeSlash size={24} color={'white'} /> : <FaEye size={24} color={'white'} />}
                                 </button>
                             </div>
 
+                            {/* Submit Button */}
                             <button
                                 type="submit"
-                                className="w-full py-3 bg-green-500 text-white font-bold rounded-lg shadow-md hover:bg-green-700 transition-transform transform hover:scale-105"
+                                className="w-full py-3  bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold rounded-md shadow hover:bg-green-600 focus:ring-2 focus:ring-green-500 transition-transform transform hover:scale-105"
                             >
                                 {activeForm === 'buyer' ? 'Login as Buyer' : 'Login as Seller'}
                             </button>
                         </form>
 
-                        <div className="flex justify-between items-center text-sm text-blue-200">
-                            <Link href="#" className="hover:text-blue-100">
+                        {/* Footer Links */}
+                        <div className="flex justify-between items-center text-sm text-white">
+                            <Link href="#" className="hover:text-green-500">
                                 Forgot Password?
                             </Link>
-                            <Link href="/signup" className="hover:text-blue-100">
+                            <Link href="/signup" className="hover:text-green-500">
                                 Create an Account
                             </Link>
                         </div>
