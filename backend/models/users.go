@@ -82,3 +82,15 @@ func GetUserbyID(id int64) (*User, error) {
 	}
 	return &user, nil
 }
+
+func (user User) UpdateUser() error {
+	query := `UPDATE users SET email = ?, password = ?, username = ?, role = ? WHERE id = ?`
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return fmt.Errorf("error while preparing query for update user")
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(user.Email, user.Password, user.Username, user.Role, user.ID)
+	return err
+
+}
