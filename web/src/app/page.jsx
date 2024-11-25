@@ -32,7 +32,6 @@ export default function Page() {
         <div className="relative mt-72 z-20 flex flex-col items-center justify-center h-full text-center px-6 space-y-12">
           <div className="absolute top-10 left-10 w-12 h-12 bg-green-400 rounded-full blur-lg opacity-50 animate-ping"></div>
           <div className="absolute bottom-20 right-20 w-16 h-16 bg-green-500 rounded-full blur-lg opacity-30 animate-pulse"></div>
-
           <div className="flex items-center justify-center space-x-6">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-green-400 animate-fade-in">
               Revolutionizing Agriculture 🌱
