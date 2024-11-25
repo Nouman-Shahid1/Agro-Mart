@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ImCross } from "react-icons/im";
 
-const Navbar = ({ bground }) => {
+const Navbar = () => {
   const [bg, setBg] = useState(false);
   const [showNav, setShowNav] = useState(false);
 
@@ -43,7 +43,8 @@ const Navbar = ({ bground }) => {
               } rounded-lg"`}
             />
           </div>
-          <div className="flex flex-col md:flex-row gap-3 text-base pt-4 items-center justify-center">
+          
+          <div className="hidden md:flex flex-col md:flex-row gap-3 text-base pt-4 items-center justify-center">
             {[
               { label: "Become a Buyer", href: "/" },
               { label: "Become a Seller", href: "/" },
@@ -91,9 +92,26 @@ const Navbar = ({ bground }) => {
             className={`${
               showNav ? "block absolute right-[30px] top-[30px]" : "hidden"
             }`}
-            onClick={handleNavbar}
+            onClick={handleNavbar} 
+            
           >
             <ImCross style={{ color: "#017d29", fontSize: "20px" }} />
+          </div>
+          <div className={`${showNav ? "flex" : "hidden"}  flex-wrap flex-rows mb-6  gap-3 text-base pt-4 items-center justify-center`}>
+            {[
+              { label: "Become a Buyer", href: "/" },
+              { label: "Become a Seller", href: "/" },
+              { label: "Rent a Machine", href: "/" },
+            ].map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="relative inline-block py-2.5 px-6 text-base font-medium text-white rounded-full bg-gradient-to-r from-green-500 to-green-700 shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:bg-gradient-to-br focus:ring-2 focus:ring-teal-300 focus:outline-none"
+              >
+                <span className="absolute inset-0 w-full h-full bg-white opacity-0 rounded-full transition-opacity duration-300 hover:opacity-10"></span>
+                <span className="relative z-10">{item.label}</span>
+              </Link>
+            ))}
           </div>
           <ul
             className={`${
