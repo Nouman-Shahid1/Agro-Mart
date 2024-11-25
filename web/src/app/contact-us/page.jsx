@@ -7,46 +7,43 @@ const ContactUs = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <div
-        style={{
-          backgroundImage: `url('https://landema.com/bootstrap-theme/images/contact-bg.e6a96d47.png')`,
-          minHeight: "550px",
-          backgroundSize: "100% 100%",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          position: "relative", // To position the overlay properly
-          display: "flex",
-          alignItems: "flex-end",
-          paddingBottom: "3rem",
-          paddingLeft: "4rem",
-        }}
-        className="text-white -z-50 text-left"
-      >
-        {/* Overlay */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)", // Black overlay with 50% opacity
-            zIndex: 1, // Ensure overlay is above background
-          }}
-        ></div>
+  style={{
+    backgroundImage: `url('https://landema.com/bootstrap-theme/images/contact-bg.e6a96d47.png')`,
+    minHeight: "550px",
+    backgroundSize: "cover", 
+    backgroundPosition: "center", 
+    backgroundRepeat: "no-repeat",
+    position: "relative", 
+  }}
+  className="text-white flex items-center justify-center h-screen sm:bg-[left] md:bg-[center] lg:bg-[left]" // Responsive background position
+>
+  
+  <div
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0, 0, 0, 0.5)", 
+      zIndex: 1, 
+    }}
+  ></div>
 
-        {/* Content */}
-        <h1
-          className="text-4xl md:text-5xl lg:text-6xl font-bold"
-          style={{ position: "relative", zIndex: 2 }} // Ensure content is above overlay
-        >
-          Get in touch <br />
-          with us
-        </h1>
-      </div>
+ 
+  <h1
+    className="text-4xl md:text-5xl lg:text-6xl font-bold text-center "
+    style={{ marginTop: "100px",position: "relative", zIndex: 2 }} 
+  >
+    Get in touch <br />
+    with us
+  </h1>
+</div>
 
-      <div className="w-full min-h-screen flex flex-col items-center pt-10 bg-gray-100 px-4">
+
+      <div className="w-full min-h-screen flex flex-col items-center pt-10absolute inset-0 bg-gradient-to-b from-green-900 via-green-700 to-transparent opacity-90 px-4">
         <div className="text-center w-full md:w-2/3 lg:w-1/2 mt-10 mb-16">
-          <p className="text-lg md:text-xl text-gray-800">
+          <p className="text-lg md:text-xl text-white">
             Please contact us using this form if you have any questions or
             comments about Agro Mart.
           </p>
