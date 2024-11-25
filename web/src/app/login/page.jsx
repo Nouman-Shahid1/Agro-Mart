@@ -32,9 +32,9 @@ export default function LoginPage() {
             <div className="relative">
                 <div className="absolute top-10 left-10 w-12 h-12 bg-green-400 rounded-full blur-lg opacity-50 animate-ping"></div>
                 <div className="absolute bottom-20 right-20 w-16 h-16 bg-green-500 rounded-full blur-lg opacity-30 animate-pulse"></div>
-                {/* Login Section */}
+                
                 <div className="relative z-20 pt-30 my-8 flex flex-col items-center justify-center min-h-[80vh]">
-                    {/* Toggle Buttons */}
+                 
                     <div className="flex mb-4 bg-white rounded-full p-1 shadow-md">
                         <button
                             onClick={() => setActiveForm('buyer')}
@@ -58,7 +58,6 @@ export default function LoginPage() {
                         </button>
                     </div>
 
-                    {/* Form */}
                     <div className="backdrop-blur-3xl shadow-2xl rounded-lg p-8 max-w-md w-full text-center space-y-6">
                         <h2 className="text-4xl font-extrabold text-green-400">
                             {activeForm === 'buyer' ? 'Buyer Login' : 'Seller Login'}
