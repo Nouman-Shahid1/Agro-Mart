@@ -171,7 +171,21 @@ const ProductCatalog = ({ bground }) => {
   return (
     <div>
       <Navbar bground={true} />
-      <div className="bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen">
+      <div
+        className="relative overflow-hidden py-20"
+        style={{
+          backgroundImage: `
+      linear-gradient(to bottom, rgba(0, 128, 0, 0.6), rgba(255, 255, 255, 0.8)),
+      url('https://t4.ftcdn.net/jpg/08/25/59/35/360_F_825593515_VKsf1azJx0C9OVq6myxRjewTE5J40RFy.jpg')`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+          filter: "brightness(1) contrast(1.1)",
+        }}
+      >
+        <div className="absolute top-[-50px] right-[-50px] w-72 h-72 bg-green-200 rounded-full blur-2xl opacity-30"></div>
+        <div className="absolute bottom-[-50px] left-[-50px] w-96 h-96 bg-lime-300 rounded-full blur-3xl opacity-40"></div>
         <div className="p-8 pt-36 mx-auto font-sans text-gray-800">
           <div className="w-[90%] mx-auto">
             <h1 className="text-5xl font-extrabold mb-8 text-center text-gray-800">
