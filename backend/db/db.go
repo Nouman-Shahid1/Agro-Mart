@@ -39,4 +39,18 @@ func CreateTable() {
 	if err != nil {
 		log.Fatal("Could not create users table:", err)
 	}
+
+	createSellerDescrptionTable := `
+	CREATE TABLE IF NOT EXISTS seller_description(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		about TEXT NOT NULL,
+		product_type TEXT NOT NULL,
+		user_id INTEGER NOT NULL UNIQUE,
+		FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+	)
+	`
+	_, err = DB.Exec(createSellerDescrptionTable)
+    if err != nil {
+        log.Fatal("Could not create seller_description table:", err)
+    }
 }

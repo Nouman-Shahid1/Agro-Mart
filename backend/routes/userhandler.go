@@ -46,8 +46,32 @@ func deleteUser(context *gin.Context){
 }
 
 func updateUser(context *gin.Context){
-
-
+    id, err := strconv.ParseInt(context.Param("id"),10,64)
+    if err!= nil {
+        context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt parse user id for update"})
+        return
+    }
+    user, err := models.GetUserbyID(id)
+    if err != nil {
+        context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt get user to update user data", "error":   err.Error()})
+        return
+    }
+    var payload struct{
+        Role string `json:"role" binding:"required"`
+    }
+    err = context.ShouldBindJSON(&payload)
+    if err != nil {
+        context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt bind update user data", "error":   err.Error()})
+        return
+    }
+    user.Role = payload.Role
+    err = user.UpdateUser()
+    
+    if err != nil {
+        context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt update user"})
+        return
+    }
+    context.JSON(http.StatusOK, gin.H{"message": "Update succesfully"})
 }
 
 func getUser(context *gin.Context){
@@ -59,6 +83,7 @@ func getUser(context *gin.Context){
     user, err := models.GetUserbyID(id)
     if err != nil {
         context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt fetch user"})
+        return
     }
     context.JSON(http.StatusOK, user)
 
