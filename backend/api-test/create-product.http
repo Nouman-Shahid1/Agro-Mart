@@ -1,0 +1,9 @@
+POST http://localhost:8080/product
+Content-type: application/json
+
+{
+    "name": "Tractor",
+    "description": "Brand new tractor",
+    "imagepath":"local storage",
+    "user_id": 1
+}

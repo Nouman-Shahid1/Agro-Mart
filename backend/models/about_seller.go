@@ -8,8 +8,8 @@ import (
 type Seller_about struct{
 	ID          int64  `json:"id"`
 	About       string `json:"about" binding:"required"`
-	ProductType string `json:"product_type" binding:"required"`
-	UserID      int64  `json:"user_id" binding:"required"`
+	ProductType string `json:"product_type" `
+	UserID      int64  `json:"user_id" `
 }
 func (u *Seller_about) Save() error {
 	query := "INSERT INTO seller_description(about, product_type, user_id) VALUES(?,?,?)"

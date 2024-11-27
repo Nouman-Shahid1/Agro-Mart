@@ -16,6 +16,11 @@ func InitDB() {
 	if err != nil {
 		log.Fatal("Could not connect to database:", err)
 	}
+	_, err = DB.Exec("PRAGMA foreign_keys = ON;")
+	if err != nil {
+		log.Fatal("Could not enable foreign key support:", err)
+	}
+	
 	err = DB.Ping()
 	if err != nil {
 		log.Fatal("Could not establish a connection to the database:", err)
@@ -53,4 +58,19 @@ func CreateTable() {
     if err != nil {
         log.Fatal("Could not create seller_description table:", err)
     }
+
+	createProductsTable := `
+CREATE TABLE IF NOT EXISTS products(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    imagepath TEXT NOT NULL,
+	user_id INTEGER NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)
+`
+_, err = DB.Exec(createProductsTable)
+if err != nil {
+    log.Fatal("Could not create products table:", err)
+}
 }
