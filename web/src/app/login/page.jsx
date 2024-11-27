@@ -1,19 +1,19 @@
-'use client';
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+"use client";
+import React, { useState } from "react";
+import Link from "next/link";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function LoginPage() {
-    const [activeForm, setActiveForm] = useState('buyer');
-    const [showPassword, setShowPassword] = useState(false);
+  const [activeForm, setActiveForm] = useState("buyer");
+  const [showPassword, setShowPassword] = useState(false);
 
-    const togglePasswordVisibility = () => {
-        setShowPassword((prevState) => !prevState);
-    };
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
 
     return (
         <div className="min-h-screen relative overflow-hidden font-sans bg-gray-900">
-  
+            {/* Background */}
             <div
                 className="absolute inset-0 bg-cover bg-center bg-fixed filter brightness-50"
                 style={{
@@ -28,46 +28,49 @@ export default function LoginPage() {
                 <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-400 rounded-full blur-3xl opacity-20 animate-bounce-slow-reverse"></div>
             </div>
 
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80"></div>
-            <div className="relative">
-                <div className="absolute top-10 left-10 w-12 h-12 bg-green-400 rounded-full blur-lg opacity-50 animate-ping"></div>
-                <div className="absolute bottom-20 right-20 w-16 h-16 bg-green-500 rounded-full blur-lg opacity-30 animate-pulse"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80"></div>
+      <div className="relative">
+        <div className="absolute top-10 left-10 w-12 h-12 bg-green-400 rounded-full blur-lg opacity-50 animate-ping"></div>
+        <div className="absolute bottom-20 right-20 w-16 h-16 bg-green-500 rounded-full blur-lg opacity-30 animate-pulse"></div>
 
-                <div className="relative z-20 pt-30 my-8 flex flex-col items-center justify-center min-h-[80vh]">
+        <div className="relative z-20 pt-30 my-8 flex flex-col items-center justify-center min-h-[80vh]">
+          <div className="flex mb-4 bg-gradient-to-r from-white/10 to-transparent backdrop-blur-sm  rounded-full p-1 shadow-md">
+            <button
+              onClick={() => setActiveForm("buyer")}
+              className={`flex-1 px-4 py-2 rounded-full text-center font-semibold text-sm transition-all duration-300 ease-in-out transform ${
+                activeForm === "buyer"
+                  ? "bg-green-700 text-white shadow-lg "
+                  : "bg-transparent text-white "
+              }`}
+            >
+              Buyer
+            </button>
+            <button
+              onClick={() => setActiveForm("seller")}
+              className={`flex-1 px-4 py-2 rounded-full text-center  text-sm transition-all font-bold duration-300 ease-in-out transform ${
+                activeForm === "seller"
+                  ? "bg-green-700 text-white shadow-lg "
+                  : "bg-transparent text-white "
+              }`}
+            >
+              Seller
+            </button>
+          </div>
 
-                    <div className="flex mb-4 bg-gradient-to-r from-white/10 to-transparent backdrop-blur-sm  rounded-full p-1 shadow-md">
-                        <button
-                            onClick={() => setActiveForm("buyer")}
-                            className={`flex-1 px-4 py-2 rounded-full text-center font-semibold text-sm transition-all duration-300 ease-in-out transform ${activeForm === "buyer"
-                                ? "bg-green-700 text-white shadow-lg "
-                                : "bg-transparent text-white "
-                                }`}
-                        >
-                            Buyer
-                        </button>
-                        <button
-                            onClick={() => setActiveForm("seller")}
-                            className={`flex-1 px-4 py-2 rounded-full text-center  text-sm transition-all font-bold duration-300 ease-in-out transform ${activeForm === "seller"
-                                ? "bg-green-700 text-white shadow-lg "
-                                : "bg-transparent text-white "
-                                }`}
-                        >
-                            Seller
-                        </button>
-                    </div>
+          <div className="bg-gradient-to-r from-white/10 to-transparent backdrop-blur-sm border border-white/18 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] p-8 max-w-[400px] w-full text-center space-y-8 transform hover:shadow-xl transition-shadow">
+            {/* Form Title */}
+            <h2 className="text-3xl text-green-400 font-extrabold text-gray-800">
+              {activeForm === "buyer" ? "Buyer Login" : "Seller Login"}
+            </h2>
+            <p className="text-white">
+              {activeForm === "buyer"
+                ? "Log in to explore and shop your favorite products."
+                : "Log in to manage your store and track your performance."}
+            </p>
 
-                    <div className="bg-gradient-to-r from-white/10 to-transparent backdrop-blur-sm border border-white/18 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] p-8 max-w-[400px] w-full text-center space-y-8 transform hover:shadow-xl transition-shadow">
-                        {/* Form Title */}
-                        <h2 className="text-3xl text-green-400 font-extrabold text-gray-800">
-                            {activeForm === 'buyer' ? 'Buyer Login' : 'Seller Login'}
-                        </h2>
-                        <p className="text-white">
-                            {activeForm === 'buyer'
-                                ? 'Log in to explore and shop your favorite products.'
-                                : 'Log in to manage your store and track your performance.'}
-                        </p>
-
+                        {/* Form Fields */}
                         <form className="space-y-6">
+                            {/* Email Input */}
                             <div>
                                 <label className="block text-left text-white font-medium mb-1">
                                     Email Address
@@ -79,6 +82,7 @@ export default function LoginPage() {
                                 />
                             </div>
 
+                            {/* Password Input */}
                             <div className="relative">
                                 <label className="block text-left text-white font-medium mb-1">
                                     Password
@@ -99,6 +103,7 @@ export default function LoginPage() {
                                 </button>
                             </div>
 
+                            {/* Submit Button */}
                             <button
                                 type="submit"
                                 className="w-full py-3  bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold rounded-md shadow hover:bg-green-600 focus:ring-2 focus:ring-green-500 transition-transform transform hover:scale-105"
@@ -107,6 +112,7 @@ export default function LoginPage() {
                             </button>
                         </form>
 
+                        {/* Footer Links */}
                         <div className="flex justify-between items-center text-sm text-white">
                             <Link href="#" className="hover:text-green-500">
                                 Forgot Password?
