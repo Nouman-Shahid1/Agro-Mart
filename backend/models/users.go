@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"log"
 
@@ -12,7 +13,7 @@ type User struct{
 	ID int64
 	Email string `binding:"required"`
 	Password string `binding:"required"`
-	Username string `binding:"required"`
+	Username string 
 	Role string 
 }
 
@@ -92,5 +93,22 @@ func (user User) UpdateUser() error {
 	defer stmt.Close()
 	_, err = stmt.Exec(user.Email, user.Password, user.Username, user.Role, user.ID)
 	return err
+
+}
+
+func (u *User) ValidateCredential() error {
+	query := "SELECT id, password FROM users WHERE email = ?"
+	row := db.DB.QueryRow(query, u.Email)
+
+	var retrievedPassword string
+	err := row.Scan(&u.ID, &retrievedPassword)
+	if err != nil {
+		log.Printf("error while retrieving password from database")
+	}
+	passwordisValid := utils.CheckPassword(u.Password, retrievedPassword)
+	if !passwordisValid{
+		return errors.New("credentail invalid")
+	}
+	return nil
 
 }

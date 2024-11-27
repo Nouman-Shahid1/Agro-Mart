@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"fyp.com/m/models"
+	"fyp.com/m/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,6 +31,26 @@ func signUp(context *gin.Context){
         return
     }
     context.JSON(http.StatusCreated, gin.H{"message": "User created", "event": user})
+}
+
+func login(context *gin.Context){
+    var user models.User
+
+    err := context.ShouldBindJSON(&user)
+    if err != nil{
+        context.JSON(http.StatusBadRequest, gin.H{"message": "Couldnt parse login data"})
+        return
+    }
+    err = user.ValidateCredential()
+    if err != nil {
+        context.JSON(http.StatusUnauthorized, gin.H{"message": "Couldnt authenticate user"})
+        return
+    }
+    token, err := utils.GenerateToken(user.Email, user.ID)
+    if err != nil {
+        context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt generate user token"})	
+    }
+    context.JSON(http.StatusOK, gin.H{"message" :"Login succesful", "token": token})
 }
 
 func deleteUser(context *gin.Context){  
