@@ -13,7 +13,7 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen relative overflow-hidden font-sans bg-gray-900">
-            {/* Background */}
+  
             <div
                 className="absolute inset-0 bg-cover bg-center bg-fixed filter brightness-50"
                 style={{
@@ -67,9 +67,7 @@ export default function LoginPage() {
                                 : 'Log in to manage your store and track your performance.'}
                         </p>
 
-                        {/* Form Fields */}
                         <form className="space-y-6">
-                            {/* Email Input */}
                             <div>
                                 <label className="block text-left text-white font-medium mb-1">
                                     Email Address
@@ -81,7 +79,6 @@ export default function LoginPage() {
                                 />
                             </div>
 
-                            {/* Password Input */}
                             <div className="relative">
                                 <label className="block text-left text-white font-medium mb-1">
                                     Password
@@ -102,7 +99,6 @@ export default function LoginPage() {
                                 </button>
                             </div>
 
-                            {/* Submit Button */}
                             <button
                                 type="submit"
                                 className="w-full py-3  bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold rounded-md shadow hover:bg-green-600 focus:ring-2 focus:ring-green-500 transition-transform transform hover:scale-105"
@@ -111,7 +107,6 @@ export default function LoginPage() {
                             </button>
                         </form>
 
-                        {/* Footer Links */}
                         <div className="flex justify-between items-center text-sm text-white">
                             <Link href="#" className="hover:text-green-500">
                                 Forgot Password?
