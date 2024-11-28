@@ -2,63 +2,64 @@
 import React from "react";
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/Footer";
+
 const ContactUs = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
+      
       <div
-  style={{
-    backgroundImage: `url('https://landema.com/bootstrap-theme/images/contact-bg.e6a96d47.png')`,
-    minHeight: "550px",
-    backgroundSize: "cover", 
-    backgroundPosition: "center", 
-    backgroundRepeat: "no-repeat",
-    position: "relative", 
-  }}
-  className="text-white flex items-center justify-center h-screen sm:bg-[left] md:bg-[center] lg:bg-[left]" // Responsive background position
->
-  
-  <div
-    style={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      backgroundColor: "rgba(0, 0, 0, 0.5)", 
-      zIndex: 1, 
-    }}
-  ></div>
+        style={{
+          backgroundImage: `url('https://landema.com/bootstrap-theme/images/contact-bg.e6a96d47.png')`,
+          minHeight: "550px",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          position: "relative",
+        }}
+        className="text-white flex items-center justify-center h-screen sm:bg-[left] md:bg-[center] lg:bg-[left]"
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1,
+          }}
+        ></div>
 
- 
-  <h1
-    className="text-4xl md:text-5xl lg:text-6xl font-bold text-center "
-    style={{ marginTop: "100px",position: "relative", zIndex: 2 }} 
-  >
-    Get in touch <br />
-    with us
-  </h1>
-</div>
-
+        <h1
+          className="text-4xl md:text-5xl lg:text-6xl font-bold text-center"
+          style={{ marginTop: "100px", position: "relative", zIndex: 2 }}
+        >
+          Get in touch <br />
+          with us
+        </h1>
+      </div>
 
       <div className="w-full min-h-screen flex flex-col items-center pt-10absolute inset-0 bg-gradient-to-b from-green-900 via-green-700 to-transparent opacity-90 px-4">
-        <div className="text-center w-full md:w-2/3 lg:w-1/2 mt-10 mb-16">
-          <p className="text-lg md:text-xl text-white">
+        <div className="text-center w-full md:w-2/3 lg:w-1/2 mt-8 mb-16">
+        <br />
+          <p className="text-xl font-bold md:text-xl text-white mt-8 ">
             Please contact us using this form if you have any questions or
             comments about Agro Mart.
           </p>
         </div>
-
-        <div className="w-full flex justify-center text-gray-600">
+    
+      <div className="w-full flex flex-col lg:flex-row items-start justify-center pt-10 px-4">
+        <div className="w-full lg:w-1/2 flex justify-center p-4">
           <form
             method="post"
-            className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 flex flex-col space-y-4 bg-white p-6 rounded-lg shadow-lg"
+            className="w-full sm:w-3/4 md:w-2/3 lg:w-11/12 flex flex-col space-y-4 bg-white p-6 rounded-lg shadow-lg"
           >
             <label htmlFor="name" className="font-bold">
-              Name <span className="text-red-600 font-bold text-lg ">*</span>
+              Name <span className="text-red-600 font-bold text-lg">*</span>
             </label>
             <input
-              className="w-full h-12 border p-4 rounded-md focus:ring focus:ring-green-300"
+              className="w-full h-12 border p-4 rounded-md "
               type="text"
               name="Name"
               id="name"
@@ -70,7 +71,7 @@ const ContactUs = () => {
               Email <span className="text-red-600 font-bold text-lg">*</span>
             </label>
             <input
-              className="w-full h-12 border p-4 rounded-md focus:ring focus:ring-green-300"
+              className="w-full h-12 border p-4 rounded-md "
               type="email"
               name="email"
               id="email"
@@ -82,7 +83,7 @@ const ContactUs = () => {
               Subject <span className="text-red-600 font-bold text-lg">*</span>
             </label>
             <input
-              className="w-full h-12 border p-4 rounded-md focus:ring focus:ring-green-300"
+              className="w-full h-12 border p-4 rounded-md "
               type="text"
               name="subject"
               id="subject"
@@ -97,7 +98,7 @@ const ContactUs = () => {
                 </label>
                 <select
                   id="aboutme"
-                  className="w-full border p-3 rounded-md text-gray-500 focus:ring-green-300"
+                  className="w-full border p-3 rounded-md text-gray-500 "
                 >
                   <option value="" disabled selected>
                     Select an option
@@ -119,7 +120,7 @@ const ContactUs = () => {
                 </label>
                 <select
                   id="interest"
-                  className="w-full border p-3 rounded-md text-gray-500 focus:ring-green-300"
+                  className="w-full border p-3 rounded-md text-gray-500 "
                 >
                   <option value="" disabled selected>
                     Select an option
@@ -140,7 +141,7 @@ const ContactUs = () => {
             <textarea
               name="message"
               id="message"
-              className="w-full h-28 border p-4 rounded-md focus:ring focus:ring-green-300"
+              className="w-full h-28 border p-4 rounded-md "
               placeholder="Enter your query"
               required
             ></textarea>
@@ -153,33 +154,21 @@ const ContactUs = () => {
             </button>
           </form>
         </div>
+        <div className="w-full lg:w-1/2 p-4">
+          <iframe
+            title="Google Maps"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.835434509586!2d-122.42189568468104!3d37.77492967975925!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858103c8f9c7c5%3A0x59d7d8d5635a5ba9!2sSan%20Francisco%2C%20CA%2C%20USA!5e0!3m2!1sen!2sin!4v1698313779029!5m2!1sen!2sin"
+            width="100%"
+            height="450"
+            allowFullScreen=""
+            loading="lazy"
+            className="rounded-lg shadow-lg border"
+          ></iframe>
+        </div>
+      </div>
       </div>
 
-      <div className="text-center mt-10 px-4">
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          At Green Agro Mart, we value your feedback and are here to assist you
-          with any questions or concerns you may have. Whether you need support
-          with our products, have inquiries about your orders, or simply want to
-          share your thoughts, please don’t hesitate to reach out to us.
-        </p>
-      </div>
-
-      <div className="flex flex-wrap justify-center md:justify-around mt-10 gap-6 text-center mb-10">
-        <div className="p-4">
-          <h2 className="text-green-700 font-bold text-xl underline">PHONE</h2>
-          <p className="text-gray-600">+123-456-7890</p>
-        </div>
-        <div className="p-4">
-          <h2 className="text-green-700 font-bold text-xl underline">EMAIL</h2>
-          <p className="text-gray-600">info@agriculture.com</p>
-        </div>
-        <div className="p-4">
-          <h2 className="text-green-700 font-bold text-xl underline">
-            ADDRESS
-          </h2>
-          <p className="text-gray-600">123 Green Field, Agriculture City</p>
-        </div>
-      </div>
+      
       <Footer />
     </div>
   );
