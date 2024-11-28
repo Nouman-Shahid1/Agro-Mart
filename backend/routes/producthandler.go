@@ -1,22 +1,46 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
-	"github.com/gin-gonic/gin"
+	"strconv"
+	"time"
+
 	"fyp.com/m/models"
+	"github.com/gin-gonic/gin"
 )
 
 func createProduct(context *gin.Context) {
-	var product models.Product
-	err := context.ShouldBindJSON(&product)
+	name := context.PostForm("name")
+	description := context.PostForm("description")
+	userId, err := strconv.ParseInt(context.PostForm("user_id"), 10, 64)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"message": "Couldnt parse request data"})
-		return
+        context.JSON(http.StatusBadRequest, gin.H{"message": "Invalid user_id"})
+        return
+    }
+	file, err := context.FormFile("image")
+	if err != nil {
+        context.JSON(http.StatusBadRequest, gin.H{"message": "Image upload failed"})
+        return
+    }
+	randomFileName := fmt.Sprintf("%d_%s", time.Now().UnixNano(), file.Filename)
+	filePath := fmt.Sprintf("static/images/%s", randomFileName)
+	if err := context.SaveUploadedFile(file, filePath); err != nil {
+        context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to save image"})
+        return
+    }
+
+	product := models.Product{
+		Name: name,
+		Description: description,
+		ImagePath: filePath,
+		UserID: userId,
 	}
+
 	err = product.Save()
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt save user", "error": err.Error()})
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt save product", "error": err.Error()})
 		return
 	}
-	context.JSON(http.StatusCreated, gin.H{"message": "User created", "event": product})
+	context.JSON(http.StatusCreated, gin.H{"message": "Product created successfully", "product": product})
 }

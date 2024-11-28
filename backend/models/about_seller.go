@@ -9,7 +9,7 @@ type Seller_about struct{
 	ID          int64  `json:"id"`
 	About       string `json:"about" binding:"required"`
 	ProductType string `json:"product_type" `
-	UserID      int64  `json:"user_id" `
+	UserID      int64  `json:"userId" `
 }
 func (u *Seller_about) Save() error {
 	query := "INSERT INTO seller_description(about, product_type, user_id) VALUES(?,?,?)"
