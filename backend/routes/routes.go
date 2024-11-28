@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fyp.com/m/middleware"
 	"github.com/gin-gonic/gin"
 )
 func RegisterRoutes(server *gin.Engine) {
@@ -11,6 +12,10 @@ func RegisterRoutes(server *gin.Engine) {
 	server.PUT("users/:id", updateUser)
 	server.POST("/users/about", create_about)
 	server.POST("login", login )
-	server.POST("product", createProduct)
+	
+
+	authenticated := server.Group("/")
+	authenticated.Use(middleware.Authenticate)
+	authenticated.POST("/new-product", createProduct)
 
 }

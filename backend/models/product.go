@@ -11,7 +11,7 @@ type Product struct{
 	Name string `json:"name"`
 	Description string `json:"description"`
 	ImagePath string `json:"imagepath"`
-	UserID int64 `json:"user_id"`
+	UserID int64 `json:"userId"`
 }
 
 

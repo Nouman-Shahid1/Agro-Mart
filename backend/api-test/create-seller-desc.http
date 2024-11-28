@@ -4,5 +4,5 @@ Content-type: application/json
 {
     "about": "I am a seller from gujrawalla ",
     "product_type": "fertilizers",
-    "user_id": 2
+    "userId": 2
 }
