@@ -188,12 +188,12 @@ const ProductCatalog = ({ bground }) => {
         <div className="absolute bottom-[-50px] left-[-50px] w-96 h-96 bg-lime-300 rounded-full blur-3xl opacity-40"></div>
         <div className="p-8 pt-36 mx-auto font-sans text-gray-800">
           <div className="w-[90%] mx-auto">
-            <h1 className="text-5xl font-extrabold mb-8 text-center text-gray-800">
-              🌟 Discover the Best{" "}
-              <span className="text-green-600">Products</span> for Your Needs 🌱
+            <h1 className="text-5xl font-extrabold mb-28 text-center text-gray-800">
+               Discover the Best{" "}
+              <span className="text-green-600">Products</span> <br />for Your Needs 🌱
             </h1>
 
-            <div className="sm:p-10 bg-white flex flex-col md:flex-row justify-between shadow-xl items-center rounded-xl w-full  my-8 mx-auto gap-8">
+            <div className="sm:p-10 bg-white flex flex-col md:flex-row justify-between shadow-xl items-center rounded-xl w-[90%] h-[150px] my-8 mx-auto gap-8">
               <div className="flex items-center w-full md:w-[450px] lg:w-[550px]">
                 <input
                   type="text"
