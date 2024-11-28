@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ImCross } from "react-icons/im";
-
+import { FaUser, FaShoppingCart } from "react-icons/fa";
 const Navbar = () => {
   const [bg, setBg] = useState(false);
   const [showNav, setShowNav] = useState(false);
@@ -59,7 +59,31 @@ const Navbar = () => {
                 <span className="relative z-10">{item.label}</span>
               </Link>
             ))}
+            
           </div>
+          <div className="flex items-center gap-4 md:gap-6">
+            <div className="group relative">
+              <FaUser
+                className={`text-2xl cursor-pointer ${bg ? "text-black" : "text-white"} hover:scale-110 transition-transform`}
+              />
+              {/* Dropdown Menu */}
+              <div className="hidden group-hover:flex flex-col z-50 absolute right-0 mt-2 w-36 py-3 px-5 bg-slate-100 text-gray-700 rounded-md shadow-lg">
+                <p className="cursor-pointer hover:text-black">My Profile</p>
+                <p className="cursor-pointer hover:text-black">Orders</p>
+                <p className="cursor-pointer hover:text-black">Logout</p>
+              </div>
+            </div>
+
+            <div>
+              <Link href="/cart">
+                <FaShoppingCart
+                  className={`text-2xl ${bg ? "text-black" : "text-white"
+                    } hover:scale-110 transition-transform`}
+                />
+              </Link>
+            </div>
+          </div>
+
           <div
             className="md:hidden absolute top-[50px] right-0  p-2"
             onClick={handleNavbar}
