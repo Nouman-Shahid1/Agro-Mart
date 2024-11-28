@@ -1,8 +1,14 @@
-import React from 'react';
+'use client'
+import React, { useState } from 'react';
 import Layout from '../Layout';
 import ProductTable from '@/Components/ProductTable/ProductTable';
+import CreateProduct from '@/Components/CreateProduct/CreateProduct';
 
 const Products = () => {
+  const [showAddProduct, setShowAddProduct] = useState(false)
+  const handleAddProduct = () => {
+    setShowAddProduct(true)
+  }
   return (
     <Layout>
       <div className="container mx-auto p-6 space-y-8">
@@ -14,21 +20,17 @@ const Products = () => {
               Manage your product inventory, update prices, and track stock levels.
             </p>
           </div>
-
-          {/* Add New Product Button */}
           <button
+            onClick={handleAddProduct}
             className="bg-green-600 text-white py-3 px-6 rounded-lg shadow-md hover:bg-green-700 transition-all duration-300 ease-in-out transform hover:scale-105"
           >
             Add New Product
           </button>
         </div>
+        <CreateProduct showAddProduct={showAddProduct} setShowAddProduct={setShowAddProduct} />
 
-        {/* Product Table */}
-        
-
-          {/* Product Table */}
-          <ProductTable />
-        </div>
+        <ProductTable name={'Product'} product={true}/>
+      </div>
     </Layout>
   );
 };
