@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from '../Layout';
+import CreateProduct from '@/Components/CreateProduct/CreateProduct';
 
 const Logout = () => {
   return (
@@ -11,6 +12,7 @@ const Logout = () => {
             Confirm Logout
         </button>
     </div>
+    <CreateProduct/>
     </Layout>
   );
 };

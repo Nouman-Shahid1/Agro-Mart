@@ -3,13 +3,29 @@ import React, { useState } from 'react';
 import { CiSearch } from "react-icons/ci";
 import { FaTrash } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
+import CreateProduct from '../CreateProduct/CreateProduct';
+import DeleteProduct from '../DeleteProduct/DeleteProduct';
+import CreateMachine from '../CreateMachine/CreateMachine';
 
-const ProductTable = () => {
+const ProductTable = ({name,product,machine}) => {
+  const [showAddProduct,setShowAddProduct]=useState(false)
+  const [showDeleteModal,setShowDeleteModal]=useState(false)
+  const [showAddMachine,setShowAddMachine]=useState(false)
+  
+  const handleAddProduct=()=>{
+    setShowAddProduct(true)
+  }
+  const handleDelete =()=>{
+    setShowDeleteModal(true)
+  }
+  const handleAddMachine = () => {
+    setShowAddMachine(true);
+  };
   return (
     <div className="p-6">
       <div className="mb-4 flex items-center justify-between px-6 py-10 border-b bg-green-50">
       <div className="">
-            <h3 className="text-2xl font-semibold text-green-800">Machines List</h3>
+            <h3 className="text-2xl font-semibold text-green-800">{name} List</h3>
             <p className="text-sm text-gray-600">Below is a list of all the products in your inventory.</p>
           </div>
         <div className="flex items-center space-x-2">
@@ -44,10 +60,10 @@ const ProductTable = () => {
                 <td className="py-4 px-4 font-medium text-gray-700">description</td>
                 <td className="py-4 px-4 text-center">
                   <div className="flex justify-center gap-3">
-                    <button className="p-2 rounded-full bg-blue-200 text-blue-600 hover:bg-blue-300 transition duration-150">
+                    <button className="p-2 rounded-full bg-blue-200 text-blue-600 hover:bg-blue-300 transition duration-150" onClick={handleAddProduct} onClickCapture={handleAddMachine}>
                       <CiEdit size={20} />
                     </button>
-                    <button className="p-2 rounded-full bg-red-200 text-red-600 hover:bg-red-300 transition duration-150">
+                    <button className="p-2 rounded-full bg-red-200 text-red-600 hover:bg-red-300 transition duration-150" onClick={handleDelete}>
                       <FaTrash size={20} />
                     </button>
                   </div>
@@ -56,6 +72,13 @@ const ProductTable = () => {
             ))}
           </tbody>
         </table>
+        {
+          product?
+          <CreateProduct showAddProduct={showAddProduct} setShowAddProduct={setShowAddProduct}/>
+          :<CreateMachine showAddMachine={showAddMachine} setShowAddMachine={setShowAddMachine}/>
+          
+        }
+        <DeleteProduct showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}/>
       </div>
     </div>
   );

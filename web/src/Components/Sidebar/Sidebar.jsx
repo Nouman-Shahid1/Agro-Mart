@@ -16,14 +16,13 @@ const Sidebar = () => {
   return (
     <aside className="fixed  flex flex-col md:w-72 bg-green-50 h-screen shadow-lg">
       {/* Header Section */}
-      <div className="py-6 px-4 border-b border-green-400">
-        <div className="flex items-center">
-          <div className="bg-green-700 text-white p-3 rounded-full">
-            <FaSeedling className="text-2xl" />
-          </div>
+      <div className="py-6 px-4 ">
+        <div className="flex justify-center">
+       
           <div className="ml-3">
-            <h2 className="text-xl font-bold text-green-900">Agro Mart</h2>
-            <p className="text-sm text-green-800">Smart Farming Solutions</p>
+            <img src="/logo.png" alt="" />
+            {/* <h2 className="text-xl font-bold text-green-900">Agro Mart</h2>
+            <p className="text-sm text-green-800">Smart Farming Solutions</p> */}
           </div>
         </div>
       </div>
@@ -46,7 +45,7 @@ const Sidebar = () => {
       </nav>
 
       {/* Footer Section */}
-      <div className="py-4 border-t border-green-400 text-center">
+      <div className="py-4 border-t border-green-500 text-center">
         <p className="text-sm text-green-800">© 2024 Agro Mart</p>
       </div>
     </aside>
