@@ -1,6 +1,6 @@
 curl.exe -X POST http://localhost:8080/new-product `
--H "Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Inpvcm9AdGVzdC5jb20iLCJleHAiOjE3MzI4MDA0NzMsInVzZXJJZCI6MX0.8uV9Yv4GQBufvqDFEat3DdWCbUwdt6o8yhE0p9QuJoQ" `
+-H "Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Inpvcm9AdGVzdC5jb20iLCJleHAiOjE3MzI4MDE4OTcsInVzZXJJZCI6MX0.efV4plvoacD1s4MmiPopxSDhP2yiwEbA6djL-fYMA-I" `
 -F "name=Tractor" `
 -F "description=Brand new tractor" `
 -F "user_id=1" `
--F "image=@C:/Users/Administrator/Pictures/nami.png"
+-F "image=@C:/Users/Administrator/Pictures/task.jpg"
