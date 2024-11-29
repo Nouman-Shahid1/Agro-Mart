@@ -2,8 +2,8 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ImCross } from "react-icons/im";
-
-const Navbar = ({ bground }) => {
+import { FaUser, FaShoppingCart } from "react-icons/fa";
+const Navbar = () => {
   const [bg, setBg] = useState(false);
   const [showNav, setShowNav] = useState(false);
 
@@ -43,7 +43,8 @@ const Navbar = ({ bground }) => {
               } rounded-lg"`}
             />
           </div>
-          <div className="flex flex-col md:flex-row gap-3 text-base pt-4 items-center justify-center">
+
+          <div className="hidden md:flex flex-col md:flex-row gap-3 text-base pt-4 items-center">
             {[
               { label: "Become a Buyer", href: "/" },
               { label: "Become a Seller", href: "/" },
@@ -58,7 +59,33 @@ const Navbar = ({ bground }) => {
                 <span className="relative z-10">{item.label}</span>
               </Link>
             ))}
+            <div className="flex items-center gap-4 md:gap-6">
+              <div className="group relative">
+                <FaUser
+                  className={`text-2xl cursor-pointer ${
+                    bg ? "text-black" : "text-white"
+                  } hover:scale-110 transition-transform`}
+                />
+                {/* Dropdown Menu */}
+                <div className="hidden group-hover:flex flex-col z-50 absolute right-0 mt-2 w-36 py-3 px-5 bg-slate-100 text-gray-700 rounded-md shadow-lg">
+                  <p className="cursor-pointer hover:text-black">My Profile</p>
+                  <p className="cursor-pointer hover:text-black">Orders</p>
+                  <p className="cursor-pointer hover:text-black">Logout</p>
+                </div>
+              </div>
+
+              <div>
+                <Link href="/cart">
+                  <FaShoppingCart
+                    className={`text-2xl ${
+                      bg ? "text-black" : "text-white"
+                    } hover:scale-110 transition-transform`}
+                  />
+                </Link>
+              </div>
+            </div>
           </div>
+
           <div
             className="md:hidden absolute top-[50px] right-0  p-2"
             onClick={handleNavbar}
@@ -94,6 +121,26 @@ const Navbar = ({ bground }) => {
             onClick={handleNavbar}
           >
             <ImCross style={{ color: "#017d29", fontSize: "20px" }} />
+          </div>
+          <div
+            className={`${
+              showNav ? "flex" : "hidden"
+            }  flex-wrap flex-rows mb-6  gap-3 text-base pt-4 items-center justify-center`}
+          >
+            {[
+              { label: "Become a Buyer", href: "/" },
+              { label: "Become a Seller", href: "/" },
+              { label: "Rent a Machine", href: "/" },
+            ].map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="relative inline-block py-2.5 px-6 text-base font-medium text-white rounded-full bg-gradient-to-r from-green-500 to-green-700 shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:bg-gradient-to-br focus:ring-2 focus:ring-teal-300 focus:outline-none"
+              >
+                <span className="absolute inset-0 w-full h-full bg-white opacity-0 rounded-full transition-opacity duration-300 hover:opacity-10"></span>
+                <span className="relative z-10">{item.label}</span>
+              </Link>
+            ))}
           </div>
           <ul
             className={`${

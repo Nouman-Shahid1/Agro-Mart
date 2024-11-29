@@ -2,187 +2,192 @@
 import React from "react";
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/Footer";
+
 const ContactUs = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
-      <div
-        style={{
-          backgroundImage: `url('https://landema.com/bootstrap-theme/images/contact-bg.e6a96d47.png')`,
-          minHeight: "550px",
-          backgroundSize: "100% 100%",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          position: "relative", // To position the overlay properly
-          display: "flex",
-          alignItems: "flex-end",
-          paddingBottom: "3rem",
-          paddingLeft: "4rem",
-        }}
-        className="text-white -z-50 text-left"
-      >
-        {/* Overlay */}
+
+      {/* Hero Section */}
+      <div className="min-h-screen relative overflow-hidden font-sans">
         <div
+          className="absolute inset-0 bg-cover bg-center bg-fixed filter brightness-50"
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)", // Black overlay with 50% opacity
-            zIndex: 1, // Ensure overlay is above background
+            backgroundImage:
+              "url('https://landema.com/bootstrap-theme/images/contact-bg.e6a96d47.png')",
           }}
         ></div>
 
-        {/* Content */}
-        <h1
-          className="text-4xl md:text-5xl lg:text-6xl font-bold"
-          style={{ position: "relative", zIndex: 2 }} // Ensure content is above overlay
-        >
-          Get in touch <br />
-          with us
-        </h1>
+        <div className="absolute inset-0 z-10">
+          {/* Background effects */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-800/30 to-black opacity-80"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 to-transparent opacity-40 animate-gradient-x"></div>
+          <div className="absolute top-0 left-0 w-96 h-96 bg-green-500 rounded-full blur-3xl opacity-20 animate-bounce-slow"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-400 rounded-full blur-3xl opacity-20 animate-bounce-slow-reverse"></div>
+        </div>
+
+        <div className="relative mt-80 z-20 flex flex-col items-center justify-center h-full text-center px-6 space-y-12">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-green-400 animate-fade-in">
+            Let's Build Connections 🌱
+          </h2>
+
+          <h1 className="text-[45px] sm:text-7xl lg:text-8xl font-extrabold text-white leading-tight tracking-wide drop-shadow-2xl animate-slide-in">
+            Get in Touch with{" "}
+            <span className="text-green-400 underline decoration-wavy">
+              AgroMart
+            </span>
+          </h1>
+
+          <p className="text-lg sm:text-xl lg:text-2xl text-gray-200 max-w-4xl leading-relaxed drop-shadow-md animate-fade-in-delayed">
+            Have questions or ideas? Whether you're a farmer, buyer, or partner,
+            we’re here to assist. Reach out to us and let's cultivate a
+            prosperous agricultural future together.
+          </p>
+
+          <div className="flex items-center space-x-6">
+            <div className="w-16 h-1 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-green-400 font-bold text-lg tracking-wider uppercase animate-bounce">
+              We’d Love to Hear from You
+            </span>
+            <div className="w-16 h-1 bg-green-500 rounded-full animate-pulse"></div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-8 mt-6 pb-8">
+            <a
+              href="#contact-form"
+              className="bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-16 rounded-full shadow-2xl transition-transform transform hover:scale-110 hover:shadow-green-500/50 animate-fade-up"
+            >
+              Contact Us
+            </a>
+          </div>
+        </div>
+
+        <div className="absolute top-0 w-full h-64 bg-gradient-to-b from-black to-transparent"></div>
+        <div className="absolute bottom-0 w-full h-64 bg-gradient-to-t from-black to-transparent"></div>
       </div>
 
-      <div className="w-full min-h-screen flex flex-col items-center pt-10 bg-gray-100 px-4">
-        <div className="text-center w-full md:w-2/3 lg:w-1/2 mt-10 mb-16">
-          <p className="text-lg md:text-xl text-gray-800">
-            Please contact us using this form if you have any questions or
-            comments about Agro Mart.
+      {/* Contact Section */}
+      <div className="py-16 relative bg-white overflow-hidden">
+        {/* Background Decorative Circles */}
+        <div className="absolute top-[-50px] right-[-50px] w-72 h-72 bg-[#f3fdf5] rounded-full blur-3xl opacity-50"></div>
+        <div className="absolute bottom-[-50px] left-[-50px] w-96 h-96 bg-[#e2f9e9] rounded-full blur-3xl opacity-40"></div>
+        <div className="container mx-auto px-6 lg:px-20 relative z-10 text-center mb-12">
+          <h1 className="text-5xl font-extrabold text-[#2c6e49] mb-4 drop-shadow-md">
+            Contact Us
+          </h1>
+          <p className="text-xl text-[#4f8c69] mb-10 max-w-2xl mx-auto">
+            Have questions, need support, or want to collaborate? Reach out to
+            us! Use the form below to send us a message, or find our location on
+            the map.
           </p>
         </div>
+        <div className="container mx-auto px-6 lg:px-20 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Contact Form */}
+            <div
+              id="contact-form"
+              className="bg-transparent shadow-lg rounded-xl p-8"
+            >
+              <h2 className="text-3xl font-bold mb-6 text-green-800">
+                Drop Us a Message
+              </h2>
+              <form className="space-y-6">
+                {/* Name Input */}
+                <div className="relative">
+                  <label
+                    htmlFor="name"
+                    className="block text-gray-700 font-medium mb-1"
+                  >
+                    Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    className="w-full border-b-2 bg-transparent border-gray-300 focus:border-green-600 text-gray-800 placeholder-gray-400 py-3 px-1 focus:outline-none transition duration-300"
+                    placeholder="Your Full Name"
+                    required
+                  />
+                </div>
 
-        <div className="w-full flex justify-center text-gray-600">
-          <form
-            method="post"
-            className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 flex flex-col space-y-4 bg-white p-6 rounded-lg shadow-lg"
-          >
-            <label htmlFor="name" className="font-bold">
-              Name <span className="text-red-600 font-bold text-lg ">*</span>
-            </label>
-            <input
-              className="w-full h-12 border p-4 rounded-md focus:ring focus:ring-green-300"
-              type="text"
-              name="Name"
-              id="name"
-              placeholder="Enter your name"
-              required
-            />
+                {/* Email Input */}
+                <div className="relative">
+                  <label
+                    htmlFor="email"
+                    className="block text-gray-700 font-medium mb-1"
+                  >
+                    Email <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    className="w-full bg-transparent border-b-2 border-gray-300 focus:border-green-600 text-gray-800 placeholder-gray-400 py-3 px-1 focus:outline-none transition duration-300"
+                    placeholder="Your Email Address"
+                    required
+                  />
+                </div>
 
-            <label htmlFor="email" className="font-bold">
-              Email <span className="text-red-600 font-bold text-lg">*</span>
-            </label>
-            <input
-              className="w-full h-12 border p-4 rounded-md focus:ring focus:ring-green-300"
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Enter your email address"
-              required
-            />
+                {/* Subject Input */}
+                <div className="relative">
+                  <label
+                    htmlFor="subject"
+                    className="block text-gray-700 font-medium mb-1"
+                  >
+                    Subject <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    className="w-full bg-transparent border-b-2 border-gray-300 focus:border-green-600 text-gray-800 placeholder-gray-400 py-3 px-1 focus:outline-none transition duration-300"
+                    placeholder="Subject of Your Inquiry"
+                    required
+                  />
+                </div>
 
-            <label htmlFor="subject" className="font-bold">
-              Subject <span className="text-red-600 font-bold text-lg">*</span>
-            </label>
-            <input
-              className="w-full h-12 border p-4 rounded-md focus:ring focus:ring-green-300"
-              type="text"
-              name="subject"
-              id="subject"
-              placeholder="Enter your subject"
-              required
-            />
+                {/* Message Textarea */}
+                <div className="relative">
+                  <label
+                    htmlFor="message"
+                    className="block text-gray-700 font-medium mb-1"
+                  >
+                    Message <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    id="message"
+                    rows="5"
+                    className="w-full bg-transparent border-b-2 border-gray-300 focus:border-green-600 text-gray-800 placeholder-gray-400 py-3 px-1 focus:outline-none transition duration-300"
+                    placeholder="Write your message here..."
+                    required
+                  ></textarea>
+                </div>
 
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="w-full">
-                <label htmlFor="aboutme" className="font-bold">
-                  I am <span className="text-red-600 font-bold text-lg">*</span>
-                </label>
-                <select
-                  id="aboutme"
-                  className="w-full border p-3 rounded-md text-gray-500 focus:ring-green-300"
-                >
-                  <option value="" disabled selected>
-                    Select an option
-                  </option>
-                  <option value="An agro buyer">An agro buyer</option>
-                  <option value="An agro seller">An agro seller</option>
-                  <option value="A Processor">A Processor</option>
-                  <option value="A farmer">A farmer</option>
-                  <option value="An Investor">An Investor</option>
-                  <option value="A Manufacturer">A Manufacturer</option>
-                  <option value="Others">Others</option>
-                </select>
-              </div>
-
-              <div className="w-full">
-                <label htmlFor="interest" className="font-bold">
-                  Interested in{" "}
-                  <span className="text-red-600 font-bold text-lg">*</span>
-                </label>
-                <select
-                  id="interest"
-                  className="w-full border p-3 rounded-md text-gray-500 focus:ring-green-300"
-                >
-                  <option value="" disabled selected>
-                    Select an option
-                  </option>
-                  <option value="buying">Buying</option>
-                  <option value="selling">Selling</option>
-                  <option value="information">Information</option>
-                  <option value="data">Data</option>
-                  <option value="Projects">Projects</option>
-                  <option value="Others">Others</option>
-                </select>
-              </div>
+                {/* Submit Button */}
+                <div className="pt-4">
+                  <button
+                    type="submit"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300"
+                  >
+                    Send Message
+                  </button>
+                </div>
+              </form>
             </div>
 
-            <label htmlFor="message" className="font-bold">
-              Message <span className="text-red-600 font-bold text-lg">*</span>
-            </label>
-            <textarea
-              name="message"
-              id="message"
-              className="w-full h-28 border p-4 rounded-md focus:ring focus:ring-green-300"
-              placeholder="Enter your query"
-              required
-            ></textarea>
-
-            <button
-              type="submit"
-              className="w-full bg-green-600 text-white font-bold py-3 rounded-md hover:bg-green-500 transition-all"
-            >
-              Submit
-            </button>
-          </form>
+            {/* Map */}
+            <div className="rounded-lg overflow-hidden shadow-lg">
+              <iframe
+                title="AgroMart Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.835434509586!2d-122.42189568468104!3d37.77492967975925!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858103c8f9c7c5%3A0x59d7d8d5635a5ba9!2sSan%20Francisco%2C%20CA%2C%20USA!5e0!3m2!1sen!2sin!4v1698313779029!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                className="w-full h-full min-h-[450px]"
+                allowFullScreen=""
+                loading="lazy"
+              ></iframe>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="text-center mt-10 px-4">
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          At Green Agro Mart, we value your feedback and are here to assist you
-          with any questions or concerns you may have. Whether you need support
-          with our products, have inquiries about your orders, or simply want to
-          share your thoughts, please don’t hesitate to reach out to us.
-        </p>
-      </div>
-
-      <div className="flex flex-wrap justify-center md:justify-around mt-10 gap-6 text-center mb-10">
-        <div className="p-4">
-          <h2 className="text-green-700 font-bold text-xl underline">PHONE</h2>
-          <p className="text-gray-600">+123-456-7890</p>
-        </div>
-        <div className="p-4">
-          <h2 className="text-green-700 font-bold text-xl underline">EMAIL</h2>
-          <p className="text-gray-600">info@agriculture.com</p>
-        </div>
-        <div className="p-4">
-          <h2 className="text-green-700 font-bold text-xl underline">
-            ADDRESS
-          </h2>
-          <p className="text-gray-600">123 Green Field, Agriculture City</p>
-        </div>
-      </div>
       <Footer />
     </div>
   );
