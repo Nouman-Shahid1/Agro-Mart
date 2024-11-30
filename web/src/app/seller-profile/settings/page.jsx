@@ -1,5 +1,5 @@
-import React from 'react';
-import Layout from '../Layout';
+import React from "react";
+import Layout from "../layout";
 
 const Settings = () => {
   return (
@@ -7,7 +7,9 @@ const Settings = () => {
       <div className="max-w-4xl mx-auto p-6 space-y-8">
         {/* Settings Header */}
         <div>
-          <h2 className="text-3xl font-semibold text-gray-800">Update Your Settings</h2>
+          <h2 className="text-3xl font-semibold text-gray-800">
+            Update Your Settings
+          </h2>
           <p className="mt-2 text-lg text-gray-600">
             Update your profile information, password, and preferences here.
           </p>
@@ -17,7 +19,10 @@ const Settings = () => {
         <form className="bg-white shadow-xl rounded-lg p-8 space-y-6">
           {/* Name Input */}
           <div className="space-y-2">
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
               Full Name
             </label>
             <input
@@ -30,7 +35,10 @@ const Settings = () => {
 
           {/* Email Input */}
           <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email Address
             </label>
             <input
@@ -43,7 +51,10 @@ const Settings = () => {
 
           {/* Password Input */}
           <div className="space-y-2">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               New Password
             </label>
             <input
@@ -56,7 +67,10 @@ const Settings = () => {
 
           {/* Confirm Password Input */}
           <div className="space-y-2">
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
               Confirm Password
             </label>
             <input
@@ -69,7 +83,10 @@ const Settings = () => {
 
           {/* Profile Picture Upload */}
           <div className="space-y-2">
-            <label htmlFor="profilePicture" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="profilePicture"
+              className="block text-sm font-medium text-gray-700"
+            >
               Profile Picture
             </label>
             <input
@@ -90,7 +107,6 @@ const Settings = () => {
           </div>
         </form>
       </div>
-      
     </Layout>
   );
 };
