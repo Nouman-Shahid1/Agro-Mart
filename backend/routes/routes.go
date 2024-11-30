@@ -6,6 +6,7 @@ import (
 )
 func RegisterRoutes(server *gin.Engine) {
 	server.GET("users", getUsers)
+	server.GET("products", getProducts)
 	server.GET("users/:id", getUser)
 	server.POST("/signup", signUp)
 	server.DELETE("/users/:id", deleteUser )
@@ -17,5 +18,8 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticated := server.Group("/")
 	authenticated.Use(middleware.Authenticate)
 	authenticated.POST("/new-product", createProduct)
+	authenticated.PUT("/update-product/:id", updateProduct)
+	authenticated.DELETE("/delete-product/:id", deleteProduct)
+	authenticated.GET("/products/:id", getProductsbyuserid)
 
 }

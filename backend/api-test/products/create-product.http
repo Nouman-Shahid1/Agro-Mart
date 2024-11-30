@@ -1,0 +1,6 @@
+curl.exe -X POST http://localhost:8080/new-product `
+-H "Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpvcnhAdGVzdC5jb20iLCJleHAiOjE3MzI5NjkwMTUsInVzZXJJZCI6Mn0.IftjXFJvfhdvVAREwH1cU42F9y059WfdSFZ-_fI1dVs" `
+-F "name=Tractor" `
+-F "description=Brand new tractor" `
+-F "user_id=2" `
+-F "image=@C:/Users/Administrator/Pictures/task.jpg"
