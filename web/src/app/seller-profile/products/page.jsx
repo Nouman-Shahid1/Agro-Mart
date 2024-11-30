@@ -1,23 +1,26 @@
-'use client'
-import React, { useState } from 'react';
-import Layout from '../Layout';
-import ProductTable from '@/Components/ProductTable/ProductTable';
-import CreateProduct from '@/Components/CreateProduct/CreateProduct';
+"use client";
+import React, { useState } from "react";
+import Layout from "../layout";
+import ProductTable from "@/Components/ProductTable/ProductTable";
+import CreateProduct from "@/Components/CreateProduct/CreateProduct";
 
 const Products = () => {
-  const [showAddProduct, setShowAddProduct] = useState(false)
+  const [showAddProduct, setShowAddProduct] = useState(false);
   const handleAddProduct = () => {
-    setShowAddProduct(true)
-  }
+    setShowAddProduct(true);
+  };
   return (
     <Layout>
       <div className="container mx-auto p-6 space-y-8">
         {/* Header Section */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-3xl font-semibold text-gray-800">Manage Products</h2>
+            <h2 className="text-3xl font-semibold text-gray-800">
+              Manage Products
+            </h2>
             <p className="mt-2 text-lg text-gray-600">
-              Manage your product inventory, update prices, and track stock levels.
+              Manage your product inventory, update prices, and track stock
+              levels.
             </p>
           </div>
           <button
@@ -27,9 +30,12 @@ const Products = () => {
             Add New Product
           </button>
         </div>
-        <CreateProduct showAddProduct={showAddProduct} setShowAddProduct={setShowAddProduct} />
+        <CreateProduct
+          showAddProduct={showAddProduct}
+          setShowAddProduct={setShowAddProduct}
+        />
 
-        <ProductTable name={'Product'} product={true}/>
+        <ProductTable name={"Product"} product={true} />
       </div>
     </Layout>
   );
