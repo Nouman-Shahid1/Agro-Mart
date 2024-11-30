@@ -72,7 +72,23 @@ const Sidebar = ({ role }) => {
       document.removeEventListener("click", closeSidebarOnOutsideClick);
     };
   }, [isSidebarOpen]);
+  const backgroundImages = {
+    seller: `
+      linear-gradient(
+        rgba(0, 0, 0, 0.8), 
+        rgba(34, 49, 63, 0.7)
+      ),
+      url('https://img.freepik.com/premium-photo/modern-agricultural-machine-with-data-connections-field-showcase-use-modern-technology-data-connections-agriculture_38013-10447.jpg')`,
+    default: `
+      linear-gradient(
+        rgba(0, 0, 0, 0.8), 
+        rgba(34, 49, 63, 0.7)
+      ),
+      url('https://media.gettyimages.com/id/1557452514/video/a-time-lapse-of-a-fern-plant-growing-concept-with-alpha-map-on-black-background.jpg?s=640x640&k=20&c=QZztVYhiYdHf7_JwyqwuOnNLuIdfuueXI0k-uvdCC_o=')`,
+  };
 
+  const backgroundImage =
+    role === "seller" ? backgroundImages.seller : backgroundImages.default;
   return (
     <>
       {/* Sidebar toggle button */}
@@ -106,12 +122,7 @@ const Sidebar = ({ role }) => {
         } sm:translate-x-0 w-[300px] py-6 px-4  text-white shadow-lg border-r border-green-700 backdrop-blur-xl`}
         aria-label="Sidebar"
         style={{
-          backgroundImage: `
-          linear-gradient(
-            rgba(0, 0, 0, 0.8), 
-            rgba(34, 49, 63, 0.7)
-          ),
-            url('https://media.gettyimages.com/id/1557452514/video/a-time-lapse-of-a-fern-plant-growing-concept-with-alpha-map-on-black-background.jpg?s=640x640&k=20&c=QZztVYhiYdHf7_JwyqwuOnNLuIdfuueXI0k-uvdCC_o=')`,
+          backgroundImage,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

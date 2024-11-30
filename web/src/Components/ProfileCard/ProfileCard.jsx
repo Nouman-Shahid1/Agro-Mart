@@ -1,54 +1,49 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-// import { useDispatch, useSelector } from "react-redux";
-// import { useRouter } from "next/navigation";
-// import { logout } from "../../reducers/Auth/authSlice";
 import ProfileImage from "../../assets/images/blank.png";
 
 const Profile = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  //   const dispatch = useDispatch();
-  //   const router = useRouter();
-
-  // Access the user from Redux state
-  //   const user = useSelector((state) => state.auth.user);
 
   // Toggle the dropdown visibility
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
 
-  // Handle user logout
-  //   const handleLogout = () => {
-  //     dispatch(logout());
-  //     router.push("/login");
-  //   };
-
   return (
-    <div className="bg-white shadow-md px-4 md:px-4 lg:px-4 xl:px-6 2xl:px-6 py-4 md:py-6 lg:py-6 xl:py-6 2xl:py-8 rounded-[32px] flex flex-col md:flex-row items-center justify-between">
-      <h1 className="text-4xl font-poppinssemibold font-semibold text-[#151D48] mb-4 md:mb-0">
+    <div className="relative bg-gradient-to-br from-green-900 via-emerald-700 to-lime-500 shadow-xl px-6 py-8 rounded-[32px] flex flex-col md:flex-row items-center justify-between backdrop-blur-lg border border-green-400/30 overflow-hidden">
+      {/* Glow Border */}
+      <div className="absolute inset-0 rounded-[32px] bg-gradient-to-r from-lime-400 via-green-500 to-emerald-500 opacity-20 blur-lg pointer-events-none"></div>
+
+      {/* Welcome Text */}
+      <h1 className="relative z-10 text-3xl md:text-4xl font-bold text-white drop-shadow-lg mb-4 md:mb-0">
         Welcome!
       </h1>
-      <div className="flex items-center gap-4">
+
+      {/* Profile Section */}
+      <div className="relative z-10 flex items-center gap-4">
+        {/* Profile Image */}
         <Image
           src={ProfileImage}
           alt="Profile"
           height={60}
           width={60}
-          className="rounded-2xl"
+          className="rounded-full border-4 border-lime-300 shadow-lg group-hover:shadow-xl transition-shadow duration-300"
         />
+
         <div>
-          <div className="flex gap-3 items-center">
+          {/* Dropdown Button */}
+          <div className="flex items-center gap-3">
             <button
               onClick={toggleDropdown}
               id="dropdownDefaultButton"
               type="button"
-              className="font-poppinsmedium flex items-center text-base font-medium text-[#151D48]"
+              className="flex items-center text-base font-medium text-white hover:text-lime-300 transition"
             >
-              {/* {user?.firstName || "User"} */} Nouman
+              Nouman
               <svg
-                className={`w-2.5 h-2.5 ms-3 transform ${
+                className={`w-4 h-4 ms-3 transform transition-transform ${
                   isDropdownOpen ? "rotate-180" : "rotate-0"
                 }`}
                 aria-hidden="true"
@@ -66,18 +61,16 @@ const Profile = () => {
               </svg>
             </button>
 
+            {/* Dropdown Menu */}
             <div
               id="dropdown"
               className={`${
-                isDropdownOpen ? "visible" : "hidden"
-              } absolute z-10 bg-white mt-28 divide-y divide-gray-100 rounded-lg shadow w-24`}
+                isDropdownOpen ? "visible opacity-100" : "invisible opacity-0"
+              } absolute top-14 right-0 z-20 bg-white transition-opacity duration-300 divide-y divide-gray-100 rounded-lg shadow-lg w-32`}
             >
               <ul className="py-2 text-sm text-gray-700">
                 <li>
-                  <span
-                    // onClick={handleLogout}
-                    className="block px-2 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
+                  <span className="block px-4 py-2 hover:bg-green-50 hover:text-green-600 cursor-pointer transition">
                     Logout
                   </span>
                 </li>
@@ -85,16 +78,8 @@ const Profile = () => {
             </div>
           </div>
 
-          <p className="text-sm font-poppinsregular font-normal text-[#737791]">
-            Buyer
-            {/* {user?.role === "admin"
-              ? "Admin"
-              : user?.role === "superadmin"
-              ? "Super Admin"
-              : user?.role === "business"
-              ? "Business"
-              : "User"} */}
-          </p>
+          {/* User Role */}
+          <p className="text-sm font-normal text-lime-300 mt-1">Buyer</p>
         </div>
       </div>
     </div>
