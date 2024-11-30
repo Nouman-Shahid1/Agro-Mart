@@ -14,13 +14,33 @@ type Product struct{
 	UserID int64 `json:"userId"`
 }
 
+func GetAllProducts() ([]Product, error){
+	query := "SELECT * FROM products"
+	rows, err := db.DB.Query(query)
+	if err != nil{
+		log.Printf("Error querying database: %v\n", err)
+	}
+	defer rows.Close()
+	var products []Product
+	for rows.Next(){
+		var product Product
+		err := rows.Scan(&product.ID, &product.Name, &product.Description, &product.ImagePath, &product.UserID)
+		if err != nil{
+			log.Printf("Error scanning rows: %v\n", err)
+			return nil, err
+		}
+		products = append(products, product)
+	}
+	return products, nil
+}
+
 
 
 func (u *Product) Save() error {
 	query := "INSERT INTO products(name, description, imagepath, user_id) VALUES(?,?,?,?)"
 	stmt, err := db.DB.Prepare(query)
 	if err != nil {
-		log.Printf("Error preparing while saving seller_description query: %v\n", err)
+		log.Printf("Error preparing while saving product query: %v\n", err)
 	}
 
 	defer stmt.Close()
@@ -33,3 +53,84 @@ func (u *Product) Save() error {
 	u.ID = id
 	return err
 }
+
+func GetProductByID(id int64) (*Product, error){
+	query := "SELECT * FROM products WHERE id = ?"
+	row := db.DB.QueryRow(query, id)
+	var product Product
+	err := row.Scan(&product.ID, &product.Name, &product.Description, &product.ImagePath, &product.UserID)
+	if err != nil {
+		return nil, err
+	}
+	return &product, nil
+}
+
+func (product Product) UpdateProduct() error {
+	query := `UPDATE products SET `
+	params := []interface{}{}
+
+	if product.Name != "" {
+		query += "name = ?, "
+		params = append(params, product.Name)
+	}
+	if product.Description != "" {
+		query += "description = ?, "
+		params = append(params, product.Description)
+	}
+	if product.ImagePath != "" {
+		query += "imagepath = ?, "
+		params = append(params, product.ImagePath)
+	}
+	if product.UserID != 0 {
+		query += "user_id = ?, "
+		params = append(params, product.ImagePath )
+	}
+
+
+	query = query[:len(query)-2]
+	query += " WHERE id = ?"
+	params = append(params, product.ID)
+
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(params...)
+	return err
+}
+
+func (product Product) DeleteProduct() error{
+	query := "DELETE FROM products WHERE id = ?"
+	stmt,err := db.DB.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(product.ID)
+	return err
+}
+
+func GetProductsbyUserID(id int64) ([]Product, error){
+	query := "SELECT * FROM products where user_id = ?"
+	rows, err := db.DB.Query(query, id)
+	if err != nil{
+		log.Printf("Error querying database: %v\n", err)
+	}
+	defer rows.Close()
+	var products []Product
+	for rows.Next(){
+		var product Product
+		err := rows.Scan(&product.ID, &product.Name, &product.Description, &product.ImagePath, &product.UserID)
+		if err != nil{
+			log.Printf("Error scanning rows: %v\n", err)
+			return nil, err
+		}
+		products = append(products, product)
+	}
+	return products, nil
+}
+
+
