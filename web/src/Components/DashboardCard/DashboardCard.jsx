@@ -9,40 +9,47 @@ const DashboardCard = ({ details }) => {
 
   return (
     <Link href={dynamicLink} className="w-full md:w-1/2">
-      <div className="md:mt-0 mt-8 me-4 transition ml-0 duration-300 ease-in-out transform shadow hover:ring-4 hover:ring-teal-600 bg-white rounded-[32px] px-4 md:px-8 py-4 md:py-6">
-        <div className="justify-between items-center w-full h-auto md:h-[200px]">
-          <div className="md:pr-4 flex items-center justify-between">
-            <h2 className="font-poppinsmedium font-normal text-lg text-[#1E1E1E] md:text-2xl">
+      <div className="group relative md:mt-0 mt-8 me-4 transition-transform duration-500 hover:scale-105 shadow-xl bg-gradient-to-t from-green-900 via-emerald-700 to-green-600 rounded-[32px] p-6 overflow-hidden border border-green-800">
+        {/* Hover Glow */}
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 via-green-500 to-lime-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-[32px]"></div>
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col justify-between h-full">
+          {/* Title and Icon */}
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-poppinssemibold text-xl md:text-2xl text-white group-hover:text-lime-200 transition-colors duration-300">
               {name}
             </h2>
-            <Image
-              src={src}
-              alt={`Image of ${name}`} // Improved accessibility
-              height={64}
-              width={64}
-              className="w-10 h-10 sm:w-10 sm:h-10 md:w-10 md:h-10 lg:w-12 lg:h-12 xl:w-16 xl:h-16"
-            />
-          </div>
-          <div className="md:mt-0 flex items-center justify-between">
-            <div className="flex gap-4 mt-4 md:mt-16">
-              <p className="font-poppinsmedium font-medium text-base md:text-xl text-[#078C89] mb-4">
-                View All
-              </p>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6 md:w-8 md:h-8 text-[#078C89]"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                />
-              </svg>
+            <div className="p-3 rounded-full bg-gradient-to-t from-lime-300 to-green-200 shadow-lg group-hover:shadow-xl transition-all duration-300">
+              <Image
+                src={src}
+                alt={`Icon of ${name}`}
+                height={64}
+                width={64}
+                className="w-12 h-12 md:w-14 md:h-14 group-hover:scale-110 transition-transform duration-300"
+              />
             </div>
+          </div>
+
+          {/* Action Section */}
+          <div className="flex items-center justify-between">
+            <p className="font-poppinsmedium font-medium text-lg md:text-xl text-lime-300 group-hover:text-white transition-colors duration-300">
+              View All
+            </p>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              className="w-8 h-8 text-lime-300 group-hover:text-white group-hover:translate-x-2 transition-transform duration-300"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+              />
+            </svg>
           </div>
         </div>
       </div>
