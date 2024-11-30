@@ -1,54 +1,191 @@
-import React from 'react';
-import { FaTractor, FaSeedling, FaAppleAlt, FaWater, FaCogs, FaSignOutAlt } from 'react-icons/fa';
-import Link from 'next/link';
+"use client";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  FaBox,
+  FaMoneyBill,
+  FaChartLine,
+  FaTruck,
+  FaTools,
+  FaSignOutAlt,
+  FaTractor,
+  FaHome,
+  FaShippingFast,
+  FaHistory,
+  FaAddressBook,
+  FaHeadset,
+  FaCog,
+} from "react-icons/fa";
 
-const Sidebar = () => {
-  const menuItems = [
-    { label: 'Dashboard', icon: <FaSeedling />, path: '/seller-profile/dashboard' },
-    { label: 'Products', icon: <FaAppleAlt />, path: '/seller-profile/products' },
-    { label: 'Machinery', icon: <FaTractor />, path: '/seller-profile/machinery' },
-    { label: 'Orders', icon: <FaTractor />, path: '/seller-profile/orders' },
-    { label: 'Earnings', icon: <FaWater />, path: '/seller-profile/earnings' },
-    { label: 'Settings', icon: <FaCogs />, path: '/seller-profile/settings' },
-    { label: 'Logout', icon: <FaSignOutAlt />, path: '/seller-profile/logout' },
-  ];
+import Logo from "../../assets/images/logo.png";
+
+const Sidebar = ({ role }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  const menuLists = {
+    seller: [
+      { label: "My Products", icon: <FaBox />, path: "/seller/products" },
+      { label: "Orders", icon: <FaTruck />, path: "/seller/orders" },
+      { label: "Earnings", icon: <FaMoneyBill />, path: "/seller/earnings" },
+      { label: "Analytics", icon: <FaChartLine />, path: "/seller/analytics" },
+      { label: "Settings", icon: <FaTools />, path: "/seller/settings" },
+    ],
+    buyer: [
+      { label: "Orders", icon: <FaTractor />, path: "/myaccount/orders" },
+      {
+        label: "Order Tracking",
+        icon: <FaShippingFast />,
+        path: "/myaccount/track-order",
+      },
+      {
+        label: "Purchase History",
+        icon: <FaHistory />,
+        path: "/myaccount/purchase-history",
+      },
+      {
+        label: "Saved Addresses",
+        icon: <FaAddressBook />,
+        path: "/myaccount/saved-addresses",
+      },
+      { label: "Support", icon: <FaHeadset />, path: "/myaccount/support" },
+      { label: "Settings", icon: <FaCog />, path: "/myaccount/settings" },
+    ],
+  };
+
+  // Get the menuItems based on the role
+  const menuItems = menuLists[role] || [];
+
+  useEffect(() => {
+    const closeSidebarOnOutsideClick = (event) => {
+      const sidebar = document.getElementById("sidebar");
+      if (isSidebarOpen && sidebar && !sidebar.contains(event.target)) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    document.addEventListener("click", closeSidebarOnOutsideClick);
+
+    return () => {
+      document.removeEventListener("click", closeSidebarOnOutsideClick);
+    };
+  }, [isSidebarOpen]);
 
   return (
-    <aside className="fixed  flex flex-col md:w-72 bg-green-50 h-screen shadow-lg">
-      {/* Header Section */}
-      <div className="py-6 px-4 ">
-        <div className="flex justify-center">
-       
-          <div className="ml-3">
-            <img src="/logo.png" alt="" />
-            {/* <h2 className="text-xl font-bold text-green-900">Agro Mart</h2>
-            <p className="text-sm text-green-800">Smart Farming Solutions</p> */}
-          </div>
+    <>
+      {/* Sidebar toggle button */}
+      <button
+        aria-controls="sidebar"
+        type="button"
+        className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+        onClick={toggleSidebar}
+      >
+        <span className="sr-only">Open sidebar</span>
+        <svg
+          className="w-6 h-6"
+          aria-hidden="true"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clipRule="evenodd"
+            fillRule="evenodd"
+            d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
+          ></path>
+        </svg>
+      </button>
+
+      {/* Sidebar */}
+      <aside
+        id="sidebar"
+        className={`fixed top-0 left-0 z-40 h-screen flex flex-col transition-transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } sm:translate-x-0 w-[300px] py-6 px-4  text-white shadow-lg border-r border-green-700 backdrop-blur-xl`}
+        aria-label="Sidebar"
+        style={{
+          backgroundImage: `
+          linear-gradient(
+            rgba(0, 0, 0, 0.8), 
+            rgba(34, 49, 63, 0.7)
+          ),
+            url('https://media.gettyimages.com/id/1557452514/video/a-time-lapse-of-a-fern-plant-growing-concept-with-alpha-map-on-black-background.jpg?s=640x640&k=20&c=QZztVYhiYdHf7_JwyqwuOnNLuIdfuueXI0k-uvdCC_o=')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Logo */}
+        <div className="flex items-center justify-center mb-8">
+          <Image
+            src={Logo}
+            height={60}
+            width={200}
+            alt="Agro Mart Logo"
+            className="hover:scale-110 transition-transform duration-300"
+          />
         </div>
-      </div>
 
-      {/* Menu Section */}
-      <nav className="flex-1 mt-4">
-        {menuItems.map((item) => (
-          <Link key={item.path} href={item.path}>
-            <div className="group relative flex items-center w-full px-4 py-3 mb-2 cursor-pointer">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 bg-green-300 text-green-800">
-                {item.icon}
-              </div>
+        <Link href="/admin" passHref>
+          <div className="rounded-lg text-lg font-semibold py-4 px-4 flex items-center gap-4 bg-gradient-to-br from-green-600 via-yellow-500 to-brown-500 text-white hover:bg-gradient-to-tl hover:from-brown-500 hover:via-yellow-600 hover:to-green-700 transition-all duration-300 shadow-xl transform hover:scale-105">
+            <FaHome className="text-2xl" />
+            Dashboard
+          </div>
+        </Link>
 
-              <span className="ml-4 text-sm font-medium transition-all duration-300 text-green-900">
-                {item.label}
-              </span>
-            </div>
-          </Link>
-        ))}
-      </nav>
+        <ul className="space-y-4 mt-16">
+          {menuItems.map((item, index) => (
+            <li key={index}>
+              <Link href={item.path}>
+                <div
+                  className={`flex items-center gap-4 p-4 rounded-lg transition-all duration-300 ${
+                    typeof window !== "undefined" &&
+                    window.location.pathname === item.path
+                      ? "bg-green-500 text-yellow-200 shadow-lg"
+                      : "bg-green-500 hover:bg-green-800 text-white"
+                  }`}
+                >
+                  <div className="text-2xl">{item.icon}</div>
+                  <span className="text-lg font-medium">{item.label}</span>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
 
-      {/* Footer Section */}
-      <div className="py-4 border-t border-green-500 text-center">
-        <p className="text-sm text-green-800">© 2024 Agro Mart</p>
-      </div>
-    </aside>
+        {/* Divider */}
+        <div className="border-t border-green-700 my-4"></div>
+
+        {/* Logout Button */}
+        <div className="mt-auto">
+          <button
+            onClick={() => {
+              console.log("User signed out");
+              window.location.href = "/login";
+            }}
+            className="flex items-center justify-center gap-4 p-4 w-full rounded-lg bg-red-500 text-white hover:bg-red-700 transition-all duration-300 shadow-lg"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+              />
+            </svg>
+            <span className="text-lg font-medium">Sign Out</span>
+          </button>
+        </div>
+      </aside>
+    </>
   );
 };
 
