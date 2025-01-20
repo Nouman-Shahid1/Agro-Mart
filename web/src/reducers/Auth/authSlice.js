@@ -140,11 +140,26 @@ export const deleteUser = createAsyncThunk(
 
 // **Thunk to log out a user**
 export const logout = createAsyncThunk("auth/logout", async (_, { dispatch }) => {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("user_role"); // Clear the role from localStorage
-  dispatch(authSlice.actions.clearState());
-  window.location.href = "/login"; // Force redirect to the login page
+  try {
+    // Clear localStorage
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user_role");
+    localStorage.removeItem("userId");
+
+    // Clear Redux state
+    dispatch(authSlice.actions.clearState());
+
+    // Delay to ensure localStorage is cleared
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // Redirect to login
+    return true; // Return success to indicate the process is complete
+  } catch (error) {
+    console.error("Error during logout:", error);
+    throw error;
+  }
 });
+
 
 const authSlice = createSlice({
   name: "auth",

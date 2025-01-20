@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useEffect, useState,useRef } from "react";
+import { useSelector } from "react-redux";
 import { ImCross } from "react-icons/im";
 import { FaUser, FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../../utilities/CartContext";
@@ -10,10 +11,27 @@ const Navbar = () => {
   const [bg, setBg] = useState(false);
   const [showNav, setShowNav] = useState(false);
   const [showCart, setShowCart] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+  const { username } = useSelector((state) => state.auth.user || {});
   const { cartItems, totalQuantity, totalPrice,clearCart , removeFromCart,increaseQuantity,
     decreaseQuantity,} = useCart();
     const cartRef = useRef(null);
-
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+          setShowDropdown(false);
+        }
+      };
+  
+      if (showDropdown) {
+        document.addEventListener("mousedown", handleClickOutside);
+      }
+  
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [showDropdown]);
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -89,19 +107,44 @@ const Navbar = () => {
             ))}
             </div>
             <div className="flex items-center gap-4 md:gap-6">
-              <div className="group relative">
-                <FaUser
-                  className={`text-2xl cursor-pointer ${
-                    bg ? "text-black" : "text-white"
-                  } hover:scale-110 transition-transform`}
-                />
-                {/* Dropdown Menu */}
-                <div className="hidden group-hover:flex flex-col z-50 absolute right-0 mt-2 w-36 py-3 px-5 bg-slate-100 text-gray-700 rounded-md shadow-lg">
-                  <p className="cursor-pointer hover:text-black">My Profile</p>
-                  <p className="cursor-pointer hover:text-black">Orders</p>
-                  <p className="cursor-pointer hover:text-black">Logout</p>
-                </div>
-              </div>
+            <div className="relative group flex items-center gap-4">
+  {/* Button to toggle dropdown */}
+  <button
+    onClick={() => setShowDropdown((prev) => !prev)}
+    className="flex items-center gap-2 cursor-pointer"
+  >
+    <FaUser
+      className={`text-2xl ${
+        bg ? "text-black" : "text-white"
+      } hover:scale-110 transition-transform`}
+    />
+    {username && (
+      <span
+        className={`${
+          bg ? "text-black" : "text-white"
+        } font-medium text-sm`}
+      >
+        {username}
+      </span>
+    )}
+  </button>
+
+  {/* Dropdown Menu */}
+  {showDropdown && (
+    <div
+      ref={dropdownRef}
+      className="absolute top-full right-0 mt-2 w-40 py-3 px-4 bg-white text-gray-800 rounded-lg shadow-lg border border-gray-300 z-50"
+    >
+      <p className="cursor-pointer hover:text-black py-1">My Profile</p>
+      <p className="cursor-pointer hover:text-black py-1">Orders</p>
+      <p className="cursor-pointer hover:text-black py-1">Logout</p>
+    </div>
+  )}
+</div>
+
+
+            {/* Show Username */}
+          
               <div className="relative" ref={cartRef}>
   <FaShoppingCart
     onClick={toggleCart}

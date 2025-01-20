@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter, usePathname } from "next/navigation";
 import { setToken } from "../reducers/Auth/authSlice";
@@ -8,8 +8,9 @@ const Authentication = ({ children }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const pathname = usePathname();
-
   const { token, role } = useSelector((state) => state.auth);
+
+  const [loading, setLoading] = useState(true); // Add a loading state
 
   const roleBasedRoutes = {
     admin: ["/admin"],
@@ -17,24 +18,29 @@ const Authentication = ({ children }) => {
     buyer: ["/buyer"],
   };
 
-  // Load token and role from localStorage on initial mount
+  // Initial load: Check localStorage for token and role
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedToken = localStorage.getItem("access_token");
-      const savedRole = localStorage.getItem("user_role");
-
-      if (savedToken) {
-        dispatch(setToken(savedToken));
-      }
-
-      // Redirect immediately if the token is invalid or missing
-      if (!savedToken) {
-        router.push("/login");
-      }
+    const savedToken = localStorage.getItem("access_token");
+    const savedRole = localStorage.getItem("user_role");
+  
+    if (savedToken) {
+      dispatch(setToken(savedToken));
+    } else {
+      setTimeout(() => router.push("/login"), 100); // Delay for smoother navigation
     }
+  
+    setLoading(false); // Stop loading once the initial check is complete
   }, [dispatch, router]);
+  
+  useEffect(() => {
+    if (!token) {
+      setTimeout(() => router.push("/login"), 100); // Delay for smoother navigation
+      return;
+    }
+  }, [token, router]);
+  
 
-  // Redirect user based on role and protected routes
+  // Redirect logic based on role and current route
   useEffect(() => {
     if (!token || !role) return;
 
@@ -43,12 +49,11 @@ const Authentication = ({ children }) => {
     const isProtectedRoute = Object.values(roleBasedRoutes).flat().includes(pathname);
 
     if (isProtectedRoute && !allowedRoutes.includes(pathname)) {
-      router.push(allowedRoutes.length > 0 ? allowedRoutes[0] : "/login");
+      router.push(allowedRoutes[0] || "/login");
     }
   }, [token, role, pathname, router]);
 
-  // Skip the loading screen entirely if the token is valid
-  if (!token) {
+  if (loading || !token) {
     return (
       <div
         className="relative flex items-center justify-center h-screen bg-cover bg-center"
@@ -58,7 +63,6 @@ const Authentication = ({ children }) => {
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-60"></div>
-
         <div className="relative z-10 flex flex-col items-center text-center p-8 rounded-lg">
           <div className="relative flex items-center justify-center h-32 w-32 mb-6">
             <div className="absolute h-full w-full rounded-full border-8 border-green-400 border-t-transparent animate-spin-slow"></div>
