@@ -25,6 +25,8 @@ func Authenticate(context *gin.Context) {
 		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Wrong token"})
 		return
 	}
+
+
 	context.Set("userId", id)
 	context.Set("role", role)
 	context.Next()
