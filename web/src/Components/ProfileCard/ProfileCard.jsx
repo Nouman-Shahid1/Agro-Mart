@@ -1,3 +1,4 @@
+// Profile Component
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -11,11 +12,9 @@ const Profile = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  // Access user and role from Redux state
   const user = useSelector((state) => state.auth.user);
   const role = useSelector((state) => state.auth.role);
 
-  // Toggle the dropdown visibility
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
@@ -36,7 +35,7 @@ const Profile = () => {
 
       {/* Welcome Text */}
       <h1 className="relative z-10 text-3xl md:text-4xl font-bold text-white drop-shadow-lg mb-4 md:mb-0">
-        Welcome, {user?.name || "Guest"}!
+        Welcome, {user?.username || "Guest"}!
       </h1>
 
       {/* Profile Section */}
@@ -59,7 +58,7 @@ const Profile = () => {
               type="button"
               className="flex items-center text-base font-medium text-white hover:text-lime-300 transition"
             >
-              {user?.username || "User"}
+              {user?.username || "N"}
               <svg
                 className={`w-4 h-4 ms-3 transform transition-transform ${
                   isDropdownOpen ? "rotate-180" : "rotate-0"
