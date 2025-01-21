@@ -1,28 +1,43 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import { createProduct, updateProduct } from "@/reducers/product/productSlice";
+import { createProduct, updateProduct,getProducts } from "@/reducers/product/productSlice";
 import { fetchCategories } from "@/reducers/Category/categorySlice";
 
 const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
   const dispatch = useDispatch();
-  const { categories } = useSelector((state) => state.category);
+  const { categories = [] } = useSelector((state) => state.category);
   const { user } = useSelector((state) => state.auth); // Get user from auth state
 
   const [formData, setFormData] = useState({
     name: initialData?.name || "",
     description: initialData?.description || "",
-    category: initialData?.category || "",
+    categoryName: initialData?.category_name || "",
     price: initialData?.price || "",
     image: null,
-    userId: user?.userId || "3", // Fallback userId
+    userId: user?.userId || localStorage.getItem("userId") || null, // Handle fallback
   });
 
   const [error, setError] = useState(null); // State to hold error messages
 
   useEffect(() => {
-    dispatch(fetchCategories());
+    dispatch(fetchCategories())
+      .then(() => console.log("Categories fetched"))
+      .catch((err) => console.error("Error fetching categories:", err));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (user?.userId) {
+      setFormData((prev) => ({ ...prev, userId: user.userId }));
+    } else if (localStorage.getItem("userId")) {
+      setFormData((prev) => ({
+        ...prev,
+        userId: localStorage.getItem("userId"),
+      }));
+    } else {
+      console.error("User ID is missing in both Redux and localStorage!");
+    }
+  }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,8 +45,8 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
   };
 
   const handleCategoryChange = (e) => {
-    const selectedCategoryId = e.target.value;
-    setFormData({ ...formData, category: selectedCategoryId });
+    const selectedCategoryName = e.target.value;
+    setFormData({ ...formData, categoryName: selectedCategoryName });
   };
 
   const handleFileChange = (e) => {
@@ -42,10 +57,15 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
     e.preventDefault();
     setError(null); // Reset error state before submission
 
+    if (!formData.userId) {
+      alert("User ID is missing. Please log in again.");
+      return;
+    }
+
     const data = new FormData();
     data.append("name", formData.name);
     data.append("description", formData.description);
-    data.append("category_id", formData.category); // Pass the category ID
+    data.append("categoryName", formData.categoryName);
     data.append("price", formData.price);
     data.append("userId", formData.userId);
 
@@ -63,6 +83,7 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
         await dispatch(createProduct(data)).unwrap();
         alert("Product created successfully!");
       }
+      await dispatch(getProducts()).unwrap();
       setShowAddProduct(false); // Close the modal on success
     } catch (err) {
       setError(err.message || "Failed to create or update the product. Please try again.");
@@ -123,19 +144,25 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Category</label>
           <select
-            name="category"
-            value={formData.category}
+            name="categoryName"
+            value={formData.categoryName}
             onChange={handleCategoryChange}
             className="w-full p-3 bg-white bg-opacity-20 text-white rounded-lg border border-gray-400 outline-none focus:ring-2 focus:ring-yellow-400 focus:bg-opacity-30 transition-all"
           >
             <option className="bg-green-800" value="">
               Select category
             </option>
-            {categories.map((cat) => (
-              <option key={cat.id} className="bg-green-800" value={cat.id}>
-                {cat.name}
+            {categories?.length > 0 ? (
+              categories.map((cat) => (
+                <option key={cat.id} className="bg-green-800" value={cat.name}>
+                  {cat.name}
+                </option>
+              ))
+            ) : (
+              <option className="bg-green-800" disabled>
+                No categories available
               </option>
-            ))}
+            )}
           </select>
         </div>
 
@@ -164,11 +191,7 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
         </div>
 
         {/* Error Message */}
-        {error && (
-          <div className="text-red-500 text-sm mt-2">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
 
         {/* Submit Button */}
         <div className="text-right">

@@ -37,16 +37,14 @@ export const updateProduct = createAsyncThunk(
   "product/updateProduct",
   async ({ id, formData }, { rejectWithValue, getState }) => {
     try {
-      // Get the token from the Redux state
-      const token = getState().auth.token;
-
+      const token = getState().auth.token; // Get token from Redux state
       if (!token) {
-        throw new Error("Authorization token is missing. Please log in again.");
+        throw new Error("Authorization token is missing.");
       }
 
       const response = await axios.put(`/products/update-product/${id}`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // Add token
           "Content-Type": "multipart/form-data",
         },
       });
@@ -54,13 +52,12 @@ export const updateProduct = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to update product. Please try again."
+        error.response?.data?.message || "Failed to update product."
       );
     }
   }
 );
+
 
 
 // Get All Products
@@ -116,7 +113,31 @@ export const deleteProduct = createAsyncThunk(
   }
 );
 
+export const getProductByUserId = createAsyncThunk(
+  "product/getProductByUserId",
+  async (userId, { rejectWithValue, getState }) => {
+    try {
+      const token = getState().auth.token; // Get token from Redux state
 
+      if (!token) {
+        throw new Error("Authorization token is missing. Please log in again.");
+      }
+
+      // Make the API request with the Authorization header
+      const response = await axios.get(`/products/get-Product/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Failed to get product by user ID."
+      );
+    }
+  }
+);
 
 const productSlice = createSlice({
   name: "product",
@@ -137,7 +158,7 @@ const productSlice = createSlice({
       .addCase(createProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        action.asyncDispatch(getProducts());
+        state.products.push(action.payload);
       })
       .addCase(createProduct.rejected, (state, action) => {
         state.loading = false;
@@ -150,9 +171,10 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
+        const index = state.products.findIndex(product => product.id === action.payload.id);
+        state.products[index] = action.payload; // Update the product in the state
         state.loading = false;
         state.error = null;
-        action.asyncDispatch(getProducts());
       })
       .addCase(updateProduct.rejected, (state, action) => {
         state.loading = false;
@@ -192,15 +214,28 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.products = state.products.filter(product => product.id !== action.payload.productId);
         state.loading = false;
         state.error = null;
-        action.asyncDispatch(getProducts());
       })
       
       .addCase(deleteProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+         // Get Product by User ID
+         .addCase(getProductByUserId.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+        .addCase(getProductByUserId.fulfilled, (state, action) => {
+          state.loading = false;
+          state.products = action.payload;
+        })
+        .addCase(getProductByUserId.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload;
+        });
   },
 });
 

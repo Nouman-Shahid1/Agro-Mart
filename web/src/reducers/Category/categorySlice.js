@@ -13,14 +13,11 @@ export const createCategory = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      console.error("Error in createCategory thunk:", error.response?.data || error.message);
       return rejectWithValue(error.response?.data || { message: error.message });
     }
   }
 );
 
-
-// **Update a category**
 export const updateCategory = createAsyncThunk(
   "category/updateCategory",
   async ({ id, categoryData }, { rejectWithValue }) => {
@@ -32,7 +29,6 @@ export const updateCategory = createAsyncThunk(
       });
       return { id, ...response.data };
     } catch (error) {
-      console.error("Error in updateCategory thunk:", error.response || error.message);
       return rejectWithValue(error.response?.data || { message: error.message });
     }
   }
@@ -86,7 +82,6 @@ const categorySlice = createSlice({
       .addCase(createCategory.fulfilled, (state, action) => {
         state.loading = false;
         state.categories.push(action.payload); 
-        action.asyncDispatch(fetchCategories());
       })
       .addCase(createCategory.rejected, (state, action) => {
         state.loading = false;
@@ -118,7 +113,6 @@ const categorySlice = createSlice({
         if (index !== -1) {
           state.categories[index] = action.payload;
         }
-        action.asyncDispatch(fetchCategories());
 
       })
       .addCase(updateCategory.rejected, (state, action) => {
@@ -134,7 +128,6 @@ const categorySlice = createSlice({
       .addCase(deleteCategory.fulfilled, (state, action) => {
         state.loading = false;
         state.categories = state.categories.filter((cat) => cat.id !== action.payload);
-        action.asyncDispatch(fetchCategories());
 
       })
       .addCase(deleteCategory.rejected, (state, action) => {
