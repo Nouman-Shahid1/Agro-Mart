@@ -32,6 +32,7 @@ func RegisterRoutes(server *gin.Engine) {
 	server.GET("/search-bar", searchProduct)
 	server.GET("/getallcategories", getProductsCategories)
 	server.GET("/getallproducts", getProducts)
+	server.GET("Product/:id", getProductbyID)
 
 	authenticated := server.Group("/products")
 	authenticated.Use(middleware.Authenticate)
@@ -39,7 +40,7 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticated.PUT("/update-product/:id", updateProduct)
 	authenticated.DELETE("/delete-product/:id", deleteProduct)
 	authenticated.GET("/get-Product/:id", getProductsbyuserid)
-	authenticated.GET("Product/:id", getProductbyID)
+	
 
 	categoryRoutes := server.Group("/category")
 	//categoryRoutes.Use(middleware.Authenticate)

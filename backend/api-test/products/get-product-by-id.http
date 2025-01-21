@@ -1,2 +1,1 @@
-GET http://localhost:8080/products/Product/4
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzc0Njk0MjUsInJvbGUiOiJzZWxsZXIiLCJ1c2VySWQiOjIsInVzZXJuYW1lIjoiVGVzdGVyIn0.tbOcNx2axgTdRI2ltYh73ChTeCzF9h5ozQFXSTiPKfw
+GET http://localhost:8080/Product/4
