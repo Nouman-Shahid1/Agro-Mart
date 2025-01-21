@@ -27,6 +27,7 @@ func RegisterRoutes(server *gin.Engine) {
 	server.POST("/signup", signUp) // Endpoint for user signup
 	server.POST("/login", login)   // Endpoint for user login
 	server.POST("/refresh-token", refreshToken)
+	server.POST("/logout", logout)
 
 	server.GET("/search-bar", searchProduct)
 	server.GET("/getallcategories", getProductsCategories)
@@ -38,6 +39,7 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticated.PUT("/update-product/:id", updateProduct)
 	authenticated.DELETE("/delete-product/:id", deleteProduct)
 	authenticated.GET("/get-Product/:id", getProductsbyuserid)
+	authenticated.GET("Product/:id", getProductbyID)
 
 	categoryRoutes := server.Group("/category")
 	//categoryRoutes.Use(middleware.Authenticate)

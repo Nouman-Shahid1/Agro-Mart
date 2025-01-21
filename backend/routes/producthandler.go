@@ -153,6 +153,20 @@ func getProductsbyuserid(context *gin.Context) {
 	context.JSON(http.StatusOK, products)
 }
 
+func getProductbyID(context *gin.Context){
+	id, err := strconv.ParseInt(context.Param("id"), 10, 64)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt convert parse product id for read"})
+		return
+	}
+	product, err := models.GetProductByID(id)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt fetch product", "error": err.Error()})
+		return
+	}
+	context.JSON(http.StatusOK, product)
+}
+
 func searchProduct(context *gin.Context) {
 	var request struct {
 		Search string `json:"search" binding:"required"`

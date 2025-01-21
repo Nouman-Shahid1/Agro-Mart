@@ -3,7 +3,6 @@ package utils
 import (
 	"errors"
 	"time"
-
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -83,3 +82,4 @@ func VerifyRefreshToken(token string) (int64, error) {
 	userId := int64(claims["userId"].(float64))
 	return userId, nil
 }
+
