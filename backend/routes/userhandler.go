@@ -3,7 +3,6 @@ package routes
 import (
 	"net/http"
 	"strconv"
-
 	"fyp.com/m/models"
 	"fyp.com/m/utils"
 	"github.com/gin-gonic/gin"
@@ -142,4 +141,9 @@ func refreshToken(context *gin.Context) {
 		"accessToken":  accessToken,
 		"refreshToken": refreshToken,
 	})
+}
+
+func logout(context *gin.Context) {
+    // Clear the token from the client (done client-side, just confirming the action on the server)
+    context.JSON(http.StatusOK, gin.H{"message": "Logout successful"})
 }
