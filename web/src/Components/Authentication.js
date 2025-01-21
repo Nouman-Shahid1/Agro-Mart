@@ -10,50 +10,56 @@ const Authentication = ({ children }) => {
   const pathname = usePathname();
   const { token, role } = useSelector((state) => state.auth);
 
-  const [loading, setLoading] = useState(true); // Add a loading state
+  const [loading, setLoading] = useState(true);
 
+  const publicRoutes = ["/login", "/signup", "/forgot-password"]; // Routes that don't require authentication
   const roleBasedRoutes = {
     admin: ["/admin"],
     seller: ["/seller-profile"],
     buyer: ["/buyer"],
   };
 
-  // Initial load: Check localStorage for token and role
+  /**
+   * Load token and role from localStorage during initial render
+   */
   useEffect(() => {
     const savedToken = localStorage.getItem("access_token");
     const savedRole = localStorage.getItem("user_role");
-  
+
     if (savedToken) {
-      dispatch(setToken(savedToken));
-    } else {
-      setTimeout(() => router.push("/login"), 100); // Delay for smoother navigation
+      dispatch(setToken(savedToken)); // Restore token to Redux
+    } else if (!publicRoutes.includes(pathname)) {
+      // Redirect to login only if the current route is not public
+      router.push("/login");
     }
-  
-    setLoading(false); // Stop loading once the initial check is complete
-  }, [dispatch, router]);
-  
+
+    setLoading(false); // Stop loading after initial check
+  }, [dispatch, router, pathname]);
+
+  /**
+   * Redirect users to the appropriate page based on their role and current route
+   */
   useEffect(() => {
-    if (!token) {
-      setTimeout(() => router.push("/login"), 100); // Delay for smoother navigation
+    if (!token && !publicRoutes.includes(pathname)) {
+      router.push("/login");
       return;
     }
-  }, [token, router]);
-  
 
-  // Redirect logic based on role and current route
-  useEffect(() => {
-    if (!token || !role) return;
+    if (token && role) {
+      const normalizedRole = role.toLowerCase();
+      const allowedRoutes = roleBasedRoutes[normalizedRole] || [];
+      const isProtectedRoute = Object.values(roleBasedRoutes).flat().includes(pathname);
 
-    const normalizedRole = role.toLowerCase();
-    const allowedRoutes = roleBasedRoutes[normalizedRole] || [];
-    const isProtectedRoute = Object.values(roleBasedRoutes).flat().includes(pathname);
-
-    if (isProtectedRoute && !allowedRoutes.includes(pathname)) {
-      router.push(allowedRoutes[0] || "/login");
+      if (isProtectedRoute && !allowedRoutes.includes(pathname)) {
+        router.push(allowedRoutes[0] || "/login");
+      }
     }
   }, [token, role, pathname, router]);
 
-  if (loading || !token) {
+  /**
+   * Show loading screen during initial authentication
+   */
+  if (loading) {
     return (
       <div
         className="relative flex items-center justify-center h-screen bg-cover bg-center"
@@ -66,32 +72,18 @@ const Authentication = ({ children }) => {
         <div className="relative z-10 flex flex-col items-center text-center p-8 rounded-lg">
           <div className="relative flex items-center justify-center h-32 w-32 mb-6">
             <div className="absolute h-full w-full rounded-full border-8 border-green-400 border-t-transparent animate-spin-slow"></div>
-            <svg
-              className="h-16 w-16 text-green-300 animate-bounce"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 21c-4.418 0-8-3.582-8-8 0-2.837 1.97-6.075 4-8.586C9.642 2.034 10.79 1 12 1s2.358 1.034 4 3.414C18.03 6.925 20 10.163 20 13c0 4.418-3.582-8-8-8z"
-              />
-            </svg>
+            <h1 className="text-3xl font-extrabold text-green-200">
+              Authenticating AgroMart...
+            </h1>
           </div>
-          <h1 className="text-3xl font-extrabold text-green-200">
-            Authenticating AgroMart...
-          </h1>
-          <p className="text-lg text-gray-300 mt-4">
-            Connecting you to greener pastures!
-          </p>
         </div>
       </div>
     );
   }
 
+  /**
+   * Render children for public routes and authenticated users
+   */
   return <>{children}</>;
 };
 

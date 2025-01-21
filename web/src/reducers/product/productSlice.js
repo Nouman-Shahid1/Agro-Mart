@@ -74,14 +74,14 @@ export const getProducts = createAsyncThunk(
 );
 
 // Get Product by ID
-export const getProductById = createAsyncThunk(
-  "product/getProductById",
-  async (id, { rejectWithValue }) => {
+export const fetchProductById = createAsyncThunk(
+  "products/fetchById",
+  async (productId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/products/${id}`);
+      const response = await axios.get(`/Product/${productId}`);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(error.response?.data || "Failed to fetch product.");
     }
   }
 );
@@ -195,16 +195,15 @@ const productSlice = createSlice({
         state.error = action.payload;
       })
       // Get Product by ID
-      .addCase(getProductById.pending, (state) => {
+      .addCase(fetchProductById.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getProductById.fulfilled, (state, action) => {
+      .addCase(fetchProductById.fulfilled, (state, action) => {
         state.loading = false;
-        state.selectedProduct = action.payload;
-        state.error = null;
+        state.product = action.payload;
       })
-      .addCase(getProductById.rejected, (state, action) => {
+      .addCase(fetchProductById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

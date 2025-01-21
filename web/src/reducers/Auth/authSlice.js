@@ -138,9 +138,12 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
-// **Thunk to log out a user**
-export const logout = createAsyncThunk("auth/logout", async (_, { dispatch }) => {
+
+export const logout = createAsyncThunk("/logout", async (_, { dispatch, rejectWithValue }) => {
   try {
+    // Call API to logout
+    await axios.post("/logout");
+
     // Clear localStorage
     localStorage.removeItem("access_token");
     localStorage.removeItem("user_role");
@@ -149,16 +152,16 @@ export const logout = createAsyncThunk("auth/logout", async (_, { dispatch }) =>
     // Clear Redux state
     dispatch(authSlice.actions.clearState());
 
-    // Delay to ensure localStorage is cleared
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    // Redirect to login
-    return true; // Return success to indicate the process is complete
+    // Optionally, return a success message
+    return { success: true, message: "Logout successful" };
   } catch (error) {
     console.error("Error during logout:", error);
-    throw error;
+
+    // Return a rejected value for error handling in UI
+    return rejectWithValue(error.response?.data || "Logout failed");
   }
 });
+
 
 
 const authSlice = createSlice({
