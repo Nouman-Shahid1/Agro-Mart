@@ -138,13 +138,31 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
-// **Thunk to log out a user**
-export const logout = createAsyncThunk("auth/logout", async (_, { dispatch }) => {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("user_role"); // Clear the role from localStorage
-  dispatch(authSlice.actions.clearState());
-  window.location.href = "/login"; // Force redirect to the login page
+
+export const logout = createAsyncThunk("/logout", async (_, { dispatch, rejectWithValue }) => {
+  try {
+    // Call API to logout
+    await axios.post("/logout");
+
+    // Clear localStorage
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user_role");
+    localStorage.removeItem("userId");
+
+    // Clear Redux state
+    dispatch(authSlice.actions.clearState());
+
+    // Optionally, return a success message
+    return { success: true, message: "Logout successful" };
+  } catch (error) {
+    console.error("Error during logout:", error);
+
+    // Return a rejected value for error handling in UI
+    return rejectWithValue(error.response?.data || "Logout failed");
+  }
 });
+
+
 
 const authSlice = createSlice({
   name: "auth",

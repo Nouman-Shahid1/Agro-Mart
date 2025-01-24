@@ -1,19 +1,38 @@
 "use client";
 import Link from "next/link";
 import React, { useEffect, useState,useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ImCross } from "react-icons/im";
 import { FaUser, FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../../utilities/CartContext";
-
+import { logout } from "@/reducers/Auth/authSlice";
 
 const Navbar = () => {
   const [bg, setBg] = useState(false);
   const [showNav, setShowNav] = useState(false);
   const [showCart, setShowCart] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+  const dispatch =useDispatch();
+  const { username } = useSelector((state) => state.auth.user || {});
   const { cartItems, totalQuantity, totalPrice,clearCart , removeFromCart,increaseQuantity,
     decreaseQuantity,} = useCart();
     const cartRef = useRef(null);
-
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+          setShowDropdown(false);
+        }
+      };
+  
+      if (showDropdown) {
+        document.addEventListener("mousedown", handleClickOutside);
+      }
+  
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [showDropdown]);
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -29,7 +48,17 @@ const Navbar = () => {
   const handleNavbar = () => {
     setShowNav(!showNav);
   };
-
+  const handleLogout = async () => {
+    try {
+      await dispatch(logout()).unwrap();
+      // Ensure navigation after state reset
+      setTimeout(() => navigate("/login"), 100); // Add a small delay if necessary
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+  
+  
   const toggleCart = () => {
     setShowCart(!showCart);
   };
@@ -89,26 +118,51 @@ const Navbar = () => {
             ))}
             </div>
             <div className="flex items-center gap-4 md:gap-6">
-              <div className="group relative">
-                <FaUser
-                  className={`text-2xl cursor-pointer ${
-                    bg ? "text-black" : "text-white"
-                  } hover:scale-110 transition-transform`}
-                />
-                {/* Dropdown Menu */}
-                <div className="hidden group-hover:flex flex-col z-50 absolute right-0 mt-2 w-36 py-3 px-5 bg-slate-100 text-gray-700 rounded-md shadow-lg">
-                  <p className="cursor-pointer hover:text-black">My Profile</p>
-                  <p className="cursor-pointer hover:text-black">Orders</p>
-                  <p className="cursor-pointer hover:text-black">Logout</p>
-                </div>
-              </div>
+            <div className="relative group flex items-center gap-4">
+  {/* Button to toggle dropdown */}
+  <button
+    onClick={() => setShowDropdown((prev) => !prev)}
+    className="flex items-center gap-2 cursor-pointer"
+  >
+    <FaUser
+      className={`text-2xl ${
+        bg ? "text-black" : "text-white"
+      } hover:scale-110 transition-transform`}
+    />
+    {username && (
+      <span
+        className={`${
+          bg ? "text-black" : "text-white"
+        } font-medium text-sm`}
+      >
+        {username}
+      </span>
+    )}
+  </button>
+
+  {/* Dropdown Menu */}
+  {showDropdown && (
+    <div
+      ref={dropdownRef}
+      className="absolute top-full right-0 mt-2 w-40 py-3 px-4 bg-white text-gray-800 rounded-lg shadow-lg border border-gray-300 z-50"
+    >
+      <p className="cursor-pointer hover:text-black py-1">My Profile</p>
+      <p className="cursor-pointer hover:text-black py-1">Orders</p>
+      <p onClick={handleLogout} className="cursor-pointer hover:text-black py-1">Logout</p>
+    </div>
+  )}
+</div>
+
+
+            {/* Show Username */}
+          
               <div className="relative" ref={cartRef}>
   <FaShoppingCart
     onClick={toggleCart}
     className={`text-2xl cursor-pointer ${bg ? "text-black" : "text-white"}`}
   />
   {totalQuantity > 0 && (
-    <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+    <div className="absolute -top-2 -right-2 bg-green-700 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
       {totalQuantity}
     </div>
   )}

@@ -21,12 +21,15 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      await dispatch(logout());
-      router.push("/login");
+      const result = await dispatch(logout());
+      if (result.payload) {
+        router.push("/login");
+      }
     } catch (err) {
       console.error("Error during logout:", err);
     }
   };
+  
 
   return (
     <div className="relative bg-gradient-to-br from-green-900 via-emerald-700 to-lime-500 shadow-xl px-6 py-8 rounded-[32px] flex flex-col md:flex-row items-center justify-between backdrop-blur-lg border border-green-400/30 overflow-hidden">
