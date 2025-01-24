@@ -160,11 +160,20 @@ func getProductbyID(context *gin.Context){
 		return
 	}
 	product, err := models.GetProductByID(id)
+	user, err := models.GetUserbyID(product.UserID)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt fetch product", "error": err.Error()})
 		return
 	}
-	context.JSON(http.StatusOK, product)
+	type Response struct {
+		Product  *models.Product `json:"product"`
+		Username string          `json:"username"`
+	}
+	response := Response{
+		Product:  product,
+		Username: user.Username,
+	}
+	context.JSON(http.StatusOK, response)
 }
 
 func searchProduct(context *gin.Context) {
