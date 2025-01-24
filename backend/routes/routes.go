@@ -8,24 +8,16 @@ import (
 func RegisterRoutes(server *gin.Engine) {
 	userRoutes := server.Group("/users")
 	{
-		// Fetch all users
 		userRoutes.GET("", getUsers)
-		// Fetch a user by ID
 		userRoutes.GET("/:id", getUser)
-
-		// Create about information for a user
 		userRoutes.POST("/about", create_about)
-
-		// Update user by ID
 		userRoutes.PUT("/:id", updateUser)
-
-		// Delete a user by ID
 		userRoutes.DELETE("/:id", deleteUser)
 	}
 
 	// Authentication routes
-	server.POST("/signup", signUp) // Endpoint for user signup
-	server.POST("/login", login)   // Endpoint for user login
+	server.POST("/signup", signUp) 
+	server.POST("/login", login)   
 	server.POST("/refresh-token", refreshToken)
 	server.POST("/logout", logout)
 
@@ -49,5 +41,11 @@ func RegisterRoutes(server *gin.Engine) {
 		categoryRoutes.PUT("/update-category/:id", updateProductCategory)
 		categoryRoutes.DELETE("delete-category/:id", deleteProductCategory)
 		categoryRoutes.GET("/get-Category/:id", getProductCategorybyuserid)
+	}
+
+	orderRoutes := server.Group("/order")
+	{
+		orderRoutes.GET("orders", getOrders)
+		orderRoutes.POST("new-order", saveOrder)
 	}
 }
