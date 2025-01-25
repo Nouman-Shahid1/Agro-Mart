@@ -1,8 +1,12 @@
 "use client";
 import { useCart } from "@/utilities/CartContext";
-import React, { useState } from "react";
-import { FaTruck, FaShippingFast, FaCreditCard, FaPaypal, FaMoneyBillWave ,FaArrowLeft} from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaTruck, FaShippingFast, FaCreditCard, FaPaypal, FaMoneyBillWave, FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { saveOrder } from "@/reducers/Order/orderSlice";
+import { useDispatch,useSelector } from "react-redux";
+
+
 const Checkout = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -16,8 +20,19 @@ const Checkout = () => {
     deliveryMethod: "standard",
     paymentMethod: "credit-card",
   });
+
   const { cartItems } = useCart();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth); // Get user from auth state
+
+  useEffect(() => {
+    const storedBuyerId = localStorage.getItem("userId");
+    if (storedBuyerId) {
+      setFormData((prev) => ({ ...prev, buyerId: parseInt(storedBuyerId, 10) }));
+    }
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -29,6 +44,40 @@ const Checkout = () => {
   const calculateTotal = () =>
     calculateSubtotal() + (formData.deliveryMethod === "express" ? 10 : 0);
 
+  const handlePlaceOrder = async () => {
+    const orderData = {
+      buyerId: parseInt(user?.userId || localStorage.getItem("userId"), 10), // Ensure buyerId is an integer
+      sellerId: parseInt(cartItems[0]?.sellerId, 10), // Ensure sellerId is an integer
+      productId: parseInt(cartItems[0]?.id, 10), // Convert productId to an integer
+      name: formData.name,
+      email: formData.email,
+      shippingAddress: formData.address,
+      country: formData.country,
+      state: formData.state,
+      city: formData.city,
+      postalCode: parseInt(formData.postalCode, 10), // Ensure postalCode is an integer
+      phoneNumber: parseInt(formData.phoneNumber, 10), // Ensure phoneNumber is an integer
+      deliveryOption: formData.deliveryMethod,
+      checkoutPrice: calculateTotal(),
+      orderStatus: "Pending",
+      paymentMethod: formData.paymentMethod,
+    };
+    
+  
+    console.log("Order Data:", orderData); // Debug the payload
+  try {
+    const response = await dispatch(saveOrder(orderData)).unwrap();
+    console.log("Response from server:", response); // Log the full response
+    alert("Order placed successfully!");
+    router.push("/order-success");
+  } catch (error) {
+    console.error("Error placing order:", error);
+    alert("An error occurred while placing the order. Please try again later.");
+  }
+
+  
+  };
+  
   return (
     <div
       className="relative py-20 px-8"
@@ -40,12 +89,12 @@ const Checkout = () => {
         backgroundAttachment: "fixed",
       }}
     >
-        <div className="flex items-center mb-8 cursor-pointer" onClick={() => router.back()}>
-          <FaArrowLeft className="text-2xl text-gray-100 hover:text-gray-300 transition-all" />
-          <span className="ml-2 text-gray-100 text-lg font-semibold hover:text-gray-300 transition-all">
-            Back
-          </span>
-        </div>
+      <div className="flex items-center mb-8 cursor-pointer" onClick={() => router.back()}>
+        <FaArrowLeft className="text-2xl text-gray-100 hover:text-gray-300 transition-all" />
+        <span className="ml-2 text-gray-100 text-lg font-semibold hover:text-gray-300 transition-all">
+          Back
+        </span>
+      </div>
       <div className="max-w-4xl mx-auto bg-gradient-to-br from-green-900 via-emerald-700 to-lime-500 shadow-lg rounded-lg p-8 relative z-10">
         <h1 className="text-4xl font-bold mb-8 text-gray-100 text-center">
           Complete Your Purchase
@@ -56,6 +105,7 @@ const Checkout = () => {
         </p>
 
         <form className="space-y-8">
+          {/* Personal Information */}
           <div>
             <h2 className="text-2xl font-semibold text-gray-100 mb-4">
               Personal Information
@@ -80,6 +130,7 @@ const Checkout = () => {
             </div>
           </div>
 
+          {/* Shipping Address */}
           <div>
             <h2 className="text-2xl font-semibold text-gray-100 mb-4">
               Shipping Address
@@ -138,6 +189,7 @@ const Checkout = () => {
             </div>
           </div>
 
+          {/* Delivery Method */}
           <div>
             <h2 className="text-2xl font-semibold text-gray-100 mb-4">
               Delivery Method
@@ -182,6 +234,7 @@ const Checkout = () => {
             </div>
           </div>
 
+          {/* Payment Method */}
           <div>
             <h2 className="text-2xl font-semibold text-gray-100 mb-4">
               Payment Method
@@ -240,6 +293,7 @@ const Checkout = () => {
           </div>
         </form>
 
+        {/* Order Summary */}
         <div className="mt-8 text-gray-100">
           <h3 className="text-lg font-bold mb-4">Order Summary</h3>
           <ul className="space-y-2">
@@ -277,7 +331,10 @@ const Checkout = () => {
             <span>${calculateTotal()}</span>
           </div>
         </div>
-        <button className="mt-6 bg-emerald-500 text-white px-6 py-3 rounded-lg w-full hover:bg-emerald-600 shadow-lg">
+        <button
+          className="mt-6 bg-emerald-500 text-white px-6 py-3 rounded-lg w-full hover:bg-emerald-600 shadow-lg"
+          onClick={handlePlaceOrder}
+        >
           Place Order
         </button>
       </div>
