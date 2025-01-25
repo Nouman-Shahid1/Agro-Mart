@@ -69,7 +69,6 @@ const Checkout = () => {
     const response = await dispatch(saveOrder(orderData)).unwrap();
     console.log("Response from server:", response); // Log the full response
     alert("Order placed successfully!");
-    router.push("/order-success");
   } catch (error) {
     console.error("Error placing order:", error);
     alert("An error occurred while placing the order. Please try again later.");
