@@ -47,5 +47,8 @@ func RegisterRoutes(server *gin.Engine) {
 	{
 		orderRoutes.GET("orders", getOrders)
 		orderRoutes.POST("new-order", saveOrder)
+		orderRoutes.GET("buyer-orders/:id", getOrdersByBuyerid)
+		orderRoutes.GET("seller-orders/:id", getOrdersBySellerid)
+		orderRoutes.PUT("update-status/:id", UpdateOrderStatus)
 	}
 }

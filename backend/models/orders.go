@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"log"
 
 	"fyp.com/m/db"
@@ -76,5 +77,85 @@ func (o *Order) Save() error {
 		return err
 	}
 	o.ID = id
+	return nil
+}
+
+func GetOrderByID(id int64) (*Order, error) {
+	query := "SELECT * FROM orders WHERE id = ?"
+	row := db.DB.QueryRow(query, id)
+	var order Order
+	err := row.Scan(
+		&order.ID, &order.BuyerID, &order.SellerID, &order.ProductID, &order.Name, 
+		&order.Email, &order.ShippingAddress, &order.Country, &order.State, 
+		&order.City, &order.PostalCode, &order.PhoneNumber, &order.DeliveryOption, 
+		&order.CheckoutPrice, &order.OrderStatus, &order.PaymentMethod,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &order, nil
+}
+
+
+func GetOrderByBuyerID(id int64) ([]Order, error) {
+	query := "SELECT * FROM orders WHERE buyer_id = ?"
+	rows, err := db.DB.Query(query, id)
+	if err != nil {
+		log.Printf("Error querying database: %v\n", err)
+		return nil, err
+	}
+	defer rows.Close()
+	var orders []Order
+	for rows.Next() {
+		var order Order
+		err := rows.Scan(&order.ID, &order.BuyerID, &order.SellerID, &order.ProductID, &order.Name, &order.Email, &order.ShippingAddress, &order.Country, 
+			&order.State, &order.City, &order.PostalCode, &order.PhoneNumber, &order.DeliveryOption, &order.CheckoutPrice, &order.OrderStatus, &order.PaymentMethod)
+
+		if err != nil {
+			log.Printf("Error scanning rows: %v\n", err)
+			return nil, err
+		}
+		orders = append(orders, order)
+	}
+	return orders, nil
+}
+
+func GetOrderBySellerID(id int64) ([]Order, error) {
+	query := "SELECT * FROM orders WHERE seller_id = ?"
+	rows, err := db.DB.Query(query, id)
+	if err != nil {
+		log.Printf("Error querying database: %v\n", err)
+		return nil, err
+	}
+	defer rows.Close()
+	var orders []Order
+	for rows.Next() {
+		var order Order
+		err := rows.Scan(&order.ID, &order.BuyerID, &order.SellerID, &order.ProductID, &order.Name, &order.Email, &order.ShippingAddress, &order.Country, 
+			&order.State, &order.City, &order.PostalCode, &order.PhoneNumber, &order.DeliveryOption, &order.CheckoutPrice, &order.OrderStatus, &order.PaymentMethod)
+
+		if err != nil {
+			log.Printf("Error scanning rows: %v\n", err)
+			return nil, err
+		}
+		orders = append(orders, order)
+	}
+	return orders, nil
+}
+
+func (order *Order) UpdateOrderStatus() error {
+	query := `UPDATE orders SET order_status = ? WHERE id = ?`
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return fmt.Errorf("error while preparing query to update order status: %v", err)
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(order.OrderStatus, order.ID)
+	if err != nil {
+		return fmt.Errorf("error while executing query to update order status: %v", err)
+	}
+
+	//order.OrderStatus = newStatus // Update the in-memory value of order status
 	return nil
 }
