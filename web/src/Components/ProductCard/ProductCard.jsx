@@ -30,7 +30,7 @@ const ProductCard = ({ title, src, price, description, rating,id }) => {
         />
       </div>
       </Link>
-      <Link href={`/products/${id}`}>
+      <Link href={`/Product/${id}`}>
 
       <div className="text-center mt-6">
         <h3 className="text-xl font-bold text-green-700 truncate">
