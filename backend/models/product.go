@@ -2,7 +2,6 @@ package models
 
 import (
 	"log"
-
 	"fyp.com/m/db"
 )
 
@@ -37,7 +36,6 @@ func GetAllProducts() ([]Product, error){
 }
 
 
-
 func (u *Product) Save() error {
 	query := "INSERT INTO products(name, description, imagepath, user_id, category_name, price) VALUES(?,?,?,?,?,?)"
 	stmt, err := db.DB.Prepare(query)
@@ -64,7 +62,7 @@ func GetProductByID(id int64) (*Product, error){
 	if err != nil {
 		return nil, err
 	}
-	return &product, nil
+	return &product,   nil
 }
 
 func (product Product) UpdateProduct() error {

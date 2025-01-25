@@ -91,5 +91,34 @@ if err != nil {
     log.Fatal("Could not create products table:", err)
 }
 
+createOrdersTable := `
+CREATE TABLE IF NOT EXISTS orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    buyer_id INTEGER NOT NULL,
+    seller_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    shipping_address TEXT NOT NULL,
+    country TEXT NOT NULL,
+    state TEXT NOT NULL,
+    city TEXT NOT NULL,
+    postal_code INTEGER NOT NULL,
+    phone_number INTEGER NOT NULL,
+    delivery_option TEXT NOT NULL,
+    checkout_price INTEGER NOT NULL,
+    order_status TEXT NOT NULL,
+    payment_method TEXT NOT NULL,
+    FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (seller_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+)
+`
+_, err = DB.Exec(createOrdersTable)
+if err != nil {
+    log.Fatal("Could not create orders table:", err)
+}
+
+
 
 }
