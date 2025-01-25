@@ -171,6 +171,7 @@ export default function Page() {
                 cat={product.category}
                 price={product.price}
                 rating={product.rating}
+                sellerId={product.userId}
               />
             ))}
           </div>

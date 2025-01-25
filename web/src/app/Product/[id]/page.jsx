@@ -1,29 +1,42 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter, useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { fetchProductById } from "@/reducers/product/productSlice";
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/Footer";
 import Newsletter from "@/Components/NewsLetter/Newsletter";
 import { FaStar } from "react-icons/fa";
 import { useCart } from "../../../utilities/CartContext";
+
 const ProductDetailsPage = () => {
-  const params = useParams(); // Use the new `useParams` hook
-  const id = params?.id; // Safely access the `id` parameter
+  const params = useParams();
+  const id = params?.id;
+  console.log("Product ID:", id); // Debug the extracted ID
+
   const { addToCart } = useCart();
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { product = null, loading = false, error = null } =
-    useSelector((state) => state.product || {});
+  const { product = null, username = null, loading = false, error = null } =
+    useSelector((state) => ({
+      product: state.product?.product || null,
+      username: state.product?.username || null,
+      loading: state.product?.loading || false,
+      error: state.product?.error || null,
+    }));
 
   const [selectedRating, setSelectedRating] = useState(0);
   const [newReview, setNewReview] = useState("");
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchProductById(id)); // Fetch product details by ID
+      dispatch(fetchProductById(id))
+        .then((action) => console.log(action))
+        .catch((error) => console.error("Error fetching product:", error));
+    } else {
+      console.error("Product ID is missing!");
     }
   }, [dispatch, id]);
 
@@ -45,7 +58,7 @@ const ProductDetailsPage = () => {
     }
 
     const review = {
-      id: Math.random(), // Temporary ID
+      id: Math.random(), // Temporary unique ID
       rating: selectedRating,
       text: newReview,
       user: "Anonymous",
@@ -65,11 +78,18 @@ const ProductDetailsPage = () => {
     return <p>Error: {error}</p>;
   }
 
+  if (!id) {
+    return <p>Invalid product ID. Please select a valid product.</p>;
+  }
+
   if (!product) {
     return <p>No product found!</p>;
   }
 
-  const imageUrl = `http://localhost:8080/${product.imagepath}`;
+  const imageUrl = product.imagepath
+    ? `http://localhost:8080/${product.imagepath}`
+    : "path/to/default-image.jpg"; // Fallback image
+
   const averageRating =
     product.reviews?.length > 0
       ? (
@@ -96,7 +116,6 @@ const ProductDetailsPage = () => {
         <section className="container mx-auto px-6">
           <div className="container mx-auto mt-28 p-10 bg-gradient-to-r from-green-100 to-white shadow-2xl rounded-2xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center min-h-[600px]">
-              {/* Product Image */}
               <div className="flex justify-center items-center">
                 <img
                   src={imageUrl}
@@ -104,8 +123,6 @@ const ProductDetailsPage = () => {
                   className="w-[90%] max-h-[500px] object-cover rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
                 />
               </div>
-
-              {/* Product Details */}
               <div className="flex flex-col justify-between space-y-10 p-6">
                 <div>
                   <h1 className="text-2xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -118,7 +135,6 @@ const ProductDetailsPage = () => {
                     Average Rating: {averageRating}
                   </p>
                 </div>
-
                 <div className="flex flex-col space-y-4">
                   <div className="flex items-center space-x-2">
                     <span className="text-lg font-medium text-gray-800">
@@ -133,7 +149,7 @@ const ProductDetailsPage = () => {
                       Posted By:
                     </span>
                     <span className="text-lg font-bold text-green-600">
-                      {product.userId}
+                      {username || "Unknown"}
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -155,7 +171,6 @@ const ProductDetailsPage = () => {
               </div>
             </div>
           </div>
-
           {/* Review Section */}
           <section className="mt-10 py-12 px-6 bg-gradient-to-br from-green-100 to-green-50 rounded-lg shadow-2xl">
             <h2 className="text-2xl md:text-5xl font-extrabold text-green-700 mb-10 text-center tracking-wide">
@@ -186,7 +201,6 @@ const ProductDetailsPage = () => {
                 </div>
               ))}
             </div>
-
             {/* Add Review Form */}
             <div className="mt-10">
               <h3 className="text-xl font-bold mb-4">Add Your Review</h3>
