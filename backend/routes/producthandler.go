@@ -160,6 +160,10 @@ func getProductbyID(context *gin.Context){
 		return
 	}
 	product, err := models.GetProductByID(id)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt get product"})
+		return
+	}
 	user, err := models.GetUserbyID(product.UserID)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt fetch product", "error": err.Error()})
