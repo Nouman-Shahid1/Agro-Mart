@@ -86,6 +86,7 @@ export const fetchProductById = createAsyncThunk(
   }
 );
 
+
 // Delete Product
 export const deleteProduct = createAsyncThunk(
   "product/deleteProduct",
@@ -201,8 +202,9 @@ const productSlice = createSlice({
       })
       .addCase(fetchProductById.fulfilled, (state, action) => {
         state.loading = false;
-        state.product = action.payload;
+        state.product = action.payload.product; // Ensure this matches the structure of the API response
       })
+      
       .addCase(fetchProductById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
