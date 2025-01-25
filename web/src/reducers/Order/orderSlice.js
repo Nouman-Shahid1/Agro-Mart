@@ -14,22 +14,18 @@ export const fetchOrders = createAsyncThunk(
   }
 );
 
-// **Save a new order**
 export const saveOrder = createAsyncThunk(
-  "orders/saveOrder",
-  async (orderData, { rejectWithValue }) => {
-    try {
-      const response = await axios.post("/order/new-order", orderData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      return response.data; // Assuming response contains the created order
-    } catch (error) {
-      return rejectWithValue(error.response?.data || { message: error.message });
+    "orders/saveOrder",
+    async (orderData, { rejectWithValue }) => {
+      try {
+        const response = await axios.post("/order/new-order", orderData);
+        return response.data; // Ensure this matches the response structure
+      } catch (error) {
+        return rejectWithValue(error.response?.data || { message: error.message });
+      }
     }
-  }
-);
+  );
+  
 
 // **Update an order**
 export const updateOrder = createAsyncThunk(

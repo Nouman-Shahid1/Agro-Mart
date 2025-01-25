@@ -2,7 +2,7 @@
 import React from "react";
 import { useCart } from "../../utilities/CartContext";
 import Link from "next/link";
-const ProductCard = ({ title, src, price, description, rating,id }) => {
+const ProductCard = ({ title, src, price, description, rating,id,sellerId }) => {
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
@@ -10,6 +10,7 @@ const ProductCard = ({ title, src, price, description, rating,id }) => {
       id,
       name: title,
       image: src,
+      sellerId,
       price: parseFloat(price), // Ensure price is numeric
     };
     addToCart(product);

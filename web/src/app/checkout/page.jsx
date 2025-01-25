@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import { FaTruck, FaShippingFast, FaCreditCard, FaPaypal, FaMoneyBillWave, FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { saveOrder } from "@/reducers/Order/orderSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
+
 
 const Checkout = () => {
   const [formData, setFormData] = useState({
@@ -19,12 +20,14 @@ const Checkout = () => {
     deliveryMethod: "standard",
     paymentMethod: "credit-card",
   });
+
   const { cartItems } = useCart();
   const router = useRouter();
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth); // Get user from auth state
 
   useEffect(() => {
-    const storedBuyerId = localStorage.getItem("buyerId");
+    const storedBuyerId = localStorage.getItem("userId");
     if (storedBuyerId) {
       setFormData((prev) => ({ ...prev, buyerId: parseInt(storedBuyerId, 10) }));
     }
@@ -43,37 +46,38 @@ const Checkout = () => {
 
   const handlePlaceOrder = async () => {
     const orderData = {
-      buyerId: formData.buyerId || 1, // Use buyerId from state or fallback
-      sellerId: cartItems[0]?.sellerId || 1, // Assuming sellerId is in cartItems
-      productId: cartItems.map((item) => item.id).join(","),
+      buyerId: parseInt(user?.userId || localStorage.getItem("userId"), 10), // Ensure buyerId is an integer
+      sellerId: parseInt(cartItems[0]?.sellerId, 10), // Ensure sellerId is an integer
+      productId: parseInt(cartItems[0]?.id, 10), // Convert productId to an integer
       name: formData.name,
       email: formData.email,
       shippingAddress: formData.address,
       country: formData.country,
       state: formData.state,
       city: formData.city,
-      postalCode: parseInt(formData.postalCode, 10),
-      phoneNumber: parseInt(formData.phoneNumber, 10),
+      postalCode: parseInt(formData.postalCode, 10), // Ensure postalCode is an integer
+      phoneNumber: parseInt(formData.phoneNumber, 10), // Ensure phoneNumber is an integer
       deliveryOption: formData.deliveryMethod,
       checkoutPrice: calculateTotal(),
       orderStatus: "Pending",
       paymentMethod: formData.paymentMethod,
     };
-debugger
-    try {
-      const response = await dispatch(saveOrder(orderData)).unwrap();
-      if (response?.status === "success") {
-        alert("Order placed successfully!");
-        router.push("/order-success");
-      } else {
-        alert("Failed to place order. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error placing order:", error);
-      alert("An error occurred while placing the order. Please try again later.");
-    }
-  };
+    
+  
+    console.log("Order Data:", orderData); // Debug the payload
+  try {
+    const response = await dispatch(saveOrder(orderData)).unwrap();
+    console.log("Response from server:", response); // Log the full response
+    alert("Order placed successfully!");
+    router.push("/order-success");
+  } catch (error) {
+    console.error("Error placing order:", error);
+    alert("An error occurred while placing the order. Please try again later.");
+  }
 
+  
+  };
+  
   return (
     <div
       className="relative py-20 px-8"
