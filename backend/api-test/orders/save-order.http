@@ -1,0 +1,21 @@
+POST http://localhost:8080/order/new-order
+Content-Type: application/json
+
+{
+    "buyerId": 1,
+    "sellerId": 2,
+    "productId": 6,
+    "name": "John Doe",
+    "email": "johndoe@example.com",
+    "shippingAddress": "123 Main St, Apt 4B",
+    "country": "USA",
+    "state": "California",
+    "city": "Los Angeles",
+    "postalCode": 90001,
+    "phoneNumber": 1234567890,
+    "deliveryOption": "Standard",
+    "checkoutPrice": 4999,
+    "orderStatus": "Pending",
+    "paymentMethod": "Cash on Delivery"
+}
+
