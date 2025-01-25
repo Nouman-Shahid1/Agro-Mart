@@ -202,8 +202,10 @@ const productSlice = createSlice({
       })
       .addCase(fetchProductById.fulfilled, (state, action) => {
         state.loading = false;
-        state.product = action.payload.product; // Ensure this matches the structure of the API response
+        state.product = action.payload.product;
+        state.username = action.payload.username; // Save username in state
       })
+      
       
       .addCase(fetchProductById.rejected, (state, action) => {
         state.loading = false;

@@ -14,16 +14,22 @@ const ProductDetailsPage = () => {
   const params = useParams();
   const id = params?.id;
   console.log("Product ID:", id); // Debug the extracted ID
-  
+
   const { addToCart } = useCart();
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { product = null, loading = false, error = null } =
-    useSelector((state) => state.product || {});
+  const { product = null, username = null, loading = false, error = null } =
+    useSelector((state) => ({
+      product: state.product?.product || null,
+      username: state.product?.username || null,
+      loading: state.product?.loading || false,
+      error: state.product?.error || null,
+    }));
 
   const [selectedRating, setSelectedRating] = useState(0);
   const [newReview, setNewReview] = useState("");
+
   useEffect(() => {
     if (id) {
       dispatch(fetchProductById(id))
@@ -33,8 +39,6 @@ const ProductDetailsPage = () => {
       console.error("Product ID is missing!");
     }
   }, [dispatch, id]);
-  
-  
 
   const handleAddToCart = () => {
     if (product) {
@@ -73,17 +77,18 @@ const ProductDetailsPage = () => {
   if (error) {
     return <p>Error: {error}</p>;
   }
+
   if (!id) {
     return <p>Invalid product ID. Please select a valid product.</p>;
   }
-  
+
   if (!product) {
     return <p>No product found!</p>;
   }
 
   const imageUrl = product.imagepath
-  ? `http://localhost:8080/${product.imagepath}`
-  : "path/to/default-image.jpg"; // Fallback image
+    ? `http://localhost:8080/${product.imagepath}`
+    : "path/to/default-image.jpg"; // Fallback image
 
   const averageRating =
     product.reviews?.length > 0
@@ -144,7 +149,7 @@ const ProductDetailsPage = () => {
                       Posted By:
                     </span>
                     <span className="text-lg font-bold text-green-600">
-                      {product.userId}
+                      {username || "Unknown"}
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
