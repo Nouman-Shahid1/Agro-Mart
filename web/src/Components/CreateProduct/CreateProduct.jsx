@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import { createProduct, updateProduct,getProducts } from "@/reducers/product/productSlice";
+import {
+  createProduct,
+  updateProduct,
+  getProducts,
+} from "@/reducers/product/productSlice";
 import { fetchCategories } from "@/reducers/Category/categorySlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
   const dispatch = useDispatch();
   const { categories = [] } = useSelector((state) => state.category);
-  const { user } = useSelector((state) => state.auth); // Get user from auth state
+  const { user } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     name: initialData?.name || "",
@@ -15,10 +21,10 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
     categoryName: initialData?.category_name || "",
     price: initialData?.price || "",
     image: null,
-    userId: user?.userId || localStorage.getItem("userId") || null, // Handle fallback
+    userId: user?.userId || localStorage.getItem("userId") || null,
   });
 
-  const [error, setError] = useState(null); // State to hold error messages
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     dispatch(fetchCategories())
@@ -55,10 +61,13 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // Reset error state before submission
+    setError(null);
 
     if (!formData.userId) {
-      alert("User ID is missing. Please log in again.");
+      toast.error("User ID is missing. Please log in again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       return;
     }
 
@@ -77,16 +86,26 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
       if (initialData?.id) {
         // Update product
         await dispatch(updateProduct({ id: initialData.id, formData: data })).unwrap();
-        alert("Product updated successfully!");
+        toast.success("Product updated successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       } else {
         // Create product
         await dispatch(createProduct(data)).unwrap();
-        alert("Product created successfully!");
+        toast.success("Product created successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
       await dispatch(getProducts()).unwrap();
-      setShowAddProduct(false); // Close the modal on success
+      setShowAddProduct(false);
     } catch (err) {
       setError(err.message || "Failed to create or update the product. Please try again.");
+      toast.error(err.message || "Failed to create or update the product.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 
@@ -100,7 +119,6 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
         className="relative max-w-4xl w-[600px] bg-gradient-to-br from-green-900 via-emerald-700 to-lime-500 text-white rounded-3xl shadow-2xl p-8 space-y-6"
         onSubmit={handleSubmit}
       >
-        {/* Close Button */}
         <button
           type="button"
           className="absolute top-4 right-4 text-gray-300 hover:text-white transition-colors"
@@ -109,12 +127,10 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
           X
         </button>
 
-        {/* Header */}
         <h2 className="text-3xl font-bold text-center text-green-300">
           {initialData?.id ? "Edit Product" : "Add Product"}
         </h2>
 
-        {/* Product Name */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Product Name</label>
           <input
@@ -127,7 +143,6 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
           />
         </div>
 
-        {/* Description */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Description</label>
           <textarea
@@ -140,7 +155,6 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
           ></textarea>
         </div>
 
-        {/* Category */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Category</label>
           <select
@@ -166,7 +180,6 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
           </select>
         </div>
 
-        {/* Price */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Price</label>
           <input
@@ -179,7 +192,6 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
           />
         </div>
 
-        {/* Product Image */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Product Image</label>
           <input
@@ -190,10 +202,8 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
           />
         </div>
 
-        {/* Error Message */}
         {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
 
-        {/* Submit Button */}
         <div className="text-right">
           <button
             type="submit"
