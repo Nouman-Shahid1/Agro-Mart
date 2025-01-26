@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaEye, FaEyeSlash, FaShoppingCart, FaStore } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { registerUser } from "../../reducers/Auth/authSlice";
 
 export default function SignupPage() {
@@ -31,31 +33,41 @@ export default function SignupPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const role = activeForm === "buyer" ? "buyer" : "seller";
-  
+
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match.");
+      toast.error("Passwords do not match.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       return;
     }
-  
+
     const userData = {
       email: formData.email,
       password: formData.password,
       username: formData.username || null,
       role,
     };
-  
+
     try {
       const result = await dispatch(registerUser(userData)).unwrap();
       console.log("Registration Success:", result); // Log success
-      alert("Registration successful! Redirecting to login...");
+
+      toast.success("Registration successful! Redirecting to login...", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+
       router.push("/login");
     } catch (err) {
       console.error("Registration Failed:", err); // Log error
-      alert(err?.message || "Registration failed. Please try again.");
+
+      toast.error(err?.message || "Registration failed. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
-  
-  
 
   const formVariants = {
     initial: { opacity: 0, y: -50 },

@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateUser, registerUser } from "../../reducers/Auth/authSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserModal = ({ showModal, setShowModal, user }) => {
   const dispatch = useDispatch();
@@ -35,16 +37,28 @@ const UserModal = ({ showModal, setShowModal, user }) => {
         await dispatch(
           updateUser({ userId: user.ID, userData: { role } })
         ).unwrap();
+        toast.success("User role updated successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       } else {
         // Create new user
         if (!email || !password) {
           throw new Error("Email and password are required.");
         }
         await dispatch(registerUser({ email, password, role })).unwrap();
+        toast.success("User created successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
       setShowModal(false);
     } catch (err) {
       console.error("Error:", err);
+      toast.error(err.message || "An error occurred. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       setError(err.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -111,9 +125,15 @@ const UserModal = ({ showModal, setShowModal, user }) => {
             className="w-full p-3 bg-gray-100 rounded-lg text-black border border-gray-300 outline-none focus:ring-2 focus:ring-green-500"
             required
           >
-            <option className="bg-green-800" value="Buyer">Buyer</option>
-            <option className="bg-green-800" value="Seller">Seller</option>
-            <option className="bg-green-800" value="Admin">Admin</option>
+            <option className="bg-green-800" value="Buyer">
+              Buyer
+            </option>
+            <option className="bg-green-800" value="Seller">
+              Seller
+            </option>
+            <option className="bg-green-800" value="Admin">
+              Admin
+            </option>
           </select>
         </div>
 

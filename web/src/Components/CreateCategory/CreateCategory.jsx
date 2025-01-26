@@ -1,13 +1,14 @@
-// CreateCategory Component
 "use client";
 
 import {
   createCategory,
   updateCategory,
-  fetchCategories
+  fetchCategories,
 } from "@/reducers/Category/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateCategory = ({
   showAddCategory,
@@ -18,15 +19,18 @@ const CreateCategory = ({
   const { user } = useSelector((state) => state.auth); // Get user from auth state
   const [preview, setPreview] = useState(null);
   const { loading, error } = useSelector((state) => state.category);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    image: null,
+    userId: user?.userId || localStorage.getItem("userId") || null, // Handle fallback
+  });
+
   useEffect(() => {
     if (user?.userId) {
-      console.log("Setting userId from Redux:", user.userId);
       setFormData((prev) => ({ ...prev, userId: user.userId }));
     } else if (localStorage.getItem("userId")) {
-      console.log(
-        "Setting userId from localStorage:",
-        localStorage.getItem("userId")
-      );
       setFormData((prev) => ({
         ...prev,
         userId: localStorage.getItem("userId"),
@@ -35,13 +39,6 @@ const CreateCategory = ({
       console.error("User ID is missing in both Redux and localStorage!");
     }
   }, [user]);
-
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    image: null,
-    userId: user?.userId || localStorage.getItem("userId") || null, // Handle fallback
-  });
 
   useEffect(() => {
     if (initialCategory) {
@@ -65,7 +62,10 @@ const CreateCategory = ({
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && !file.type.startsWith("image/")) {
-      alert("Please upload a valid image file.");
+      toast.error("Please upload a valid image file.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       return;
     }
     setFormData((prev) => ({ ...prev, image: file }));
@@ -74,22 +74,22 @@ const CreateCategory = ({
       setPreview(objectUrl);
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.userId) {
       const storedUserId = localStorage.getItem("userId");
       if (storedUserId) {
-        console.log("Falling back to localStorage for userId:", storedUserId);
         setFormData((prev) => ({ ...prev, userId: storedUserId }));
       } else {
-        alert("User ID is missing. Please log in again.");
+        toast.error("User ID is missing. Please log in again.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
         return;
       }
     }
-
-    // Ensure `userId` is available
-    console.log("Final formData before submission:", formData);
 
     const formDataToSend = new FormData();
     formDataToSend.append("name", formData.name);
@@ -111,11 +111,26 @@ const CreateCategory = ({
         : createCategory(formDataToSend);
 
       await dispatch(action).unwrap();
-      alert("Category submitted successfully!");
+      toast.success(
+        initialCategory
+          ? "Category updated successfully!"
+          : "Category created successfully!",
+        {
+          position: "top-right",
+          autoClose: 3000,
+        }
+      );
       await dispatch(fetchCategories()).unwrap();
       resetForm();
     } catch (err) {
       console.error("Error during category submission:", err);
+      toast.error(
+        err.message || "Failed to submit category. Please try again.",
+        {
+          position: "top-right",
+          autoClose: 3000,
+        }
+      );
     }
   };
 
