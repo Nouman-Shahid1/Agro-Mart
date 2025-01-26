@@ -43,6 +43,7 @@ func getOrdersByBuyerid(context *gin.Context) {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt fetch orders", "error": err.Error()})
 		return
 	}
+	
 	context.JSON(http.StatusOK, orders)
 }
 
@@ -58,6 +59,34 @@ func getOrdersBySellerid(context *gin.Context) {
 		return
 	}
 	context.JSON(http.StatusOK, orders)
+}
+
+func getOrderByid(context *gin.Context){
+	id, err := strconv.ParseInt(context.Param("id"), 10, 64)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt convert parse order id for read"})
+		return
+	}
+	order, err := models.GetOrderByID(id)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt fetch orders", "error": err.Error()})
+		return
+	}
+	product, err := models.GetProductByID(order.ProductID)
+	if err != nil{
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt fetch orders", "error": err.Error()})
+		return
+	}
+	type Response struct {
+		Order  *models.Order 
+		Product *models.Product        
+	}
+	response := Response{
+		Order:  order,
+		Product: product,
+	}
+
+	context.JSON(http.StatusOK, response)
 }
 
 func UpdateOrderStatus(ctx *gin.Context) {
