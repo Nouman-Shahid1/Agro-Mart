@@ -16,18 +16,45 @@ import {
   FaAddressBook,
   FaCog,
   FaComments,
-  FaSeedling,
-  FaCogs,
-  FaUserAlt,
-  FaWarehouse,
+
 } from "react-icons/fa";
 
 import Logo from "../../assets/images/logo.png";
-
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import "react-toastify/dist/ReactToastify.css";
+import { logout } from "@/reducers/Auth/authSlice";
 const Sidebar = ({ role }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return; // Prevent multiple clicks
+    setIsLoggingOut(true);
+  
+    try {
+      const result = await dispatch(logout()).unwrap();
+      if (result) {
+        toast.success("Logged out successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+        router.push("/login");
+      }
+    } catch (err) {
+      console.error("Error during logout:", err);
+      toast.error("Failed to log out. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+  
 
   const menuLists = {
     seller: [
@@ -78,17 +105,9 @@ const Sidebar = ({ role }) => {
       { label: "Chats", icon: <FaComments />, path: "/buyer/chats" },
       { label: "Settings", icon: <FaCog />, path: "/buyer/settings" },
     ],
-    // admin: [
-    //   { label: "Machines", icon: <FaCogs />, path: "/admin/machines" },
-    //   { label: "Seeds", icon: <FaSeedling />, path: "/admin/seeds" },
-    //   { label: "Crops", icon: <FaWarehouse />, path: "/admin/crops" },
-    //   { label: "Pesticides", icon: <FaCog />, path: "/admin/pesticides" },
-    //   { label: "Rentals", icon: <FaTruck />, path: "/admin/rentals" },
-    //   { label: "Users", icon: <FaUserAlt />, path: "/admin/users" },
-    // ],
+
   };
 
-  // Get the menuItems based on the role
   const menuItems = menuLists[role] || [];
   const dashboardRoute =
     role === "seller"
@@ -214,10 +233,8 @@ const Sidebar = ({ role }) => {
         {/* Logout Button */}
         <div className="mt-auto">
           <button
-            onClick={() => {
-              console.log("User signed out");
-              window.location.href = "/login";
-            }}
+           onClick={handleLogout}
+           disabled={isLoggingOut}
             className="flex items-center justify-center gap-4 p-4 w-full rounded-lg bg-red-500 text-white hover:bg-red-700 transition-all duration-300 shadow-lg"
           >
             <svg

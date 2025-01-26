@@ -6,7 +6,8 @@ import { ImCross } from "react-icons/im";
 import { FaUser, FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../../utilities/CartContext";
 import { logout } from "@/reducers/Auth/authSlice";
-
+import { toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Navbar = () => {
   const [bg, setBg] = useState(false);
   const [showNav, setShowNav] = useState(false);
@@ -15,8 +16,7 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
   const dispatch =useDispatch();
   const { username } = useSelector((state) => state.auth.user || {});
-  const { cartItems, totalQuantity, totalPrice,clearCart , removeFromCart,increaseQuantity,
-    decreaseQuantity,} = useCart();
+
     const cartRef = useRef(null);
     useEffect(() => {
       const handleClickOutside = (event) => {
@@ -48,20 +48,65 @@ const Navbar = () => {
   const handleNavbar = () => {
     setShowNav(!showNav);
   };
+  
+  const {
+    cartItems,
+    totalQuantity,
+    totalPrice,
+    clearCart,
+    removeFromCart,
+    increaseQuantity,
+    decreaseQuantity,
+  } = useCart();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showDropdown]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setBg(true);
+      } else {
+        setBg(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const handleLogout = async () => {
     try {
       await dispatch(logout()).unwrap();
-      // Ensure navigation after state reset
-      setTimeout(() => navigate("/login"), 100); // Add a small delay if necessary
+      toast.success("Logged out successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     } catch (error) {
-      console.error("Logout error:", error);
+      toast.error("Failed to log out. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
-  
-  
+
   const toggleCart = () => {
     setShowCart(!showCart);
   };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (cartRef.current && !cartRef.current.contains(event.target)) {
@@ -77,6 +122,23 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showCart]);
+
+  const handleClearCart = () => {
+    clearCart();
+    toast.success("Cart cleared successfully!", {
+      position: "top-right",
+      autoClose: 3000,
+    });
+  };
+
+  const handleRemoveFromCart = (id) => {
+    removeFromCart(id);
+    toast.success("Item removed from cart!", {
+      position: "top-right",
+      autoClose: 3000,
+    });
+  };
+
 
 
   return (
@@ -235,7 +297,7 @@ const Navbar = () => {
                     +
                   </button>
                   <button
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => handleRemoveFromCart(item.id)}
                     className="text-red-500 hover:text-red-700 text-xl"
                   >
                     &times;
@@ -255,7 +317,7 @@ const Navbar = () => {
           {/* Actions */}
           <div className="flex justify-between mt-6">
             <button
-              onClick={clearCart}
+              onClick={handleClearCart}
               className="py-2 px-4 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition-transform transform hover:scale-105"
             >
               Clear Cart

@@ -7,9 +7,11 @@ import Image from 'next/image';
 import Logo from "../../assets/images/logo.png";
 import { logout } from '../../reducers/Auth/authSlice';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const AdminSidebar = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
-
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const toggleSidebar = () => {
     setIsSidebarVisible(!isSidebarVisible);
   };
@@ -17,9 +19,31 @@ const AdminSidebar = () => {
 
   const dispatch = useDispatch();
 
-  const handleSignOut = () => {
-    dispatch(logout());
-    router.push('/login');// Dispatch the logout action
+  const handleSignOut = async () => {
+    if (isLoggingOut) return; // Prevent multiple clicks
+    setIsLoggingOut(true);
+
+    try {
+      const result = await dispatch(logout()).unwrap();
+      if (result) {
+        toast.success("Logged out successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+
+        setTimeout(() => {
+          router.push('/login');
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+      toast.error("Failed to log out. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
   const menuItems = [
     { label: "Categories", icon: <FaThLarge />, path: "/admin/categories" },
@@ -33,6 +57,7 @@ const AdminSidebar = () => {
 
   return (
     <>
+    
     <div className='md:hidden w-full h-[70px] z-30'></div>
       <div className="md:hidden fixed top-4 left-4 z-50">
         <button
@@ -86,7 +111,8 @@ const AdminSidebar = () => {
 
         <div className="absolute bottom-4 left-0 w-full flex justify-center">
           <button
-            onClick={handleSignOut}
+           onClick={handleSignOut}
+           disabled={isLoggingOut}
             className="flex items-center justify-center gap-4 p-4 w-[90%] rounded-lg bg-red-500 text-white hover:bg-red-700 transition-all duration-300 shadow-lg"
           >
             <svg
