@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { loginUser } from "../../reducers/Auth/authSlice"; // Adjust the path as per your structure
 
 export default function LoginPage() {
@@ -28,7 +30,10 @@ export default function LoginPage() {
 
     // Validate the form
     if (!formData.email || !formData.password) {
-      setError("Please fill in both email and password.");
+      toast.error("Please fill in both email and password.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       return;
     }
 
@@ -43,18 +48,29 @@ export default function LoginPage() {
 
       // Extract role and navigate accordingly
       const { role } = result;
+      toast.success("Login successful! Redirecting...", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+
       if (role === "Admin") {
         router.push("/admin");
-      } else if (role === "Buyer"|| "buyer") {
+      } else if (role === "Buyer" || role === "buyer") {
         router.push("/buyer");
-      } else if (role === "Seller" || "seller") {
+      } else if (role === "Seller" || role === "seller") {
         router.push("/seller-profile");
       } else {
-        setError("Unauthorized role. Please contact support.");
+        toast.error("Unauthorized role. Please contact support.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
     } catch (err) {
       console.error("Login failed:", err);
-      setError(err.message || "Login failed. Please check your credentials.");
+      toast.error(err.message || "Login failed. Please check your credentials.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 
@@ -90,10 +106,6 @@ export default function LoginPage() {
         >
           <h2 className="text-3xl text-green-400 font-extrabold">Welcome Back!</h2>
           <p className="text-white">Log in to access your account.</p>
-
-          {error && (
-            <div className="text-red-500 font-medium text-sm">{error}</div>
-          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email */}

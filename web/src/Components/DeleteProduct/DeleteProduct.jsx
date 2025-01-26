@@ -1,12 +1,31 @@
 "use client";
 import React from "react";
 import { FaTimes } from "react-icons/fa";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const DeleteModal = ({
   showDeleteModal,
   setShowDeleteModal,
   confirmDelete,
 }) => {
+  const handleDelete = async () => {
+    try {
+      await confirmDelete();
+      toast.success("User deleted successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Failed to delete user. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
+
   return (
     <div
       className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ${
@@ -38,7 +57,7 @@ const DeleteModal = ({
           </button>
           <button
             className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-            onClick={confirmDelete}
+            onClick={handleDelete}
           >
             Delete
           </button>
