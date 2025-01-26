@@ -5,7 +5,8 @@ import { FaTruck, FaShippingFast, FaCreditCard, FaPaypal, FaMoneyBillWave, FaArr
 import { useRouter } from "next/navigation";
 import { saveOrder } from "@/reducers/Order/orderSlice";
 import { useDispatch,useSelector } from "react-redux";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Checkout = () => {
   const [formData, setFormData] = useState({
@@ -65,18 +66,24 @@ const Checkout = () => {
     
   
     console.log("Order Data:", orderData); // Debug the payload
-  try {
-    const response = await dispatch(saveOrder(orderData)).unwrap();
-    console.log("Response from server:", response); // Log the full response
-    alert("Order placed successfully!");
-  } catch (error) {
-    console.error("Error placing order:", error);
-    alert("An error occurred while placing the order. Please try again later.");
-  }
-
-  
+    try {
+      const response = await dispatch(saveOrder(orderData)).unwrap();
+      console.log("Response from server:", response); // Debug the response
+      toast.success("Order placed successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      setTimeout(() => {
+        router.push("/products"); // Redirect after success
+      }, 3000);
+    } catch (error) {
+      console.error("Error placing order:", error);
+      toast.error("An error occurred while placing the order. Please try again later.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
   };
-  
   return (
     <div
       className="relative py-20 px-8"
