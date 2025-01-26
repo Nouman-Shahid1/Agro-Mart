@@ -14,6 +14,18 @@ export const fetchOrders = createAsyncThunk(
   }
 );
 
+export const fetchOrderDetail = createAsyncThunk(
+  "orders/fetchOrderDetail",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/order/order-detail/${id}`);
+      return response.data; // Assuming response contains the order detail
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 export const saveOrder = createAsyncThunk(
     "orders/saveOrder",
     async (orderData, { rejectWithValue }) => {
@@ -81,7 +93,18 @@ const ordersSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-
+      .addCase(fetchOrderDetail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOrderDetail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orderDetail = action.payload; // Update state with fetched order detail
+      })
+      .addCase(fetchOrderDetail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // Save a New Order
       .addCase(saveOrder.pending, (state) => {
         state.loading = true;
