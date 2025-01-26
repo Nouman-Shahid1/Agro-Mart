@@ -7,6 +7,7 @@ import store from "../store/store";
 import "./globals.css";
 import Authentication from "../Components/Authentication"; // Import the Authentication component
 import { CartProvider } from '../utilities/CartContext';
+import { ToastContainer } from "react-toastify";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -60,6 +61,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <ToastContainer />
         <Provider store={store}>
         <CartProvider>
           <Authentication>

@@ -2,7 +2,10 @@
 import React from "react";
 import { useCart } from "../../utilities/CartContext";
 import Link from "next/link";
-const ProductCard = ({ title, src, price, description, rating,id,sellerId }) => {
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const ProductCard = ({ title, src, price, description, rating, id, sellerId }) => {
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
@@ -13,38 +16,44 @@ const ProductCard = ({ title, src, price, description, rating,id,sellerId }) => 
       sellerId,
       price: parseFloat(price), // Ensure price is numeric
     };
+  
     addToCart(product);
+  
+    // Display a success toast notification
+    toast.success(`${title} added to cart!`, {
+      position: "top-right", // Use string literal for position
+      autoClose: 3000,
+    });
   };
-
+  
   return (
     <div className="relative bg-gradient-to-b from-green-50 via-white to-[#baf8cc] p-6 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-105 transform transition-transform duration-300 w-[80%] sm:w-[320px] flex flex-col">
-       <Link href={`/Product/${id}`}>
-      <div className="absolute top-4 left-4 bg-gradient-to-r from-green-600 to-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-        Bestseller
-      </div>
+      <Link href={`/Product/${id}`}>
+        <div className="absolute top-4 left-4 bg-gradient-to-r from-green-600 to-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+          Bestseller
+        </div>
 
-      <div className="relative w-[180px] h-[180px] mx-auto rounded-full overflow-hidden shadow-lg border-4 border-green-500">
-        <img
-          className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110"
-          src={src}
-          alt={title || "Product"}
-        />
-      </div>
+        <div className="relative w-[180px] h-[180px] mx-auto rounded-full overflow-hidden shadow-lg border-4 border-green-500">
+          <img
+            className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110"
+            src={src}
+            alt={title || "Product"}
+          />
+        </div>
       </Link>
       <Link href={`/Product/${id}`}>
-
-      <div className="text-center mt-6">
-        <h3 className="text-xl font-bold text-green-700 truncate">
-          {title || "Product Name"}
-        </h3>
-        <p className="text-sm text-gray-600 mt-2">
-          {description || "A short description of the product."}
-        </p>
-        <p className="text-2xl font-bold text-green-600 mt-4">
-          ${price || "0.00"}
-        </p>
-      </div>
-</Link>
+        <div className="text-center mt-6">
+          <h3 className="text-xl font-bold text-green-700 truncate">
+            {title || "Product Name"}
+          </h3>
+          <p className="text-sm text-gray-600 mt-2">
+            {description || "A short description of the product."}
+          </p>
+          <p className="text-2xl font-bold text-green-600 mt-4">
+            ${price || "0.00"}
+          </p>
+        </div>
+      </Link>
       <div className="flex justify-center items-center mt-4">
         {Array.from({ length: 5 }, (_, index) => (
           <svg
