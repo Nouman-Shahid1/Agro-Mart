@@ -1,11 +1,12 @@
-// Profile Component
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import ProfileImage from "../../assets/images/blank.png";
 import { logout } from "../../reducers/Auth/authSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Profile = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -21,15 +22,22 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      const result = await dispatch(logout());
-      if (result.payload) {
+      const result = await dispatch(logout()).unwrap();
+      if (result) {
+        toast.success("Logged out successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+        });
         router.push("/login");
       }
     } catch (err) {
       console.error("Error during logout:", err);
+      toast.error("Failed to log out. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
-  
 
   return (
     <div className="relative bg-gradient-to-br from-green-900 via-emerald-700 to-lime-500 shadow-xl px-6 py-8 rounded-[32px] flex flex-col md:flex-row items-center justify-between backdrop-blur-lg border border-green-400/30 overflow-hidden">
