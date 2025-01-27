@@ -52,4 +52,11 @@ func RegisterRoutes(server *gin.Engine) {
 		orderRoutes.GET("order-detail/:id", getOrderByid)
 		orderRoutes.PUT("update-status/:id", UpdateOrderStatus)
 	}
+
+	ReviewRoutes := server.Group("/review")
+	{
+		ReviewRoutes.GET("reviews", getReviews)
+		ReviewRoutes.GET("product-review/:id", getReviewsByProductId)
+		ReviewRoutes.POST("new-review", saveReview)
+	}
 }
