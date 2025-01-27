@@ -97,28 +97,28 @@ func GetOrderByID(id int64) (*Order, error) {
 }
 
 
-func GetOrderByBuyerID(id int64) ([]Order, error) {
-	query := "SELECT * FROM orders WHERE buyer_id = ?"
-	rows, err := db.DB.Query(query, id)
-	if err != nil {
-		log.Printf("Error querying database: %v\n", err)
-		return nil, err
-	}
-	defer rows.Close()
-	var orders []Order
-	for rows.Next() {
-		var order Order
-		err := rows.Scan(&order.ID, &order.BuyerID, &order.SellerID, &order.ProductID, &order.Name, &order.Email, &order.ShippingAddress, &order.Country, 
-			&order.State, &order.City, &order.PostalCode, &order.PhoneNumber, &order.DeliveryOption, &order.CheckoutPrice, &order.OrderStatus, &order.PaymentMethod)
-
+	func GetOrderByBuyerID(id int64) ([]Order, error) {
+		query := "SELECT * FROM orders WHERE buyer_id = ?"
+		rows, err := db.DB.Query(query, id)
 		if err != nil {
-			log.Printf("Error scanning rows: %v\n", err)
+			log.Printf("Error querying database: %v\n", err)
 			return nil, err
 		}
-		orders = append(orders, order)
+		defer rows.Close()
+		var orders []Order
+		for rows.Next() {
+			var order Order
+			err := rows.Scan(&order.ID, &order.BuyerID, &order.SellerID, &order.ProductID, &order.Name, &order.Email, &order.ShippingAddress, &order.Country, 
+				&order.State, &order.City, &order.PostalCode, &order.PhoneNumber, &order.DeliveryOption, &order.CheckoutPrice, &order.OrderStatus, &order.PaymentMethod)
+
+			if err != nil {
+				log.Printf("Error scanning rows: %v\n", err)
+				return nil, err
+			}
+			orders = append(orders, order)
+		}
+		return orders, nil
 	}
-	return orders, nil
-}
 
 func GetOrderBySellerID(id int64) ([]Order, error) {
 	query := "SELECT * FROM orders WHERE seller_id = ?"

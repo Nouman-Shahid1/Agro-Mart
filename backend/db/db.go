@@ -119,6 +119,23 @@ if err != nil {
     log.Fatal("Could not create orders table:", err)
 }
 
+createReviewsTable := `
+CREATE TABLE IF NOT EXISTS reviews(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    userid INTEGER NOT NULL,
+    username TEXT NOT NULL,
+    productid INTEGER NOT NULL,
+    rating INTEGER NOT NULL,
+    review TEXT NOT NULL,
+    FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (productid) REFERENCES products(id) ON DELETE CASCADE
+)
+`
+_, err = DB.Exec(createReviewsTable)
+if err != nil {
+    log.Fatal("Could not create reviews table:", err)
+}
+
 
 
 }
