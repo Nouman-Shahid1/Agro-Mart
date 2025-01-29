@@ -197,22 +197,7 @@ const ProductDetailsPage = () => {
             <h2 className="text-2xl md:text-5xl font-extrabold text-green-700 mb-10 text-center">
               Customer Reviews
             </h2>
-            {reviews.map((review) => (
-              <div key={review.id} className="p-6 bg-white rounded-xl shadow-lg mb-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-lg font-bold text-gray-800">{review.username}</span>
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <FaStar
-                        key={i}
-                        className={i < review.rating ? "text-yellow-500" : "text-gray-300"}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-gray-600">{review.review}</p>
-              </div>
-            ))}
+          
             <div className="mt-10">
               <h3 className="text-xl font-bold mb-4">Add Your Review</h3>
               <div className="flex items-center mb-4">
@@ -239,6 +224,24 @@ const ProductDetailsPage = () => {
                 Submit Review
               </button>
             </div>
+          <div className="mt-8">
+          {reviews.map((review) => (
+              <div key={review.id} className="p-6 bg-white rounded-xl shadow-lg mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-lg font-bold text-gray-800">{review.username}</span>
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar
+                        key={i}
+                        className={i < review.rating ? "text-yellow-500" : "text-gray-300"}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-gray-600">{review.review}</p>
+              </div>
+            ))}
+          </div>
           </section>
         </section>
       </div>

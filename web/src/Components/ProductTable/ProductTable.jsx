@@ -1,19 +1,16 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CiSearch, CiEdit } from "react-icons/ci";
 import { FaTrash, FaPlusCircle } from "react-icons/fa";
-import {
-  getProducts,
-  deleteProduct,
-} from "@/reducers/product/productSlice";
+import { getProducts, deleteProduct } from "@/reducers/product/productSlice";
 import CreateProduct from "../CreateProduct/CreateProduct";
 import DeleteModal from "../DeleteProduct/DeleteProduct";
 
-const ProductTable = ({ name = "Products", category })=> {
+const ProductTable = ({ name = "Products", category }) => {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.product);
-  const { token } = useSelector((state) => state.auth); // Get token from auth state
+  const { token } = useSelector((state) => state.auth);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddProduct, setShowAddProduct] = useState(false);
@@ -21,12 +18,10 @@ const ProductTable = ({ name = "Products", category })=> {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-  // Fetch products on component load
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
 
-  // Filter products based on search term
   const filteredProducts = products
     ? products.filter(
         (product) =>
@@ -35,10 +30,9 @@ const ProductTable = ({ name = "Products", category })=> {
       )
     : [];
 
-  // Handle delete confirmation
   const confirmDelete = () => {
     if (deleteId) {
-      dispatch(deleteProduct(deleteId)) // Pass the `deleteId` directly
+      dispatch(deleteProduct(deleteId))
         .unwrap()
         .then(() => {
           alert("Product deleted successfully!");
@@ -53,7 +47,7 @@ const ProductTable = ({ name = "Products", category })=> {
         });
     }
   };
-  
+
   return (
     <div className="p-6">
       {/* Header Section */}
@@ -80,8 +74,8 @@ const ProductTable = ({ name = "Products", category })=> {
               type="text"
               placeholder="Search products"
               className="w-[200px] md:w-[250px] px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              value={searchTerm || ""}
-              onChange={(e) => setSearchTerm(e.target.value || "")}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-r-lg">
               <CiSearch size={22} />
@@ -93,7 +87,6 @@ const ProductTable = ({ name = "Products", category })=> {
       {/* Table Section */}
       <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 shadow-lg rounded-3xl overflow-hidden">
         <table className="min-w-full text-sm">
-          {/* Header */}
           <thead className="bg-gradient-to-r from-green-500 to-emerald-700 text-white">
             <tr>
               <th className="py-4 px-6 text-left font-semibold">Icon</th>
@@ -104,13 +97,11 @@ const ProductTable = ({ name = "Products", category })=> {
               <th className="py-4 px-6 text-center font-semibold">Actions</th>
             </tr>
           </thead>
-
-          {/* Table Body */}
           <tbody>
             {filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => (
+              filteredProducts.map((product, index) => (
                 <tr
-                  key={product.id}
+                  key={product.id || product._id || index}
                   className="border-b bg-white hover:bg-green-50 transition duration-300"
                 >
                   <td className="py-4 px-6">
@@ -126,7 +117,6 @@ const ProductTable = ({ name = "Products", category })=> {
                   <td className="py-4 px-6">{product.categoryName}</td>
                   <td className="py-4 px-6 text-center">
                     <div className="flex justify-center items-center gap-4">
-                      {/* Edit Button */}
                       <button
                         className="bg-green-500 text-white p-2 rounded-full shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300"
                         onClick={() => {
@@ -136,8 +126,6 @@ const ProductTable = ({ name = "Products", category })=> {
                       >
                         <CiEdit size={18} />
                       </button>
-
-                      {/* Delete Button */}
                       <button
                         className="bg-red-500 text-white p-2 rounded-full shadow-lg hover:bg-red-600 hover:shadow-xl transition duration-300"
                         onClick={() => {
