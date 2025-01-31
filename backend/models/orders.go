@@ -159,3 +159,15 @@ func (order *Order) UpdateOrderStatus() error {
 	//order.OrderStatus = newStatus // Update the in-memory value of order status
 	return nil
 }
+
+func (order Order) DeleteOrder() error{
+	query := "DELETE FROM orders WHERE id = ?"
+	stmt,err := db.DB.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(order.ID)
+	return err
+}

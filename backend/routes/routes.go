@@ -51,6 +51,7 @@ func RegisterRoutes(server *gin.Engine) {
 		orderRoutes.GET("seller-orders/:id", getOrdersBySellerid)
 		orderRoutes.GET("order-detail/:id", getOrderByid)
 		orderRoutes.PUT("update-status/:id", UpdateOrderStatus)
+		orderRoutes.DELETE("delete-order/:id", deleteOrder)
 	}
 
 	ReviewRoutes := server.Group("/review")

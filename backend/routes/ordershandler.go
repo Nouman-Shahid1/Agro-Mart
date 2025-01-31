@@ -116,3 +116,27 @@ func UpdateOrderStatus(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Order status updated successfully", "order": order})
 }
+
+
+func deleteOrder(context *gin.Context) {
+	id, err := strconv.ParseInt(context.Param("id"), 10, 64)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt parse Order id"})
+	}
+	// userId := context.GetInt64("userId")
+	order, err := models.GetOrderByID(id)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt fetch order"})
+	}
+	// if productcategory.UserID != userId {
+	// 	context.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized to delete product category"})
+	// 	return
+	// }
+	err = order.DeleteOrder()
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt delete order", "error": err.Error()})
+		return
+	}
+	context.JSON(http.StatusOK, gin.H{"message": "Order deleted"})
+
+}
