@@ -55,7 +55,28 @@ export const updateOrder = createAsyncThunk(
     }
   }
 );
-
+export const fetchSellerOrders = createAsyncThunk(
+  "orders/fetchSellerOrders",
+  async (sellerId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/order/seller-orders/${sellerId}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+export const fetchBuyerOrders = createAsyncThunk(
+  "orders/fetchBuyerOrders",
+  async (buyerId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/order/buyer-orders/${buyerId}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 // **Delete an order**
 export const deleteOrder = createAsyncThunk(
   "orders/deleteOrder",
@@ -74,6 +95,8 @@ const ordersSlice = createSlice({
   name: "orders",
   initialState: {
     orders: [], // List of orders
+    sellerOrders: [],
+    buyerOrders: [],
     loading: false, // Loading state
     error: null, // Error state
   },
@@ -102,6 +125,30 @@ const ordersSlice = createSlice({
         state.orderDetail = action.payload; // Update state with fetched order detail
       })
       .addCase(fetchOrderDetail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchSellerOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSellerOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.sellerOrders = action.payload;
+      })
+      .addCase(fetchSellerOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchBuyerOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchBuyerOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.buyerOrders = action.payload;
+      })
+      .addCase(fetchBuyerOrders.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
