@@ -2,24 +2,24 @@
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { fetchProductById } from "@/reducers/product/productSlice";
+import { fetchReviewsByProductId, saveReview } from "@/reducers/Review/reviewSlice";
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/Footer";
 import Newsletter from "@/Components/NewsLetter/Newsletter";
 import { FaStar } from "react-icons/fa";
 import { useCart } from "../../../utilities/CartContext";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const ProductDetailsPage = () => {
   const params = useParams();
   const id = params?.id;
-  console.log("Product ID:", id); // Debug the extracted ID
-
-  const { addToCart } = useCart();
   const dispatch = useDispatch();
-  const router = useRouter();
 
-  const { product = null, username = null, loading = false, error = null } =
+  const user = useSelector((state) => state.auth.user);
+
+  const { product, username, loading: productLoading, error: productError } =
     useSelector((state) => ({
       product: state.product?.product || null,
       username: state.product?.username || null,
@@ -27,16 +27,22 @@ const ProductDetailsPage = () => {
       error: state.product?.error || null,
     }));
 
+  const { reviews, stats, loading: reviewLoading, error: reviewError } =
+    useSelector((state) => ({
+      reviews: state.reviews?.reviews || [],
+      stats: state.reviews?.stats || { avgRating: 0, totalReviews: 0 },
+      loading: state.reviews?.loading || false,
+      error: state.reviews?.error || null,
+    }));
+
+  const { addToCart } = useCart();
   const [selectedRating, setSelectedRating] = useState(0);
-  const [newReview, setNewReview] = useState("");
+  const [newReviewText, setNewReviewText] = useState("");
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchProductById(id))
-        .then((action) => console.log(action))
-        .catch((error) => console.error("Error fetching product:", error));
-    } else {
-      console.error("Product ID is missing!");
+      dispatch(fetchProductById(id));
+      dispatch(fetchReviewsByProductId(id));
     }
   }, [dispatch, id]);
 
@@ -47,39 +53,64 @@ const ProductDetailsPage = () => {
         name: product.name,
         image: product.imagepath,
         price: product.price,
+      sellerId:product.userId,
+      });
+      toast.success(`${product.name} added to cart successfully!`, {
+        position: "top-right",
+        autoClose: 3000,
       });
     }
   };
 
-  const handleSubmitReview = () => {
-    if (!newReview.trim() || selectedRating === 0) {
-      alert("Please provide a valid review and rating.");
+  const handleSubmitReview = async () => {
+    if (!newReviewText.trim() || selectedRating === 0) {
+      toast.error("Please provide a valid review and rating.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       return;
     }
 
-    const review = {
-      id: Math.random(), // Temporary unique ID
+    if (!user) {
+      toast.error("You need to be logged in to submit a review.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    const newReview = {
+      productId: parseInt(id, 10),
       rating: selectedRating,
-      text: newReview,
-      user: "Anonymous",
+      review: newReviewText,
+      userId: user.id,
+      userName: user.username,
     };
 
-    product.reviews = [...(product.reviews || []), review];
-    alert("Review submitted successfully!");
-    setNewReview("");
-    setSelectedRating(0);
+    try {
+      await dispatch(saveReview(newReview)).unwrap();
+      toast.success("Review submitted successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      setNewReviewText("");
+      setSelectedRating(0);
+      dispatch(fetchReviewsByProductId(id)); // Refresh reviews
+    } catch (err) {
+      console.error("Error saving review:", err);
+      toast.error("Failed to submit review. Please try again later.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
   };
 
-  if (loading) {
+  if (productLoading || reviewLoading) {
     return <p>Loading product details...</p>;
   }
 
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
-
-  if (!id) {
-    return <p>Invalid product ID. Please select a valid product.</p>;
+  if (productError || reviewError) {
+    return <p>Error: {productError || reviewError}</p>;
   }
 
   if (!product) {
@@ -90,14 +121,11 @@ const ProductDetailsPage = () => {
     ? `http://localhost:8080/${product.imagepath}`
     : "path/to/default-image.jpg"; // Fallback image
 
-  const averageRating =
-    product.reviews?.length > 0
-      ? (
-          product.reviews.reduce((acc, review) => acc + review.rating, 0) /
-          product.reviews.length
-        ).toFixed(1)
-      : "No ratings yet";
-
+    const averageRating = stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "No ratings yet";
+    const totalReviews = stats.totalReviews || 0;
+    
+    
+    
   return (
     <>
       <Navbar bground={true} />
@@ -110,7 +138,6 @@ const ProductDetailsPage = () => {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundAttachment: "fixed",
-          filter: "brightness(1) contrast(1.1)",
         }}
       >
         <section className="container mx-auto px-6">
@@ -124,18 +151,14 @@ const ProductDetailsPage = () => {
                 />
               </div>
               <div className="flex flex-col justify-between space-y-10 p-6">
-                <div>
-                  <h1 className="text-2xl md:text-5xl font-bold text-gray-900 mb-4">
-                    {product.name}
-                  </h1>
-                  <p className="text-gray-600 text-md md:text-lg leading-relaxed tracking-wide">
-                    {product.description}
-                  </p>
-                  <p className="text-gray-800 text-lg font-medium">
-                    Average Rating: {averageRating}
-                  </p>
-                </div>
-                <div className="flex flex-col space-y-4">
+                <h1 className="text-2xl md:text-5xl font-bold">{product.name}</h1>
+                <p className="text-gray-600">{product.description}</p>
+                <p className="text-gray-800 text-lg font-medium">
+  Average Rating: {averageRating} ({totalReviews} reviews)
+</p>
+               
+               
+<div className="flex flex-col space-y-4">
                   <div className="flex items-center space-x-2">
                     <span className="text-lg font-medium text-gray-800">
                       Category:
@@ -161,7 +184,6 @@ const ProductDetailsPage = () => {
                     </span>
                   </div>
                 </div>
-
                 <button
                   onClick={handleAddToCart}
                   className="w-full py-2 md:py-4 bg-green-600 text-white text-lg md:text-xl font-semibold rounded-lg hover:bg-green-700 shadow-xl hover:shadow-green-500/50 transition-transform hover:scale-105"
@@ -171,37 +193,11 @@ const ProductDetailsPage = () => {
               </div>
             </div>
           </div>
-          {/* Review Section */}
           <section className="mt-10 py-12 px-6 bg-gradient-to-br from-green-100 to-green-50 rounded-lg shadow-2xl">
-            <h2 className="text-2xl md:text-5xl font-extrabold text-green-700 mb-10 text-center tracking-wide">
+            <h2 className="text-2xl md:text-5xl font-extrabold text-green-700 mb-10 text-center">
               Customer Reviews
             </h2>
-            <div className="space-y-10">
-              {product.reviews?.map((review, index) => (
-                <div
-                  key={index}
-                  className="p-6 bg-white rounded-xl shadow-lg border border-gray-200"
-                >
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-lg font-bold text-gray-800">
-                      {review.user || "Anonymous"}
-                    </span>
-                    <div className="flex text-yellow-500">
-                      {[...Array(5)].map((_, i) => (
-                        <FaStar
-                          key={i}
-                          className={
-                            i < review.rating ? "text-yellow-500" : "text-gray-300"
-                          }
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <p className="text-gray-600">{review.text}</p>
-                </div>
-              ))}
-            </div>
-            {/* Add Review Form */}
+          
             <div className="mt-10">
               <h3 className="text-xl font-bold mb-4">Add Your Review</h3>
               <div className="flex items-center mb-4">
@@ -216,8 +212,8 @@ const ProductDetailsPage = () => {
                 ))}
               </div>
               <textarea
-                value={newReview}
-                onChange={(e) => setNewReview(e.target.value)}
+                value={newReviewText}
+                onChange={(e) => setNewReviewText(e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-md"
                 placeholder="Write your review here..."
               ></textarea>
@@ -228,6 +224,24 @@ const ProductDetailsPage = () => {
                 Submit Review
               </button>
             </div>
+          <div className="mt-8">
+          {reviews.map((review) => (
+              <div key={review.id} className="p-6 bg-white rounded-xl shadow-lg mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-lg font-bold text-gray-800">{review.username}</span>
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar
+                        key={i}
+                        className={i < review.rating ? "text-yellow-500" : "text-gray-300"}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-gray-600">{review.review}</p>
+              </div>
+            ))}
+          </div>
           </section>
         </section>
       </div>
