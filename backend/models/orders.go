@@ -24,6 +24,7 @@ type Order struct {
 	CheckoutPrice   int64  `json:"checkoutPrice"`
 	OrderStatus     string `json:"orderStatus"`
 	PaymentMethod   string `json:"paymentMethod"`
+	Time 			int64  `json:"time"`
 }
 
 func GetAllOrders() ([]Order, error) {
@@ -38,7 +39,7 @@ func GetAllOrders() ([]Order, error) {
 	for rows.Next() {
 		var order Order
 		err := rows.Scan(&order.ID, &order.BuyerID, &order.SellerID, &order.ProductID, &order.Name, &order.Email, &order.ShippingAddress, &order.Country, 
-			&order.State, &order.City, &order.PostalCode, &order.PhoneNumber, &order.DeliveryOption, &order.CheckoutPrice, &order.OrderStatus, &order.PaymentMethod)
+			&order.State, &order.City, &order.PostalCode, &order.PhoneNumber, &order.DeliveryOption, &order.CheckoutPrice, &order.OrderStatus, &order.PaymentMethod, &order.Time)
 
 		if err != nil {
 			log.Printf("Error scanning rows: %v\n", err)
@@ -53,8 +54,8 @@ func (o *Order) Save() error {
 	query := `INSERT INTO orders(
 		buyer_id, seller_id, product_id, name, email, shipping_address, 
 		country, state, city, postal_code, phone_number, delivery_option, 
-		checkout_price, order_status, payment_method
-	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+		checkout_price, order_status, payment_method, time)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
 	stmt, err := db.DB.Prepare(query)
 	if err != nil {
@@ -64,7 +65,7 @@ func (o *Order) Save() error {
 	defer stmt.Close()
 
 	result, err := stmt.Exec(o.BuyerID, o.SellerID, o.ProductID, o.Name, o.Email, o.ShippingAddress, o.Country, o.State, o.City, o.PostalCode, 
-		o.PhoneNumber, o.DeliveryOption, o.CheckoutPrice, o.OrderStatus, o.PaymentMethod)
+		o.PhoneNumber, o.DeliveryOption, o.CheckoutPrice, o.OrderStatus, o.PaymentMethod, o.Time)
 
 	if err != nil {
 		log.Printf("Error executing save order query: %v\n", err)
@@ -88,7 +89,7 @@ func GetOrderByID(id int64) (*Order, error) {
 		&order.ID, &order.BuyerID, &order.SellerID, &order.ProductID, &order.Name, 
 		&order.Email, &order.ShippingAddress, &order.Country, &order.State, 
 		&order.City, &order.PostalCode, &order.PhoneNumber, &order.DeliveryOption, 
-		&order.CheckoutPrice, &order.OrderStatus, &order.PaymentMethod,
+		&order.CheckoutPrice, &order.OrderStatus, &order.PaymentMethod, &order.Time,
 	)
 	if err != nil {
 		return nil, err
@@ -109,7 +110,7 @@ func GetOrderByID(id int64) (*Order, error) {
 		for rows.Next() {
 			var order Order
 			err := rows.Scan(&order.ID, &order.BuyerID, &order.SellerID, &order.ProductID, &order.Name, &order.Email, &order.ShippingAddress, &order.Country, 
-				&order.State, &order.City, &order.PostalCode, &order.PhoneNumber, &order.DeliveryOption, &order.CheckoutPrice, &order.OrderStatus, &order.PaymentMethod)
+				&order.State, &order.City, &order.PostalCode, &order.PhoneNumber, &order.DeliveryOption, &order.CheckoutPrice, &order.OrderStatus, &order.PaymentMethod, &order.Time)
 
 			if err != nil {
 				log.Printf("Error scanning rows: %v\n", err)
@@ -132,7 +133,7 @@ func GetOrderBySellerID(id int64) ([]Order, error) {
 	for rows.Next() {
 		var order Order
 		err := rows.Scan(&order.ID, &order.BuyerID, &order.SellerID, &order.ProductID, &order.Name, &order.Email, &order.ShippingAddress, &order.Country, 
-			&order.State, &order.City, &order.PostalCode, &order.PhoneNumber, &order.DeliveryOption, &order.CheckoutPrice, &order.OrderStatus, &order.PaymentMethod)
+			&order.State, &order.City, &order.PostalCode, &order.PhoneNumber, &order.DeliveryOption, &order.CheckoutPrice, &order.OrderStatus, &order.PaymentMethod, &order.Time)
 
 		if err != nil {
 			log.Printf("Error scanning rows: %v\n", err)

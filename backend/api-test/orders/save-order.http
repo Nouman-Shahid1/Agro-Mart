@@ -14,8 +14,9 @@ Content-Type: application/json
     "postalCode": 90001,
     "phoneNumber": 1234567890,
     "deliveryOption": "Standard",
-    "checkoutPrice": 4999,
+    "checkoutPrice": 2000,
     "orderStatus": "Pending",
-    "paymentMethod": "Cash on Delivery"
+    "paymentMethod": "Cash on Delivery",
+    "time": 1738432287
 }
 

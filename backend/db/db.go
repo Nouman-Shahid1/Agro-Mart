@@ -109,6 +109,7 @@ CREATE TABLE IF NOT EXISTS orders (
     checkout_price INTEGER NOT NULL,
     order_status TEXT NOT NULL,
     payment_method TEXT NOT NULL,
+	time INTEGER NOT NULL,
     FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (seller_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
