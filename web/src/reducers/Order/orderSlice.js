@@ -77,12 +77,24 @@ export const fetchBuyerOrders = createAsyncThunk(
     }
   }
 );
+export const updateOrderStatus = createAsyncThunk(
+  "orders/updateOrderStatus",
+  async ({ id, orderStatus }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`/order/update-status/${id}`, { orderStatus });
+      return { id, orderStatus: response.data.orderStatus };
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 // **Delete an order**
 export const deleteOrder = createAsyncThunk(
   "orders/deleteOrder",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`/orders/${id}`);
+      await axios.delete(`/order/delete-order/${id}`);
       return id; // Return the ID of the deleted order
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -137,6 +149,22 @@ const ordersSlice = createSlice({
         state.sellerOrders = action.payload;
       })
       .addCase(fetchSellerOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateOrderStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.orders.findIndex((order) => order.id === action.payload.id);
+        if (index !== -1) {
+          state.orders[index].orderStatus = action.payload.orderStatus;
+        }
+      })
+      
+      .addCase(updateOrderStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
