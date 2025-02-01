@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchBuyerOrders, fetchOrderDetail } from "@/reducers/Order/orderSlice";
+import { fetchBuyerOrders, fetchOrderDetail,deleteOrder } from "@/reducers/Order/orderSlice";
 import Profile from "@/Components/ProfileCard/ProfileCard";
 
 export default function Orders() {
@@ -45,7 +45,11 @@ export default function Orders() {
     });
     setPopupVisible(true);
   };
-
+  const handleDeleteOrder = async (orderId) => {
+    await dispatch(deleteOrder(orderId));
+    dispatch(fetchBuyerOrders(userId));
+    closePopup();
+  };
   const closePopup = () => {
     setSelectedOrder(null);
     setPopupVisible(false);
@@ -151,12 +155,23 @@ export default function Orders() {
             alt={selectedOrder.Product?.name || "Product Image"}
             className="w-full h-40 rounded-lg object-cover mb-4"
           />
+          
+          <div className="flex gap-8">
+          {selectedOrder.orderStatus === "Pending" && (
+                <button
+                  className="mt-2 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition shadow-md"
+                  onClick={() => handleDeleteOrder(selectedOrder.id)}
+                >
+                  Delete Order
+                </button>
+              )}
           <button
             className="w-full bg-lime-600 text-white py-2 rounded-lg hover:bg-lime-700 transition shadow-md"
             onClick={closePopup}
           >
             Close
           </button>
+          </div>
         </div>
       </div>
     )}
