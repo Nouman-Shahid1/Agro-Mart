@@ -3,6 +3,7 @@ package routes
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"fyp.com/m/models"
 	"github.com/gin-gonic/gin"
@@ -139,4 +140,61 @@ func deleteOrder(context *gin.Context) {
 	}
 	context.JSON(http.StatusOK, gin.H{"message": "Order deleted"})
 
+}
+
+func getsellerStats(context *gin.Context) {
+	id, err := strconv.ParseInt(context.Param("id"), 10, 64)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt convert parse order id for read"})
+		return
+	}
+	orders, err := models.GetOrderBySellerID(id)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt fetch orders", "error": err.Error()})
+		return
+	}
+	type sellerStats struct {
+		TotalOrders  int
+		Revenue      int
+		ActiveOrders int
+		TotalSales   int
+	}
+	var stats sellerStats
+	for _, order := range orders {
+		stats.TotalOrders += 1
+		stats.Revenue += int(order.CheckoutPrice)
+		if order.OrderStatus == "completed"{
+			stats.TotalSales += int(order.CheckoutPrice)
+		}else {
+			stats.ActiveOrders += 1
+		}	
+    }
+	context.JSON(http.StatusOK, stats)
+}
+
+func getsellermonthlyStats(context *gin.Context) {
+	id, err := strconv.ParseInt(context.Param("id"), 10, 64)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt convert parse order id for read"})
+		return
+	}
+	orders, err := models.GetOrderBySellerID(id)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt fetch orders", "error": err.Error()})
+		return
+	}
+	type MonthlyStats struct {
+		Order *models.Order
+		Time time.Time
+	}
+	var total_stats []MonthlyStats
+	for _, order := range orders {
+		stats := MonthlyStats{
+		Order: &order,
+		Time : time.Unix(order.Time, 0),
+		}
+		total_stats = append(total_stats, stats)
+
+    }
+	context.JSON(http.StatusOK, total_stats)
 }

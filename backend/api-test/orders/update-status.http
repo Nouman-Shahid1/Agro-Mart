@@ -2,5 +2,5 @@ PUT http://localhost:8080/order/update-status/1
 Content-Type: application/json
 
 {
-    "orderStatus": "Delivered"
+    "orderStatus": "completed"
 }
