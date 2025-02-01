@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchSellerOrders, fetchOrderDetail } from "@/reducers/Order/orderSlice";
+import { fetchSellerOrders, fetchOrderDetail,updateOrderStatus } from "@/reducers/Order/orderSlice";
 import Profile from "@/Components/ProfileCard/ProfileCard";
 
 export default function Orders() {
@@ -45,7 +45,12 @@ export default function Orders() {
     });
     setPopupVisible(true);
   };
-
+  const handleUpdateStatus = async (orderId, newStatus) => {
+    await dispatch(updateOrderStatus({ id: orderId, orderStatus: newStatus })); // ✅ Correct key "orderStatus"
+    dispatch(fetchSellerOrders(userId));
+    closePopup();
+  };
+  
   const closePopup = () => {
     setSelectedOrder(null);
     setPopupVisible(false);
@@ -116,6 +121,18 @@ export default function Orders() {
             >
               View Details
             </button>
+            <select
+                className="mt-2 w-full bg-lime-600 text-white py-2 rounded-lg hover:bg-green-700 transition shadow-md"
+                onChange={(e) => handleUpdateStatus(order.id, e.target.value)}
+                value={order.orderStatus}
+              >
+                <option value="Pending">Pending</option>
+                <option value="Packed">Packed</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Out for Delivery">Out for Delivery</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
           </div>
         ))}
       </div>
