@@ -1,6 +1,6 @@
 "use client";
 import Profile from "@/Components/ProfileCard/ProfileCard";
-import React, { useState } from "react";
+import React,  { useEffect, useState }  from "react";
 import { Line, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -14,7 +14,8 @@ import {
 } from "chart.js";
 import { saveAs } from "file-saver";
 import { FaDownload, FaTractor, FaSeedling, FaChartLine } from "react-icons/fa";
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSellerStats } from "@/reducers/Order/orderSlice";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -26,6 +27,16 @@ ChartJS.register(
 );
 
 const AnalyticsPage = () => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { sellerStats, loading, error } = useSelector((state) => state.orders);
+
+  useEffect(() => {
+    if (user?.userId) {
+      dispatch(fetchSellerStats(user.userId));
+    }
+  }, [dispatch, user?.userId]);
+
   const revenueData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
     datasets: [
@@ -68,16 +79,40 @@ const AnalyticsPage = () => {
       },
     ],
   };
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
+  const totalOrders = sellerStats?.TotalOrders || 0;
+  const totalRevenue = sellerStats?.Revenue || 0;
+  const activeOrders = sellerStats?.ActiveOrders || 0;
+  const totalSales = sellerStats?.TotalSales || 0;
 
-  const [totalFarmers] = useState(4567);
-  const [totalRevenue] = useState(78910);
-  const [activeFields] = useState(789);
-  const [totalSales] = useState(15340);
 
   const downloadReport = () => {
-    const csvContent = "Example Report Content";
+    const sellerName = user?.username || "Seller";
+  
+    const csvContent =
+  `AgroMart Sales Report
+  =======================
+  Welcome, ${sellerName}!
+  Thank you for being a valuable part of AgroMart.
+  Below is your latest sales report:
+  
+  SUMMARY
+  -------
+  Total Orders: ${totalOrders}
+  Total Revenue: $${totalRevenue}
+  Active Orders: ${activeOrders}
+  Total Sales: $${totalSales}
+  
+  
+  Generated on: ${new Date().toLocaleString()}
+  Powered by AgroMart
+  =======================
+  `;
+  
+    // Create a Blob and trigger file download
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
-    saveAs(blob, "agromart_sales_report.csv");
+    saveAs(blob, `AgroMart_Sales_Report_${sellerName}.csv`);
   };
 
   return (
@@ -113,15 +148,15 @@ const AnalyticsPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
           {[
             {
-              title: "Total Farmers",
-              value: totalFarmers,
+              title: "Total Orders",
+              value: totalOrders,
               colorFrom: "green-600",
               colorTo: "green-700",
               icon: <FaSeedling />,
               change: "+3% from last month",
             },
             {
-              title: "Harvest Revenue",
+              title: "Total Revenue",
               value: `$${totalRevenue.toLocaleString()}`,
               colorFrom: "yellow-600",
               colorTo: "yellow-700",
@@ -129,8 +164,8 @@ const AnalyticsPage = () => {
               change: "-1% from last month",
             },
             {
-              title: "Active Fields",
-              value: activeFields,
+              title: "Active Orders",
+              value: activeOrders,
               colorFrom: "blue-600",
               colorTo: "blue-700",
               icon: <FaSeedling />,

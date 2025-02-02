@@ -99,14 +99,25 @@ const CreateProduct = ({ showAddProduct, setShowAddProduct, initialData }) => {
         });
       }
       await dispatch(getProducts()).unwrap();
-      setShowAddProduct(false);
+
+      if (typeof setShowAddProduct === "function") {
+        setShowAddProduct(false);
+      } else {
+        console.error("setShowAddProduct is not a function!");
+      }
+      
     } catch (err) {
-      setError(err.message || "Failed to create or update the product. Please try again.");
-      toast.error(err.message || "Failed to create or update the product.", {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      console.error("Full error details:", err); // Log the entire error
+      console.error("Error message:", err.message); // Log specific message
+    
+      setError(err.message || "An error occurred while processing the request.");
+    
+      toast.error(
+        err.message || "Failed to create or update the product. Please try again.",
+        { position: "top-right", autoClose: 3000 }
+      );
     }
+    
   };
 
   return (

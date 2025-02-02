@@ -25,6 +25,29 @@ export const fetchOrderDetail = createAsyncThunk(
     }
   }
 );
+export const fetchSellerStats = createAsyncThunk(
+  "orders/fetchSellerStats",
+  async (sellerId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/order/seller-stats/${sellerId}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const fetchSellerMonthlyStats = createAsyncThunk(
+  "orders/fetchSellerMonthlyStats",
+  async (sellerId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/order/seller-monthly-stats/${sellerId}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 export const saveOrder = createAsyncThunk(
     "orders/saveOrder",
@@ -109,6 +132,8 @@ const ordersSlice = createSlice({
     orders: [], // List of orders
     sellerOrders: [],
     buyerOrders: [],
+    sellerStats: null, // Store overall seller stats
+    sellerMonthlyStats: [],
     loading: false, // Loading state
     error: null, // Error state
   },
@@ -149,6 +174,32 @@ const ordersSlice = createSlice({
         state.sellerOrders = action.payload;
       })
       .addCase(fetchSellerOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchSellerStats.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSellerStats.fulfilled, (state, action) => {
+        state.loading = false;
+        state.sellerStats = action.payload; // Store overall seller stats
+      })
+      .addCase(fetchSellerStats.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      
+      // Fetch Seller Monthly Stats
+      .addCase(fetchSellerMonthlyStats.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSellerMonthlyStats.fulfilled, (state, action) => {
+        state.loading = false;
+        state.sellerMonthlyStats = action.payload; // Store monthly stats
+      })
+      .addCase(fetchSellerMonthlyStats.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
