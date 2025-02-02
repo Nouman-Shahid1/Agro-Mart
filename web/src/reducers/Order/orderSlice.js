@@ -41,7 +41,7 @@ export const fetchSellerMonthlyStats = createAsyncThunk(
   "orders/fetchSellerMonthlyStats",
   async (sellerId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/order/seller-monthly-stats/${sellerId}`);
+      const response = await axios.get(`/order/monthly-stats/${sellerId}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
