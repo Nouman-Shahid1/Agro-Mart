@@ -6,6 +6,7 @@ import { ImCross } from "react-icons/im";
 import { FaUser, FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../../utilities/CartContext";
 import { logout } from "@/reducers/Auth/authSlice";
+import { useRouter } from "next/navigation";
 import { toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Navbar = () => {
@@ -15,8 +16,8 @@ const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
   const dispatch =useDispatch();
-  const { username } = useSelector((state) => state.auth.user || {});
-
+  const { username,role } = useSelector((state) => state.auth.user || {});
+const router=useRouter();
     const cartRef = useRef(null);
     useEffect(() => {
       const handleClickOutside = (event) => {
@@ -122,7 +123,24 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showCart]);
+const HandleProfile=()=>{
+  if (role === "Admin") {
+    router.push("/admin");
+  } else if (role === "Buyer" || role === "buyer") {
+    router.push("/buyer");
+  } else if (role === "Seller" || role === "seller") {
+    router.push("/seller-profile");
+  }
 
+}
+const HandleOrder=()=>{
+  if (role === "Buyer" || role === "buyer") {
+    router.push("/buyer/orders");
+  } else if (role === "Seller" || role === "seller") {
+    router.push("/seller-profile/orders");
+  }
+
+}
   const handleClearCart = () => {
     clearCart();
     toast.success("Cart cleared successfully!", {
@@ -181,7 +199,6 @@ const Navbar = () => {
             </div>
             <div className="flex items-center gap-4 md:gap-6">
             <div className="relative group flex items-center gap-4">
-  {/* Button to toggle dropdown */}
   <button
     onClick={() => setShowDropdown((prev) => !prev)}
     className="flex items-center gap-2 cursor-pointer"
@@ -208,8 +225,9 @@ const Navbar = () => {
       ref={dropdownRef}
       className="absolute top-full right-0 mt-2 w-40 py-3 px-4 bg-white text-gray-800 rounded-lg shadow-lg border border-gray-300 z-50"
     >
-      <p className="cursor-pointer hover:text-black py-1">My Profile</p>
-      <p className="cursor-pointer hover:text-black py-1">Orders</p>
+      <p className="cursor-pointer hover:text-black py-1" onClick={HandleProfile}>My Profile</p>
+      
+      <p className="cursor-pointer hover:text-black py-1" onClick={HandleOrder}>Orders</p>
       <p onClick={handleLogout} className="cursor-pointer hover:text-black py-1">Logout</p>
     </div>
   )}

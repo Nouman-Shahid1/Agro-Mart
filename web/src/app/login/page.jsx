@@ -46,7 +46,6 @@ export default function LoginPage() {
       const result = await dispatch(loginUser(loginData)).unwrap();
       console.log("Login successful, response:", result);
 
-      // Extract role and navigate accordingly
       const { role } = result;
       toast.success("Login successful! Redirecting...", {
         position: "top-right",
