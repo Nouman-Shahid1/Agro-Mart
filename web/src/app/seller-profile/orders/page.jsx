@@ -131,6 +131,7 @@ export default function Orders() {
                 <option value="Shipped">Shipped</option>
                 <option value="Out for Delivery">Out for Delivery</option>
                 <option value="Delivered">Delivered</option>
+                <option value="completed">completed</option>
                 <option value="Cancelled">Cancelled</option>
               </select>
           </div>

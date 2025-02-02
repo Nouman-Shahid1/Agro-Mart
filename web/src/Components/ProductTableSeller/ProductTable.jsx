@@ -86,11 +86,8 @@ const ProductTable = () => {
           </thead>
           <tbody>
             {products?.length > 0 ? (
-              products.map((product) => (
-                <tr
-                  key={product.id}
-                  className="border-b bg-white hover:bg-green-50 transition duration-300"
-                >
+            products.map((product, index) => (
+              <tr key={product.id || `product-${index}`} className="border-b bg-white hover:bg-green-50 transition duration-300">
                   <td className="py-4 px-6">
                     <img
                       src={`http://localhost:8080/${product.imagepath}`}

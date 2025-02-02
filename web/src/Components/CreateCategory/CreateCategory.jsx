@@ -77,7 +77,7 @@ const CreateCategory = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.userId) {
       const storedUserId = localStorage.getItem("userId");
       if (storedUserId) {
@@ -90,49 +90,43 @@ const CreateCategory = ({
         return;
       }
     }
-
+  
     const formDataToSend = new FormData();
     formDataToSend.append("name", formData.name);
     formDataToSend.append("description", formData.description);
-
-    const userId = formData.userId || localStorage.getItem("userId");
-    formDataToSend.append("userId", userId);
-
+    formDataToSend.append("userId", formData.userId || localStorage.getItem("userId"));
+  
     if (formData.image) {
       formDataToSend.append("image", formData.image);
     }
-
+  
     try {
       const action = initialCategory
-        ? updateCategory({
-            id: initialCategory.id,
-            categoryData: formDataToSend,
-          })
+        ? updateCategory({ id: initialCategory.id, categoryData: formDataToSend })
         : createCategory(formDataToSend);
-
+  
       await dispatch(action).unwrap();
       toast.success(
-        initialCategory
-          ? "Category updated successfully!"
-          : "Category created successfully!",
-        {
-          position: "top-right",
-          autoClose: 3000,
-        }
+        initialCategory ? "Category updated successfully!" : "Category created successfully!",
+        { position: "top-right", autoClose: 3000 }
       );
+  
       await dispatch(fetchCategories()).unwrap();
       resetForm();
+  
+      if (typeof router !== "undefined" && router) {
+        router.push("/categories"); // ✅ Only push if router is available
+      }
+  
     } catch (err) {
       console.error("Error during category submission:", err);
       toast.error(
         err.message || "Failed to submit category. Please try again.",
-        {
-          position: "top-right",
-          autoClose: 3000,
-        }
+        { position: "top-right", autoClose: 3000 }
       );
     }
   };
+  
 
   const resetForm = () => {
     setFormData({

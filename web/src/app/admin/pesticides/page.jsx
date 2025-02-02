@@ -8,7 +8,7 @@ const Pesticides = () => {
       <Profile />
       <div className="z-20">
         {/* Passing the category as "pesticides" for filtering */}
-        <ProductTable name="Pesticides" category="Pesticide" />
+        <ProductTable name="Pesticides" category="Pesticides" />
       </div>
     </div>
   );

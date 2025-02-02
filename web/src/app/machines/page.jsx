@@ -18,7 +18,7 @@ export default function MachinesPage() {
   }, [dispatch]);
 
   // Filter products for the "Machines" category
-  const machineProducts = products.filter((product) => product.categoryName === "Farm Machinery");
+  const machineProducts = products.filter((product) => product.categoryName === "Machines");
 
   return (
     <>
