@@ -62,7 +62,7 @@ const Checkout = () => {
       checkoutPrice: calculateTotal(),
       orderStatus: "Pending",
       paymentMethod: formData.paymentMethod,
-      time: Date.now(),
+      time: Math.floor(Date.now() / 1000),
     };
     
   

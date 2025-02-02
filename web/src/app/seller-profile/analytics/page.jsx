@@ -13,9 +13,9 @@ import {
   ArcElement,
 } from "chart.js";
 import { saveAs } from "file-saver";
-import { FaDownload, FaTractor, FaSeedling, FaChartLine } from "react-icons/fa";
+import { FaDownload, FaTractor, FaSeedling, FaChartLine ,FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSellerStats } from "@/reducers/Order/orderSlice";
+import { fetchSellerStats ,fetchSellerMonthlyStats} from "@/reducers/Order/orderSlice";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -29,20 +29,31 @@ ChartJS.register(
 const AnalyticsPage = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const { sellerStats, loading, error } = useSelector((state) => state.orders);
-
+  const { sellerStats, sellerMonthlyStats, loading, error } = useSelector((state) => state.orders);
+  
   useEffect(() => {
     if (user?.userId) {
       dispatch(fetchSellerStats(user.userId));
+      dispatch(fetchSellerMonthlyStats(user.userId));
     }
   }, [dispatch, user?.userId]);
 
+ 
+  const monthlyStats = Array.isArray(sellerMonthlyStats?.monthly_stats) ? sellerMonthlyStats.monthly_stats : [];
+  const yearlyStats = Array.isArray(sellerStats?.yearly_stats) ? sellerStats.yearly_stats : [];
+  const labels = monthlyStats.map((stat) => `${stat.month}-${stat.year}`);
+  const currentMonthRevenue = sellerMonthlyStats?.current_month_revenue || 0;
+  const currentYearRevenue = sellerMonthlyStats?.current_year_revenue || 0;
+  const revenueDataPoints = monthlyStats.map(stat => stat.total_revenue);
+  const salesDataPoints = monthlyStats.map(stat => stat.total_orders);
+  const revenueGrowthPoints = monthlyStats.map(stat => stat.revenue_growth_percentage);
+  const orderGrowthPoints = monthlyStats.map(stat => stat.order_growth_percentage);
   const revenueData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+    labels,
     datasets: [
       {
         label: "Revenue Growth",
-        data: [5000, 7000, 8000, 12000, 11000, 13000, 15000],
+        data: revenueDataPoints,
         borderColor: "#4caf50",
         backgroundColor: "rgba(76, 175, 80, 0.3)",
         tension: 0.4,
@@ -50,12 +61,12 @@ const AnalyticsPage = () => {
     ],
   };
 
-  const monthlySalesTrend = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+  const salesData = {
+    labels,
     datasets: [
       {
         label: "Monthly Sales Trend",
-        data: [4000, 5000, 6000, 10000, 9500, 11000, 12500],
+        data: salesDataPoints,
         borderColor: "#ff9800",
         backgroundColor: "rgba(255, 152, 0, 0.3)",
         tension: 0.4,
@@ -63,22 +74,33 @@ const AnalyticsPage = () => {
     ],
   };
 
-  const activeFieldsData = {
-    labels: ["Region 1", "Region 2", "Region 3", "Region 4", "Region 5"],
-    datasets: [
-      {
-        label: "Active Fields",
-        data: [120, 90, 150, 100, 80],
-        backgroundColor: [
-          "#4caf50",
-          "#66bb6a",
-          "#81c784",
-          "#a5d6a7",
-          "#c8e6c9",
-        ],
+  // ** Determine Last Month & Year Growth Stats **
+  const lastMonthStats = monthlyStats[monthlyStats.length - 1] || {};
+  const lastYearStats = yearlyStats[yearlyStats.length - 1] || {};
+
+  const lastMonthGrowth = lastMonthStats.revenue_growth_percentage || 0;
+  const lastYearGrowth = lastYearStats.revenue_growth_percentage || 0;
+
+   const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: "Revenue ($)",
+        },
       },
-    ],
+      x: {
+        title: {
+          display: true,
+          text: "Months",
+        },
+      },
+    },
   };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
   const totalOrders = sellerStats?.TotalOrders || 0;
@@ -198,34 +220,33 @@ const AnalyticsPage = () => {
           ))}
         </div>
 
-        <div className="bg-white shadow-md rounded-3xl p-6 mt-10">
-          <h2 className="text-2xl font-bold text-green-800 mb-4">
-            Revenue Growth
-          </h2>
-          <div className="h-80">
-            <Line data={revenueData} options={{ responsive: true }} />
-          </div>
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+          <div className="bg-white shadow-md rounded-3xl p-6">
+            <h2 className="text-2xl font-bold text-green-800 mb-4">
+              Last Month Revenue Growth
+              <span className={`ml-2 ${lastMonthGrowth >= 0 ? "text-green-600" : "text-red-600"}`}>
+                {lastMonthGrowth >= 0 ? <FaArrowUp /> : <FaArrowDown />} {lastMonthGrowth.toFixed(2)}%
+              </span>
+            </h2>
+            <div className="h-64">
+            <Line data={revenueData} options={options} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10">
-          <div className="bg-white shadow-md rounded-3xl p-6">
-            <h2 className="text-2xl font-bold text-green-800 mb-4">
-              Active Fields by Region
-            </h2>
-            <div className="h-64">
-              <Pie data={activeFieldsData} options={{ responsive: true }} />
             </div>
           </div>
+
           <div className="bg-white shadow-md rounded-3xl p-6">
             <h2 className="text-2xl font-bold text-green-800 mb-4">
-              Monthly Sales Trends
+              Last Year Revenue Growth
+              <span className={`ml-2 ${lastYearGrowth >= 0 ? "text-green-600" : "text-red-600"}`}>
+                {lastYearGrowth >= 0 ? <FaArrowUp /> : <FaArrowDown />} {lastYearGrowth.toFixed(2)}%
+              </span>
             </h2>
             <div className="h-64">
-              <Line data={monthlySalesTrend} options={{ responsive: true}} />
+            <Line data={salesData} options={options} />
             </div>
           </div>
-        </div>
       </div>
+    </div>
     </div>
   );
 };
