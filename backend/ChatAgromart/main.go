@@ -1,16 +1,17 @@
 package main
 
 import (
-	"example.com/chat/db"
-	"example.com/chat/models"
-	"example.com/chat/routes"
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"strconv"
 	"sync"
 	"time"
+
+	"example.com/chat/db"
+	"example.com/chat/models"
+	"example.com/chat/routes"
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 )
 
 // WebSocket Client Struct
@@ -31,7 +32,24 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-// WebSocket Connection Handler
+// ✅ CORS Middleware (Allows requests from localhost:3000)
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000") // Allow frontend requests
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true") // Needed for auth headers
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+
+		c.Next()
+	}
+}
+
+// ✅ WebSocket Connection Handler
 func wsEndpoint(c *gin.Context) {
 	senderID, err := strconv.ParseInt(c.Query("senderID"), 10, 64)
 	if err != nil {
@@ -62,7 +80,7 @@ func wsEndpoint(c *gin.Context) {
 	go client.writeMessages()
 }
 
-// Handle Incoming Messages
+// ✅ Handle Incoming Messages
 func handleMessages(client *Client) {
 	defer func() {
 		mutex.Lock()
@@ -91,14 +109,14 @@ func handleMessages(client *Client) {
 	}
 }
 
-// Send Messages to WebSocket Clients
+// ✅ Send Messages to WebSocket Clients
 func (c *Client) writeMessages() {
 	for msg := range c.send {
 		c.conn.WriteMessage(websocket.TextMessage, msg)
 	}
 }
 
-// Broadcast Messages to the Intended Receiver
+// ✅ Broadcast Messages to the Intended Receiver
 func handleBroadcast() {
 	for {
 		message := <-broadcast
@@ -121,23 +139,33 @@ func handleBroadcast() {
 }
 
 func main() {
-	// Initialize the database
+	// ✅ Initialize the database
 	db.InitDB()
 	db.CreateTable()
 
-	// Create a new Gin router
+	// ✅ Create a new Gin router
 	router := gin.Default()
+	router.Use(CORSMiddleware()) // Apply CORS middleware
 
-	// Register WebSocket endpoint
+	// ✅ Register WebSocket endpoint
 	router.GET("/ws", wsEndpoint)
 
-	// Register other API routes
+	// ✅ Register REST API routes
 	routes.RegisterRoutes(router)
 
-	// Start WebSocket broadcasting in a separate goroutine
+	// ✅ Debugging: List all registered routes
+	router.GET("/debug/routes", func(c *gin.Context) {
+		var routes []string
+		for _, route := range router.Routes() {
+			routes = append(routes, route.Method+" "+route.Path)
+		}
+		c.JSON(http.StatusOK, gin.H{"routes": routes})
+	})
+
+	// ✅ Start WebSocket broadcasting in a separate goroutine
 	go handleBroadcast()
 
-	// Start the chat service on port 8081
+	// ✅ Start the chat service on port 8081
 	log.Println("Chat Service running on http://localhost:8081")
 	if err := router.Run(":8081"); err != nil {
 		log.Fatal("Chat Service failed:", err)
