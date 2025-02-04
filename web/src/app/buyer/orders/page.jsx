@@ -3,16 +3,20 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchBuyerOrders, fetchOrderDetail,deleteOrder } from "@/reducers/Order/orderSlice";
 import Profile from "@/Components/ProfileCard/ProfileCard";
-
+import { fetchMessages, } from "@/reducers/Chat/chatSlice";
 export default function Orders() {
   const dispatch = useDispatch();
   const { buyerOrders, loading, error } = useSelector((state) => state.orders);
+  // const { messages, loading: chatLoading } = useSelector((state) => state.chat);
   const userId = useSelector((state) => state.auth.user?.userId);
+  const token = useSelector((state) => state.auth.token);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [products, setProducts] = useState({});
+  const [isChatVisible, setChatVisible] = useState(false);
+  const [chatMessage, setChatMessage] = useState("");
+  const [selectedBuyerId, setSelectedBuyerId] = useState(null);
 
-  // Fetch seller orders on component mount
   useEffect(() => {
     if (userId) {
       dispatch(fetchBuyerOrders(userId));
@@ -54,6 +58,113 @@ export default function Orders() {
     setSelectedOrder(null);
     setPopupVisible(false);
   };
+  const messages = useSelector((state) => state.chat.messages);
+  const loadingMessages = useSelector((state) => state.chat.loading);
+  const [localMessages, setLocalMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [ws, setWs] = useState(null);
+
+  // ✅ Fetch Orders
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchBuyerOrders(userId));
+    }
+  }, [dispatch, userId]);
+
+  // ✅ Fetch Product Details for Orders
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      const productData = {};
+      for (const order of buyerOrders) {
+        try {
+          const response = await dispatch(fetchOrderDetail(order.id));
+          if (response.meta.requestStatus === "fulfilled") {
+            productData[order.id] = response.payload.Product;
+          }
+        } catch (error) {
+          console.error("Failed to fetch product details:", error);
+        }
+      }
+      setProducts(productData);
+    };
+
+    if (buyerOrders.length > 0) fetchProductDetails();
+  }, [buyerOrders, dispatch]);
+
+  // ✅ Open Chat & Connect WebSocket
+
+  const sendMessage = () => {
+    if (!ws || !input.trim()) return;
+  
+    const messageData = { senderId: userId, receiverId: selectedBuyerId, content: input };
+    console.log("🔹 Sending Message:", messageData);
+  
+    // Send the message over WebSocket
+    ws.send(JSON.stringify(messageData));
+  
+    // Do NOT update local state here. Let the WebSocket `onmessage` handle this.
+    setInput(""); // Clear the input field
+  };
+  
+  const handleOpenChat = (buyerId) => {
+    if (!token) {
+      alert("⚠ Unauthorized! Please log in again.");
+      return;
+    }
+  
+    setSelectedBuyerId(buyerId);
+    setChatVisible(true);
+  
+    if (!userId || !buyerId) {
+      console.error("Missing sender or receiver ID");
+      return;
+    }
+  
+    // Fetch chat messages from the backend
+    dispatch(fetchMessages({ senderId: userId, receiverId: buyerId }));
+  
+    const websocket = new WebSocket(`ws://localhost:8081/ws?senderID=${userId}&receiverID=${buyerId}`);
+    setWs(websocket);
+  
+    websocket.onopen = () => {
+      console.log("✅ WebSocket connected");
+    };
+  
+    websocket.onmessage = (event) => {
+      const receivedMessage = JSON.parse(event.data);
+      console.log("🔹 Message Received:", receivedMessage);
+  
+      // Update local state with the received message
+      setLocalMessages((prev) => [...prev, receivedMessage]);
+  
+      // Dispatch to Redux store to update the message list (if needed)
+      dispatch({
+        type: "chat/addMessage",
+        payload: receivedMessage,
+      });
+    };
+  
+    websocket.onclose = () => {
+      console.log("❌ WebSocket disconnected");
+    };
+  
+    return () => {
+      websocket.close();
+      setWs(null);
+    };
+  };
+  
+  const handleCloseChat = () => {
+    if (ws) {
+      ws.close();
+      setWs(null);
+    }
+    setChatVisible(false);
+    setSelectedBuyerId(null);
+    setLocalMessages([]);
+  };
+
+
 
   return (
     <div className="bg-gradient-to-br from-green-900 via-emerald-700 to-lime-500 min-h-screen p-6 text-white">
@@ -109,11 +220,62 @@ export default function Orders() {
             >
               View Details
             </button>
+            <button
+                className="mt-4 w-full bg-lime-600 text-white py-2 rounded-lg hover:bg-lime-700 transition shadow-md"
+                onClick={() => handleOpenChat(order.sellerId)}
+              >
+                Chat with Seller
+              </button>
           </div>
         ))}
       </div>
     )}
-
+{isChatVisible && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-green-700 p-6 rounded-lg text-white w-full max-w-lg shadow-lg">
+            <button className="absolute top-3 right-3 text-gray-300 hover:text-white" onClick={handleCloseChat}>
+              ❌
+            </button>
+            <h2 className="text-xl font-semibold mb-4 text-center">Chat with Seller</h2>
+            <div className="h-72 overflow-y-auto border-b mb-4 p-2 flex flex-col space-y-2">
+              {localMessages.length > 0 ? (
+                localMessages.map((msg, index) => (
+                  <div
+                    key={index}
+                    className={`p-2 px-4 rounded-lg max-w-[75%] ${
+                      msg.senderId === userId
+                        ? "bg-green-500 text-white self-end"
+                        : "bg-gray-300 text-black self-start"
+                    }`}
+                  >
+                    <strong className="block text-sm">
+                      {msg.senderId === userId ? "You" : msg.username || "Seller"}
+                    </strong>
+                    <span>{msg.content}</span>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-gray-400">No messages yet.</p>
+              )}
+            </div>
+            <div className="flex items-center space-x-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="flex-1 border p-2 rounded-lg text-black outline-none"
+                placeholder="Type a message..."
+              />
+              <button
+                onClick={sendMessage}
+                className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition duration-300"
+              >
+                📩
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     {/* Popup for Order Details */}
     {isPopupVisible && selectedOrder && (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

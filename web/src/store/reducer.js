@@ -4,14 +4,18 @@ import productSlice from "@/reducers/product/productSlice";
 import categorySlice from "@/reducers/Category/categorySlice";
 import orderSlice from "@/reducers/Order/orderSlice.js";
 import { reviewsReducer } from "@/reducers/Review/reviewSlice.js";
+import chatReducer from "@/reducers/Chat/chatSlice";
+
 
 const rootReducer = combineReducers({
   auth: authReducer,
   product: productSlice,
   category: categorySlice,
   orders: orderSlice,
-  reviews: reviewsReducer, // Ensure this matches the import
+  reviews: reviewsReducer,
+  chat: chatReducer,
 });
+
 
 export default rootReducer;
 
