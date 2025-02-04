@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func main(){
+func main() {
 	db.InitDB()
 	db.CreateTable()
 	server := gin.Default()
