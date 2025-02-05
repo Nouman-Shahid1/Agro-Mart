@@ -8,22 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewMessage(context *gin.Context) {
-	var message models.Message
-	err := context.ShouldBindJSON(&message)
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"message": "Couldnt parse request data"})
-		return
-	}
-	userId := context.GetInt64("userId")
-	message.SenderID = userId
-	err = message.CreateMessage()
-	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt save message", "error": err.Error()})
-		return
-	}
-	context.JSON(http.StatusCreated, gin.H{"message": "Message saved", "event": message})
-}
+
 
 func GetMessages(context *gin.Context) {
 	receiverID := context.Query("receiverId")     // Get receiverId from query
