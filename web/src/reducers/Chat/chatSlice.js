@@ -4,101 +4,62 @@ import axios from "axios"; // ✅ Use axios directly
 const API_BASE_URL = "http://localhost:8081/message"; // ✅ Backend URL
 
 // Fetch Messages from API
+// Fetch Messages from API
 export const fetchMessages = createAsyncThunk(
   "chat/fetchMessages",
-  async ({ receiverId, limit = 20, offset = 0 }, { rejectWithValue, getState }) => {
+  async ({ senderId, receiverId, limit = 20, offset = 0 }, { rejectWithValue, getState }) => {
     try {
-      const token = getState().auth.token; // ✅ Get token from Redux state
+      const token = getState().auth.token; // Get token from Redux state
 
       if (!token) {
-        throw new Error("❌ Authorization token is missing. Please log in again.");
+        throw new Error("Authorization token is missing. Please log in again.");
       }
-
-      console.log("🔹 Fetching Messages | Token:", token);
 
       const response = await axios.get(
         `${API_BASE_URL}/messages?receiverId=${receiverId}&limit=${limit}&offset=${offset}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // ✅ Ensure the token is sent
+            Authorization: `Bearer ${token}`, // Ensure the token is sent
           },
         }
       );
 
-      console.log("✅ Messages Fetched:", response.data);
-      return response.data.messages;
+      return response.data.messages; // Return messages array
     } catch (error) {
-      console.error("❌ Failed to fetch messages:", error.response?.data || error.message);
       return rejectWithValue(error.response?.data?.message || "Failed to fetch messages.");
     }
   }
 );
 
 // Send Message to API
-// export const sendMessage = createAsyncThunk(
-//   "chat/sendMessage",
-//   async ({ receiverId, content }, { rejectWithValue, getState }) => {
-//     try {
-//       const token = getState().auth.token;
-
-//       if (!token) {
-//         throw new Error("❌ Authorization token is missing. Please log in again.");
-//       }
-
-//       console.log("🔹 Sending Message | Token:", token);
-
-//       const response = await axios.post(
-//         `${API_BASE_URL}/new`, // ✅ Correct API endpoint
-//         { receiverId, content },
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`, // ✅ Ensure the token is sent
-//             "Content-Type": "application/json",
-//           },
-//         }
-//       );
-
-//       console.log("✅ Message Sent:", response.data);
-//       return response.data.event;
-//     } catch (error) {
-//       console.error("❌ Failed to send message:", error.response?.data || error.message);
-//       return rejectWithValue(error.response?.data?.message || "Failed to send message.");
-//     }
-//   }
-// );
-
-// ✅ Send Message to API
 export const sendMessage = createAsyncThunk(
-    "chat/sendMessage",
-    async ({ receiverId, content }, { rejectWithValue, getState }) => {
-      try {
-        const token = getState().auth.token;
-  
-        if (!token) {
-          throw new Error("Authorization token is missing. Please log in again.");
-        }
-  
-        // ✅ Ensure correct request format
-        const requestBody = { receiverId, content }; 
-  
-        const response = await axios.post(
-          "http://localhost:8081/message/new",
-          requestBody,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json", // ✅ Ensure proper headers
-            },
-          }
-        );
-  
-        return response.data.event; // Assuming API returns { event: messageData }
-      } catch (error) {
-        console.error("❌ Failed to send message:", error.response?.data);
-        return rejectWithValue(error.response?.data?.message || "Failed to send message.");
+  "chat/sendMessage",
+  async ({ senderId, receiverId, content }, { rejectWithValue, getState }) => {
+    try {
+      const token = getState().auth.token;
+
+      if (!token) {
+        throw new Error("Authorization token is missing. Please log in again.");
       }
+
+      const response = await axios.post(
+        `${API_BASE_URL}/new`,
+        { senderId, receiverId, content },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.data.message; // Return the sent message
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Failed to send message.");
     }
-  );
+  }
+);
+
   
 
 const chatSlice = createSlice({
@@ -110,8 +71,18 @@ const chatSlice = createSlice({
   },
   reducers: {
     addMessage: (state, action) => {
+      // Check for duplicate messages before adding
+      const exists = state.messages.some(
+        (msg) =>
+          msg.senderId === action.payload.senderId &&
+          msg.content === action.payload.content &&
+          msg.timestamp === action.payload.timestamp // Include unique attributes if possible
+      );
+
+      if (!exists) {
         state.messages.push(action.payload);
-      },
+      }
+    },
     clearChat: (state) => {
       state.messages = [];
     },
@@ -123,9 +94,12 @@ const chatSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchMessages.fulfilled, (state, action) => {
+        console.log("✅ Messages in Redux after Fetch:", action.payload);
         state.loading = false;
-        state.messages = action.payload || []; // ✅ Ensure messages is always an array
+        state.messages = action.payload || [];
       })
+      
+      
       .addCase(fetchMessages.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -147,5 +121,5 @@ const chatSlice = createSlice({
   },
 });
 
-export const { clearChat } = chatSlice.actions;
+export const { addMessage, clearChat } = chatSlice.actions;
 export default chatSlice.reducer;

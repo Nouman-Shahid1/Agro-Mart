@@ -69,58 +69,28 @@ const loadingMessages = useSelector((state) => state.chat.loading);
 
   const handleOpenChat = (buyerId) => {
     if (!token) {
-      alert("⚠ Unauthorized! Please log in again.");
+      alert("Unauthorized! Please log in again.");
       return;
     }
   
     setSelectedBuyerId(buyerId);
     setChatVisible(true);
-    dispatch(fetchMessages({ senderId: userId, receiverId: buyerId })); // ✅ Fetch chat history
   
-    if (!userId || !buyerId) {
-      console.error("Missing sender or receiver ID");
-      return;
-    }
+    dispatch(fetchMessages({receiverId: buyerId }));
   
     const websocket = new WebSocket(
       `ws://localhost:8081/ws?senderID=${userId}&receiverID=${buyerId}`
     );
     setWs(websocket);
   
-    websocket.onopen = () => {
-      console.log("✅ WebSocket connected");
-    };
-  
     websocket.onmessage = (event) => {
       const receivedMessage = JSON.parse(event.data);
-      console.log("🔹 Message Received:", receivedMessage);
-    
-      // Dispatch to Redux store to update the message list
-      dispatch({
-        type: "chat/addMessage",
-        payload: receivedMessage,
-      });
-    };
-    
-  
-    websocket.onclose = () => {
-      console.log("❌ WebSocket disconnected");
+      dispatch({ type: "chat/addMessage", payload: receivedMessage });
     };
   
-    return () => {
-      websocket.close();
-      setWs(null);
-    };
+    websocket.onclose = () => setWs(null);
   };
   
-  const handleCloseChat = () => {
-    if (ws) {
-      ws.close();
-      setWs(null);
-    }
-    setChatVisible(false);
-    setSelectedBuyerId(null);
-  };
   const sendMessage = () => {
     if (!ws || !input.trim()) return;
   
@@ -133,6 +103,7 @@ const loadingMessages = useSelector((state) => state.chat.loading);
     setInput(""); // Clear input field
 
   };
+
 
   return (
     <div
@@ -225,48 +196,46 @@ const loadingMessages = useSelector((state) => state.chat.loading);
     )}
 {isChatVisible && (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-green-700 p-6 rounded-lg text-white w-full max-w-lg shadow-lg">
-      <button className="absolute top-3 right-3 text-gray-300 hover:text-white" onClick={handleCloseChat}>
+    <div className="bg-green-700 p-6 rounded-lg text-white w-full max-w-lg relative">
+      <button
+        onClick={() => setChatVisible(false)}
+        className="absolute top-3 right-3 text-white hover:text-gray-300"
+      >
         ❌
       </button>
-      <h2 className="text-xl font-semibold mb-4 text-center">Chat with Buyer</h2>
+      <h2 className="text-xl font-semibold text-center mb-4">Chat with Buyer</h2>
+      
+      {/* Chat Messages */}
       <div className="h-72 overflow-y-auto border-b mb-4 p-2 flex flex-col space-y-2">
-  {messages.length > 0 ? (
-    messages.map((msg, index) => (
-      <div
-        key={index}
-        className={`p-2 px-4 rounded-lg max-w-[75%] ${
-          msg.senderId === userId
-            ? "bg-green-500 text-white self-end" // Sent messages (right)
-            : "bg-gray-300 text-black self-start" // Received messages (left)
-        }`}
-      >
-        <strong className="block text-sm">
-          {msg.senderId === userId ? "You" : msg.username || "Buyer"}
-        </strong>
-        <span>{typeof msg === "string" ? JSON.parse(msg).content : msg.content}</span>
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`p-2 px-4 rounded-lg max-w-[75%] ${
+              msg.user === "Seller"
+                ? "bg-green-500 text-white self-end" // Seller messages on the right
+                : "bg-gray-300 text-black self-start" // Buyer messages on the left
+            }`}
+          >
+            <strong className="block text-sm mb-1">
+              {msg.user === "Seller" ? "You" : "Buyer"}
+            </strong>
+            <span>{msg.content}</span>
+          </div>
+        ))}
       </div>
-    ))
-  ) : (
-    <p className="text-center text-gray-400">No messages yet.</p>
-  )}
-</div>
 
-
-
-
-      {/* ✅ Input Field & Send Button (Styled like WhatsApp) */}
+      {/* Message Input */}
       <div className="flex items-center space-x-2">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="flex-1 border p-2 rounded-lg text-black outline-none"
+          className="flex-1 border p-2 rounded-lg text-black"
           placeholder="Type a message..."
         />
         <button
           onClick={sendMessage}
-          className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition duration-300"
+          className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700"
         >
           📩
         </button>
@@ -274,7 +243,6 @@ const loadingMessages = useSelector((state) => state.chat.loading);
     </div>
   </div>
 )}
-
 
 
     {/* Popup for Order Details */}
