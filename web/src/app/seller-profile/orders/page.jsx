@@ -217,7 +217,7 @@ const loadingMessages = useSelector((state) => state.chat.loading);
             }`}
           >
             <strong className="block text-sm mb-1">
-              {msg.senderId === userId || msg.user === "Seller" ? "You" : "Buyer"}
+              {msg.user}
             </strong>
             <span>{msg.content}</span>
           </div>

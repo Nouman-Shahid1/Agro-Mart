@@ -15,8 +15,6 @@ export default function Orders() {
   const [products, setProducts] = useState({});
   const [isChatVisible, setChatVisible] = useState(false);
   const [chatMessage, setChatMessage] = useState("");
-  const [selectedBuyerId, setSelectedBuyerId] = useState(null);
-
   const [selectedSellerId, setSelectedSellerId] = useState(null);
   useEffect(() => {
     if (userId) {
@@ -96,51 +94,40 @@ const setMessages = (newMessages) => {
     if (buyerOrders.length > 0) fetchProductDetails();
   }, [buyerOrders, dispatch]);
 
-  const handleCloseChat = () => {
-    if (ws) {
-      ws.close();
-      setWs(null);
+
+  const handleOpenChat = (sellerId) => {
+    if (!token) {
+      alert("Unauthorized! Please log in again.");
+      return;
     }
-    setChatVisible(false);
-    setSelectedSellerId(null);
-    setLocalMessages([]);
+
+    setSelectedSellerId(sellerId);
+    setChatVisible(true);
+
+    dispatch(fetchMessages({ receiverId: sellerId }));
+
+    const websocket = new WebSocket(
+      `ws://localhost:8081/ws?senderID=${userId}&receiverID=${sellerId}`
+    );
+    setWs(websocket);
+
+    websocket.onmessage = (event) => {
+      const receivedMessage = JSON.parse(event.data);
+      dispatch({ type: "chat/addMessage", payload: receivedMessage });
+    };
+
+    websocket.onclose = () => setWs(null);
   };
-   const handleOpenChat = (buyerId) => {
-     if (!token) {
-       alert("Unauthorized! Please log in again.");
-       return;
-     }
+
    
-     setSelectedBuyerId(buyerId);
-     setChatVisible(true);
-   
-     dispatch(fetchMessages({receiverId: buyerId }));
-   
-     const websocket = new WebSocket(
-       `ws://localhost:8081/ws?senderID=${userId}&receiverID=${buyerId}`
-     );
-     setWs(websocket);
-   
-     websocket.onmessage = (event) => {
-       const receivedMessage = JSON.parse(event.data);
-       dispatch({ type: "chat/addMessage", payload: receivedMessage });
-     };
-   
-     websocket.onclose = () => setWs(null);
-   };
-   
-   const sendMessage = () => {
-     if (!ws || !input.trim()) return;
-   
-     const messageData = { senderId: userId, receiverId: selectedBuyerId, content: input };
-     console.log("🔹 Sending Message:", messageData);
-   
-     ws.send(JSON.stringify(messageData)); // Send the message as a JSON string
-   
-     setMessages((prev) => [...prev, messageData]); // Add message directly to state
-     setInput(""); // Clear input field
- 
-   };
+  const sendMessage = () => {
+    if (!ws || !input.trim()) return;
+
+    const messageData = { senderId: userId, receiverId: selectedSellerId, content: input };
+    ws.send(JSON.stringify(messageData));
+    setInput("");
+  };
+
  
   
   const allMessages = [...messages, ...localMessages];
@@ -233,12 +220,13 @@ const setMessages = (newMessages) => {
             key={index}
             className={`p-2 px-4 rounded-lg max-w-[75%] ${
               msg.senderId === userId || msg.user === "Seller"
-                ? "bg-green-500 text-white self-end" // Seller messages on the right
-                : "bg-gray-300 text-black self-start" // Buyer messages on the left
+              ?"bg-gray-300 text-black self-start" // Buyer messages on the left
+
+                : "bg-green-500 text-white self-end" // Seller messages on the right
             }`}
           >
             <strong className="block text-sm mb-1">
-              {msg.senderId === userId || msg.user === "Seller" ? "You" : "Buyer"}
+              {msg.senderId === userId || msg.user}
             </strong>
             <span>{msg.content}</span>
           </div>
