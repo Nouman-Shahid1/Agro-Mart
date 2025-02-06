@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CiSearch, CiEdit } from "react-icons/ci";
@@ -15,6 +15,8 @@ const ProductTable = () => {
   const { categories, status } = useSelector((state) => state.category);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [filteredCategories, setFilteredCategories] = useState([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [editCategory, setEditCategory] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -25,12 +27,24 @@ const ProductTable = () => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  // Filter categories based on search term
-  const filteredCategories = categories
-    ? categories.filter((category) =>
-        category?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
+  // Update filtered categories when search term changes
+  useEffect(() => {
+    if (!categories) return;
+
+    // Filter categories based on search term
+    const results = categories.filter((category) =>
+      category?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    setFilteredCategories(results);
+
+    // Generate search suggestions only if searchTerm is typed
+    if (searchTerm.length > 0) {
+      setSuggestions(results.map((category) => category.name).slice(0, 5));
+    } else {
+      setSuggestions([]); // Hide suggestions if search is empty
+    }
+  }, [searchTerm, categories]);
 
   // Handle delete confirmation
   const confirmDelete = () => {
@@ -59,6 +73,7 @@ const ProductTable = () => {
           <h3 className="text-3xl font-bold">Categories List</h3>
           <p className="text-sm">Manage all your categories here.</p>
         </div>
+
         <div className="flex flex-col md:flex-row md:items-center md:space-x-4">
           <button
             className="py-2 px-4 bg-white text-green-600 rounded-lg shadow-md hover:bg-green-100 transition duration-150 flex items-center space-x-2"
@@ -71,18 +86,38 @@ const ProductTable = () => {
             <span>Add New Category</span>
           </button>
 
-          {/* Search Input */}
-          <div className="flex items-center mt-3 md:mt-0">
-            <input
-              type="text"
-              placeholder="Search categories"
-              className="w-[200px] md:w-[250px] px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              value={searchTerm || ""}
-              onChange={(e) => setSearchTerm(e.target.value || "")}
-            />
-            <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-r-lg">
-              <CiSearch size={22} />
-            </button>
+          {/* Search Box with Suggestions */}
+          <div className="relative">
+            <div className="flex items-center">
+              <input
+                type="text"
+                placeholder="Search categories..."
+                className="w-[200px] md:w-[250px] px-4 py-2 border text-black border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button className="bg-green-600 hover:bg-green-700 text-BLACK px-4 py-2 rounded-r-lg">
+                <CiSearch size={22} />
+              </button>
+            </div>
+
+            {/* Suggestions Dropdown */}
+            {suggestions.length > 0 && (
+              <ul className="absolute z-10 bg-white border rounded-lg shadow-md w-full mt-1">
+                {suggestions.map((suggestion, index) => (
+                  <li
+                    key={index}
+                    className="p-2 hover:bg-green-100 text-black cursor-pointer"
+                    onClick={() => {
+                      setSearchTerm(suggestion);
+                      setTimeout(() => setSuggestions([]), 100);
+                    }}
+                  >
+                    {suggestion}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </div>

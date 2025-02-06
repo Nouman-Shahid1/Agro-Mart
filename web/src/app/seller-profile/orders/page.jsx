@@ -211,13 +211,13 @@ const loadingMessages = useSelector((state) => state.chat.loading);
           <div
             key={index}
             className={`p-2 px-4 rounded-lg max-w-[75%] ${
-              msg.user === "Seller"
+              msg.senderId === userId || msg.user === "Seller"
                 ? "bg-green-500 text-white self-end" // Seller messages on the right
                 : "bg-gray-300 text-black self-start" // Buyer messages on the left
             }`}
           >
             <strong className="block text-sm mb-1">
-              {msg.user === "Seller" ? "You" : "Buyer"}
+              {msg.senderId === userId || msg.user === "Seller" ? "You" : "Buyer"}
             </strong>
             <span>{msg.content}</span>
           </div>
@@ -243,6 +243,7 @@ const loadingMessages = useSelector((state) => state.chat.loading);
     </div>
   </div>
 )}
+
 
 
     {/* Popup for Order Details */}

@@ -59,11 +59,15 @@ export default function Orders() {
     setSelectedOrder(null);
     setPopupVisible(false);
   };
-  const messages = useSelector((state) => state.chat.messages);
+  // const messages = useSelector((state) => state.chat.messages);
   const loadingMessages = useSelector((state) => state.chat.loading);
   const [localMessages, setLocalMessages] = useState([]);
   const [input, setInput] = useState("");
   const [ws, setWs] = useState(null);
+  const messages = useSelector((state) => state.chat.messages);
+const setMessages = (newMessages) => {
+  console.warn("setMessages is not used. Messages are managed via Redux.");
+}; // Dummy function to avoid errors
 
   // ✅ Fetch Orders
   useEffect(() => {
@@ -101,60 +105,43 @@ export default function Orders() {
     setSelectedSellerId(null);
     setLocalMessages([]);
   };
-  const handleOpenChat = (sellerId) => {
-    if (!token) {
-      alert("⚠ Unauthorized! Please log in again.");
-      return;
-    }
-  
-    setSelectedSellerId(sellerId);
-    setChatVisible(true);
-  
-    // Fetch previous messages from API
-    dispatch(fetchMessages({ senderId: userId, receiverId: sellerId }));
-  
-    // Open WebSocket connection
-    const websocket = new WebSocket(`ws://localhost:8081/ws?senderID=${userId}&receiverID=${sellerId}`);
-    setWs(websocket);
-  
-    websocket.onopen = () => {
-      console.log("✅ WebSocket connected");
-    };
-  
-    websocket.onmessage = (event) => {
-      const receivedMessage = JSON.parse(event.data);
-      console.log("🔹 Message Received from WebSocket:", receivedMessage);
-  
-      // Append the new message only if it doesn't already exist in the local state
-      setLocalMessages((prev) => {
-        const exists = prev.some(
-          (msg) =>
-            msg.content === receivedMessage.content &&
-            msg.senderId === receivedMessage.senderId &&
-            msg.receiverId === receivedMessage.receiverId
-        );
-        return exists ? prev : [...prev, receivedMessage];
-      });
-    };
-  
-    websocket.onclose = () => {
-      console.log("❌ WebSocket disconnected");
-      setWs(null);
-    };
-  };
-  
-  const sendMessage = () => {
-    if (!ws || !input.trim()) return;
-  
-    const messageData = { senderId: userId, receiverId: selectedSellerId, content: input };
-    console.log("🔹 Sending Message:", messageData);
-  
-    // Send the message over WebSocket
-    ws.send(JSON.stringify(messageData));
-  
-    // Clear the input field
-    setInput("");
-  };
+   const handleOpenChat = (buyerId) => {
+     if (!token) {
+       alert("Unauthorized! Please log in again.");
+       return;
+     }
+   
+     setSelectedBuyerId(buyerId);
+     setChatVisible(true);
+   
+     dispatch(fetchMessages({receiverId: buyerId }));
+   
+     const websocket = new WebSocket(
+       `ws://localhost:8081/ws?senderID=${userId}&receiverID=${buyerId}`
+     );
+     setWs(websocket);
+   
+     websocket.onmessage = (event) => {
+       const receivedMessage = JSON.parse(event.data);
+       dispatch({ type: "chat/addMessage", payload: receivedMessage });
+     };
+   
+     websocket.onclose = () => setWs(null);
+   };
+   
+   const sendMessage = () => {
+     if (!ws || !input.trim()) return;
+   
+     const messageData = { senderId: userId, receiverId: selectedBuyerId, content: input };
+     console.log("🔹 Sending Message:", messageData);
+   
+     ws.send(JSON.stringify(messageData)); // Send the message as a JSON string
+   
+     setMessages((prev) => [...prev, messageData]); // Add message directly to state
+     setInput(""); // Clear input field
+ 
+   };
+ 
   
   const allMessages = [...messages, ...localMessages];
 
@@ -230,49 +217,46 @@ export default function Orders() {
     )}
 {isChatVisible && (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-green-700 p-6 rounded-lg text-white w-full max-w-lg shadow-lg">
+    <div className="bg-green-700 p-6 rounded-lg text-white w-full max-w-lg relative">
       <button
-        className="absolute top-3 right-3 text-gray-300 hover:text-white"
-        onClick={handleCloseChat}
+        onClick={() => setChatVisible(false)}
+        className="absolute top-3 right-3 text-white hover:text-gray-300"
       >
         ❌
       </button>
-      <h2 className="text-xl font-semibold mb-4 text-center">Chat with Seller</h2>
+      <h2 className="text-xl font-semibold text-center mb-4">Chat with Seller</h2>
+      
+      {/* Chat Messages */}
       <div className="h-72 overflow-y-auto border-b mb-4 p-2 flex flex-col space-y-2">
-        {loadingMessages ? (
-          <p className="text-center text-gray-400">Loading messages...</p>
-        ) : allMessages.length > 0 ? (
-          allMessages.map((msg, index) => (
-            <div
-              key={index}
-              className={`p-2 px-4 rounded-lg max-w-[75%] ${
-                msg.senderId === userId
-                  ? "bg-green-500 text-white self-end" // Sent by you (buyer)
-                  : "bg-gray-300 text-black self-start" // Sent by the seller
-              }`}
-            >
-              <strong className="block text-sm mb-1">
-                {msg.senderId === userId ? "You" : "Seller"}
-              </strong>
-              <span>{msg.content}</span>
-            </div>
-          ))
-        ) : (
-          <p className="text-center text-gray-400">No messages yet.</p>
-        )}
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`p-2 px-4 rounded-lg max-w-[75%] ${
+              msg.senderId === userId || msg.user === "Seller"
+                ? "bg-green-500 text-white self-end" // Seller messages on the right
+                : "bg-gray-300 text-black self-start" // Buyer messages on the left
+            }`}
+          >
+            <strong className="block text-sm mb-1">
+              {msg.senderId === userId || msg.user === "Seller" ? "You" : "Buyer"}
+            </strong>
+            <span>{msg.content}</span>
+          </div>
+        ))}
       </div>
 
+      {/* Message Input */}
       <div className="flex items-center space-x-2">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="flex-1 border p-2 rounded-lg text-black outline-none"
+          className="flex-1 border p-2 rounded-lg text-black"
           placeholder="Type a message..."
         />
         <button
           onClick={sendMessage}
-          className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition duration-300"
+          className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700"
         >
           📩
         </button>
@@ -280,6 +264,7 @@ export default function Orders() {
     </div>
   </div>
 )}
+
 
 
     {/* Popup for Order Details */}

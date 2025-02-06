@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CiEdit } from "react-icons/ci";
-import { FaTrash, FaPlusCircle } from "react-icons/fa";
+import { FaTrash, FaPlusCircle, FaSearch } from "react-icons/fa";
 import {
   getProductByUserId,
   deleteProduct,
@@ -19,18 +19,42 @@ const ProductTable = () => {
   const [editProduct, setEditProduct] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  
+  // Search state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
 
   // Fetch products by user ID
   useEffect(() => {
     if (user?.userId) {
       dispatch(getProductByUserId(user.userId)).then((res) => {
         console.log("Fetched Products by User ID:", res.payload);
+        setFilteredProducts(res.payload || []);
       });
     }
   }, [dispatch, user?.userId]);
 
-  // Log products for debugging
-  console.log("Rendering Products:", products);
+  // Search function
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setFilteredProducts(products);
+      setSuggestions([]);
+    } else {
+      const searchResults = products.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredProducts(searchResults);
+
+      // Update suggestions
+      const productNames = products
+        .map((product) => product.name)
+        .filter((name) =>
+          name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      setSuggestions(productNames.slice(0, 5)); // Limit suggestions to top 5
+    }
+  }, [searchQuery, products]);
 
   // Handle delete confirmation
   const confirmDelete = () => {
@@ -53,14 +77,47 @@ const ProductTable = () => {
 
   return (
     <div className="p-6">
-      {/* Header */}
-      <div className="mb-6 flex items-center justify-between px-6 py-8 bg-gradient-to-r from-green-500 via-lime-400 to-emerald-600 text-white rounded-3xl shadow-lg">
+      {/* Header with Search */}
+      <div className="mb-6 flex flex-col md:flex-row items-center justify-between px-6 py-8 bg-gradient-to-r from-green-500 via-lime-400 to-emerald-600 text-white rounded-3xl shadow-lg">
         <div>
           <h3 className="text-3xl font-bold">Products List</h3>
           <p className="text-sm">Manage all your products here.</p>
         </div>
+
+        {/* Search Box */}
+        <div className="relative w-full md:w-96 mt-4 md:mt-0">
+          <div className="flex items-center bg-white rounded-lg shadow-md">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full p-2 pl-4 rounded-lg text-black outline-none"
+              placeholder="Search products..."
+            />
+            <FaSearch className="text-gray-500 mr-3" />
+          </div>
+
+          {suggestions.length > 0 && (
+            <ul className="absolute z-10 bg-white border rounded-lg shadow-md w-full mt-1">
+              {suggestions.map((suggestion, index) => (
+                <li
+                  key={index}
+                  className="p-2 hover:bg-green-100 text-black cursor-pointer"
+                  onClick={() => {
+                    setSearchQuery(suggestion);
+                    setTimeout(() => setSuggestions([]), 100);
+                    // Hide suggestions after selection
+                  }}
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
         <button
-          className="py-2 px-4 bg-white text-green-600 rounded-lg shadow-md hover:bg-green-100 transition duration-150 flex items-center space-x-2"
+          className="py-2 px-4 bg-white text-green-600 rounded-lg shadow-md hover:bg-green-100 transition duration-150 flex items-center space-x-2 mt-4 md:mt-0"
           onClick={() => {
             setEditProduct(null);
             setShowAddProduct(true);
@@ -85,9 +142,12 @@ const ProductTable = () => {
             </tr>
           </thead>
           <tbody>
-            {products?.length > 0 ? (
-            products.map((product, index) => (
-              <tr key={product.id || `product-${index}`} className="border-b bg-white hover:bg-green-50 transition duration-300">
+            {filteredProducts?.length > 0 ? (
+              filteredProducts.map((product, index) => (
+                <tr
+                  key={product.id || `product-${index}`}
+                  className="border-b bg-white hover:bg-green-50 transition duration-300"
+                >
                   <td className="py-4 px-6">
                     <img
                       src={`http://localhost:8080/${product.imagepath}`}
