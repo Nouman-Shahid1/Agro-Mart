@@ -1,23 +1,49 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "@/reducers/product/productSlice"; // Redux action to fetch products
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/Footer";
 import ProductCard from "@/Components/ProductCard/ProductCard";
 import { GiBarbedSpear } from "react-icons/gi";
+import {  FaSearch } from "react-icons/fa";
 
 export default function SeedsPage() {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.product);
 
+ const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
   useEffect(() => {
-    // Fetch products when the component mounts
     dispatch(getProducts());
   }, [dispatch]);
 
-  // Filter products for the "Seeds" category
+  useEffect(() => {
+    const fertilizerProducts = products.filter(
+      (product) => product.categoryName === "Seeds"
+    );
+    setFilteredProducts(fertilizerProducts);
+  }, [products]);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    const filtered = products.filter(
+      (product) =>
+        product.categoryName === "Seeds" &&
+        product.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredProducts(filtered);
+    
+    const suggested = products
+      .filter((product) => product.categoryName === "Seeds")
+      .map((product) => product.name)
+      .filter((name) => name.toLowerCase().includes(value.toLowerCase()));
+    setSuggestions(suggested);
+  };
+
   const seedsProducts = products.filter((product) => product.categoryName === "Seeds");
 
   return (
@@ -97,6 +123,36 @@ export default function SeedsPage() {
             Choose from our handpicked collection of seeds designed to give you
             the best yields.
           </p>
+            <div className="relative w-full max-w-lg mx-auto mb-6">
+                      <input
+                        type="text"
+                        placeholder="Search Seeds..."
+                        value={searchTerm}
+                        onChange={handleSearch}
+                        className="w-full p-4 rounded-full border border-green-400 bg-white text-gray-800 focus:ring-2 focus:ring-green-500 focus:outline-none shadow-md"
+                      />
+                      <FaSearch className="absolute right-4 top-1/2 transform -translate-y-1/2 text-green-500" size={20} />
+                      {searchTerm && suggestions.length > 0 && (
+                        <ul className="absolute left-0 text-left w-full bg-white shadow-lg rounded-md mt-2 max-h-40 overflow-y-auto border border-gray-300">
+                          {suggestions.map((suggestion, index) => (
+                            <li
+                              key={index}
+                              className="p-2 hover:bg-green-100 cursor-pointer"
+                              onClick={() => {
+                                setSearchTerm(suggestion);
+                                setTimeout(() => {
+                                  handleSearch({ target: { value: suggestion } });
+                                  setSuggestions([]);
+                                }, 100);
+                              }}
+                              
+                            >
+                              {suggestion}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
           <div className="flex items-center justify-center gap-4 mb-12">
             <div className="w-16 h-1 bg-[#47b881] rounded-full"></div>
             <GiBarbedSpear
@@ -111,9 +167,9 @@ export default function SeedsPage() {
             <p>Loading seeds...</p>
           ) : error ? (
             <p className="text-red-500">{error}</p>
-          ) : seedsProducts.length > 0 ? (
+          ) : filteredProducts.length > 0 ? (
             <div className="flex flex-wrap gap-10 justify-center">
-              {seedsProducts.map((product) => (
+              {filteredProducts.map((product) => (
                 <ProductCard
                   key={product.id}
                 id={product.id}
