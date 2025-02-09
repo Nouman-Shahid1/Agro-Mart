@@ -68,3 +68,41 @@ func GetUserNamebyId(id int64) (string, error) {
 	}
 	return user, nil
 }
+
+
+func BatchInsertMessages(messages []Message) error {
+	if len(messages) == 0 {
+		return nil
+	}
+
+	query := "INSERT INTO messages(senderid, recieverid, content, time) VALUES "
+	values := []interface{}{}
+
+	for _, msg := range messages {
+		query += "(?, ?, ?, ?),"
+		values = append(values, msg.SenderID, msg.RecieverID, msg.Content, msg.Time)
+	}
+
+	// Trim the trailing comma
+	query = query[:len(query)-1]
+
+	tx, err := db.DB.Begin()
+	if err != nil {
+		return err
+	}
+
+	stmt, err := tx.Prepare(query)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(values...)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit()
+}
