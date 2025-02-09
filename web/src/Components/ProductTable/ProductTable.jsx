@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useMemo} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CiSearch, CiEdit } from "react-icons/ci";
-import { FaTrash, FaPlusCircle } from "react-icons/fa";
+import { FaTrash, FaPlusCircle, FaSearch } from "react-icons/fa";
 import { getProducts, deleteProduct } from "@/reducers/product/productSlice";
 import CreateProduct from "../CreateProduct/CreateProduct";
 import DeleteModal from "../DeleteProduct/DeleteProduct";
@@ -17,19 +17,38 @@ const ProductTable = ({ name = "Products", category }) => {
   const [editProduct, setEditProduct] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
 
-  const filteredProducts = products
-    ? products.filter(
-        (product) =>
-          (!category || product.categoryName === category) &&
-          product?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
-
+  useEffect(() => {
+    let filtered = products || []; // Ensure products is always an array
+  
+    // Filter by category if provided
+    if (category) {
+      filtered = filtered.filter((product) => product.categoryName === category);
+    }
+  
+    // Apply search query filter
+    if (searchQuery.trim() !== "") {
+      filtered = filtered.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+  
+      // Generate suggestions based on filtered results
+      const productNames = filtered.map((product) => product.name);
+      setSuggestions(productNames.slice(0, 5));
+    } else {
+      setSuggestions([]);
+    }
+  
+    setFilteredProducts(filtered); // ✅ Update state correctly
+  }, [searchQuery, products, category]);
+  
   const confirmDelete = () => {
     if (deleteId) {
       dispatch(deleteProduct(deleteId))
@@ -70,17 +89,39 @@ const ProductTable = ({ name = "Products", category }) => {
 
           {/* Search Input */}
           <div className="flex items-center mt-3 md:mt-0">
+          <div className="relative w-full md:w-96 mt-4 md:mt-0">
+          <div className="flex items-center bg-white rounded-lg shadow-md">
             <input
               type="text"
-              placeholder="Search products"
-              className="w-[200px] md:w-[250px] px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full p-2 pl-4 rounded-lg text-black outline-none"
+              placeholder="Search products..."
             />
+            <FaSearch className="text-gray-500 mr-3" />
+          </div>
+          {suggestions.length > 0 && (
+            <ul className="absolute z-10 bg-white border rounded-lg shadow-md w-full mt-1">
+              {suggestions.map((suggestion, index) => (
+                <li
+                  key={index}
+                  className="p-2 hover:bg-green-100 text-black cursor-pointer"
+                  onClick={() => {
+                    setSearchQuery(suggestion);
+                    setTimeout(() => setSuggestions([]), 100);
+                  }}
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
             <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-r-lg">
               <CiSearch size={22} />
             </button>
           </div>
+
         </div>
       </div>
 
