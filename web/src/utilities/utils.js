@@ -1,5 +1,3 @@
-// utils.js
-
 export const setCookie = (name, value, expiresIn) => {
   if (typeof document === "undefined") return; // Ensure document is available
 
@@ -12,7 +10,6 @@ export const getCookie = (name) => {
   if (typeof document === "undefined") return null; // Ensure document is available
 
   const cookieArr = document.cookie.split(";");
-  console.log(cookieArr)
   for (let i = 0; i < cookieArr.length; i++) {
     const cookiePair = cookieArr[i].split("=");
     if (name === cookiePair[0].trim()) {

@@ -11,17 +11,31 @@ const initialState = {
   error: null,
 };
 
+
+const TOKEN_EXPIRATION_TIME = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+
 const loadStateFromLocalStorage = () => {
   if (typeof window !== "undefined") {
     const token = localStorage.getItem("access_token");
     const role = localStorage.getItem("user_role");
     const userId = localStorage.getItem("userId");
+    const tokenExpiration = localStorage.getItem("token_expiration");
 
-    if (token) {
+    if (token && tokenExpiration) {
+      const currentTime = new Date().getTime();
+      if (currentTime > Number(tokenExpiration)) {
+        console.log("Token expired. Clearing local storage...");
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user_role");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("token_expiration");
+        return { user: null, token: null, role: null };
+      }
+
       try {
         const decodedToken = jwtDecode(token);
         return {
-          user: { ...decodedToken, userId }, // Include the user ID from localStorage
+          user: { ...decodedToken, userId },
           token,
           role,
         };
@@ -33,7 +47,6 @@ const loadStateFromLocalStorage = () => {
   return { user: null, token: null, role: null };
 };
 
-// Initialize state with persisted data from localStorage
 const persistedState = typeof window !== "undefined" ? loadStateFromLocalStorage() : {};
 
 export const loginUser = createAsyncThunk(
@@ -44,14 +57,13 @@ export const loginUser = createAsyncThunk(
       if (response.status === 200) {
         const { accessToken } = response.data;
         const decodedToken = jwtDecode(accessToken);
+        const expirationTime = new Date().getTime() + TOKEN_EXPIRATION_TIME;
 
-        // Log decoded token details to the console
-        console.log("Decoded Token Details:", decodedToken);
-
-        // Store in localStorage
+        // Store in localStorage with expiry time
         localStorage.setItem("access_token", accessToken);
-        localStorage.setItem("user_role", decodedToken.role); // Save the role
-        localStorage.setItem("userId", decodedToken.Id); // Save the role
+        localStorage.setItem("user_role", decodedToken.role);
+        localStorage.setItem("userId", decodedToken.Id);
+        localStorage.setItem("token_expiration", expirationTime);
 
         return { token: accessToken, role: decodedToken.role, user: decodedToken };
       } else {
@@ -62,6 +74,8 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
+// Updated logout function
 
 export const registerUser = createAsyncThunk(
   "auth/register",
@@ -141,23 +155,19 @@ export const deleteUser = createAsyncThunk(
 
 export const logout = createAsyncThunk("/logout", async (_, { dispatch, rejectWithValue }) => {
   try {
-    // Call API to logout
     await axios.post("/logout");
 
     // Clear localStorage
     localStorage.removeItem("access_token");
     localStorage.removeItem("user_role");
     localStorage.removeItem("userId");
+    localStorage.removeItem("token_expiration");
 
-    // Clear Redux state
     dispatch(authSlice.actions.clearState());
 
-    // Optionally, return a success message
     return { success: true, message: "Logout successful" };
   } catch (error) {
     console.error("Error during logout:", error);
-
-    // Return a rejected value for error handling in UI
     return rejectWithValue(error.response?.data || "Logout failed");
   }
 });
