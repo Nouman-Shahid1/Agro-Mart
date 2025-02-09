@@ -12,7 +12,7 @@ const Authentication = ({ children }) => {
 
   const [loading, setLoading] = useState(true);
 
-  const publicRoutes = ["/login", "/signup", "/forgot-password"]; // Routes that don't require authentication
+  const restrictedRoutes = ["/admin", "/seller-profile", "/buyer"]; // Routes that require authentication
   const roleBasedRoutes = {
     admin: ["/admin"],
     seller: ["/seller-profile"],
@@ -28,30 +28,25 @@ const Authentication = ({ children }) => {
 
     if (savedToken) {
       dispatch(setToken(savedToken)); // Restore token to Redux
-    } else if (!publicRoutes.includes(pathname)) {
-      // Redirect to login only if the current route is not public
-      router.push("/login");
     }
 
     setLoading(false); // Stop loading after initial check
-  }, [dispatch, router, pathname]);
+  }, [dispatch]);
 
   /**
-   * Redirect users to the appropriate page based on their role and current route
+   * Redirect users to login if they try to access restricted routes without authentication
    */
   useEffect(() => {
-    if (!token && !publicRoutes.includes(pathname)) {
+    if (!token && restrictedRoutes.includes(pathname)) {
       router.push("/login");
-      return;
-    }
-
-    if (token && role) {
+    } else if (token && role) {
+      // Ensure role-based navigation
       const normalizedRole = role.toLowerCase();
       const allowedRoutes = roleBasedRoutes[normalizedRole] || [];
       const isProtectedRoute = Object.values(roleBasedRoutes).flat().includes(pathname);
 
       if (isProtectedRoute && !allowedRoutes.includes(pathname)) {
-        router.push(allowedRoutes[0] || "/login");
+        router.push(allowedRoutes[0] || "/");
       }
     }
   }, [token, role, pathname, router]);
@@ -81,9 +76,6 @@ const Authentication = ({ children }) => {
     );
   }
 
-  /**
-   * Render children for public routes and authenticated users
-   */
   return <>{children}</>;
 };
 

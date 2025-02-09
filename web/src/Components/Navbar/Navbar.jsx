@@ -183,8 +183,8 @@ const HandleOrder=()=>{
 
           <div className="hidden md:flex flex-col md:flex-row gap-3 text-base pt-4 items-center">
             {[
-              { label: "Become a Buyer", href: "/" },
-              { label: "Become a Seller", href: "/" },
+              { label: "Become a Buyer", href: "/login" },
+              { label: "Become a Seller", href: "/login" },
               { label: "Rent a Machine", href: "/" },
             ].map((item) => (
               <Link
@@ -412,8 +412,8 @@ const HandleOrder=()=>{
             }  flex-wrap flex-rows mb-6  gap-3 text-base pt-4 items-center justify-center`}
           >
             {[
-              { label: "Become a Buyer", href: "/" },
-              { label: "Become a Seller", href: "/" },
+              { label: "Become a Buyer", href: "/login" },
+              { label: "Become a Seller", href: "/login" },
               { label: "Rent a Machine", href: "/" },
             ].map((item) => (
               <Link
