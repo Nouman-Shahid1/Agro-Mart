@@ -3,7 +3,6 @@ import axios from '../../axios/config';
 
 
 
-// Async actions
 export const fetchReviews = createAsyncThunk('reviews/fetchReviews', async (_, { rejectWithValue }) => {
   try {
     const response = await axios.get('/review/reviews');
@@ -36,7 +35,6 @@ export const fetchReviewsByProductId = createAsyncThunk(
 
 
 
-// Slice
 const reviewsSlice = createSlice({
   name: 'reviews',
   initialState: {
@@ -48,7 +46,6 @@ const reviewsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetch all reviews
       .addCase(fetchReviews.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -61,7 +58,6 @@ const reviewsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // Save a review
       .addCase(saveReview.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -74,7 +70,6 @@ const reviewsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // Fetch reviews by product ID
       .addCase(fetchReviewsByProductId.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -83,7 +78,6 @@ const reviewsSlice = createSlice({
         state.loading = false;
         state.reviews = action.payload.reviews || [];
         
-        // Normalize stats keys
         state.stats = {
           avgRating: action.payload.stats?.avg_rating || 0,
           totalReviews: action.payload.stats?.total_reviews || 0,

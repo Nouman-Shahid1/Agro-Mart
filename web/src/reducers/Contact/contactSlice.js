@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../axios/config";
 
-// Async thunk for sending contact message
 export const sendContactMessage = createAsyncThunk(
   "contact/sendContactMessage",
   async (contactData, { rejectWithValue }) => {

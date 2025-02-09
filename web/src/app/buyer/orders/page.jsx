@@ -9,7 +9,6 @@ import { AiOutlineClose } from "react-icons/ai";
 export default function Orders() {
   const dispatch = useDispatch();
   const { buyerOrders, loading, error } = useSelector((state) => state.orders);
-  // const { messages, loading: chatLoading } = useSelector((state) => state.chat);
   const userId = useSelector((state) => state.auth.user?.userId);
   const token = useSelector((state) => state.auth.token);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -62,7 +61,6 @@ const activeOrders = buyerOrders.filter(order => order.orderStatus !== "complete
     setSelectedOrder(null);
     setPopupVisible(false);
   };
-  // const messages = useSelector((state) => state.chat.messages);
   const loadingMessages = useSelector((state) => state.chat.loading);
   const [localMessages, setLocalMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -71,16 +69,14 @@ const activeOrders = buyerOrders.filter(order => order.orderStatus !== "complete
   const messages = useSelector((state) => state.chat.messages);
 const setMessages = (newMessages) => {
   console.warn("setMessages is not used. Messages are managed via Redux.");
-}; // Dummy function to avoid errors
+}; 
 
-  // ✅ Fetch Orders
   useEffect(() => {
     if (userId) {
       dispatch(fetchBuyerOrders(userId));
     }
   }, [dispatch, userId]);
 
-  // ✅ Fetch Product Details for Orders
   useEffect(() => {
     const fetchProductDetails = async () => {
       const productData = {};
@@ -109,7 +105,6 @@ const setMessages = (newMessages) => {
       const receivedMessage = JSON.parse(event.data);
       dispatch({ type: "chat/addMessage", payload: receivedMessage });
 
-      // ✅ Show notification only if the chat is NOT open
       if (!isChatVisible) {
         setNewMessage(true);
       }
@@ -143,7 +138,7 @@ const setMessages = (newMessages) => {
       const receivedMessage = JSON.parse(event.data);
       dispatch({ type: "chat/addMessage", payload: receivedMessage });
       if (!isChatVisible) {
-        setNewMessage(true); // Set new message notification if chat is not open
+        setNewMessage(true);
       }
     };
 
@@ -177,7 +172,6 @@ const setMessages = (newMessages) => {
       <h2 className="text-3xl font-bold text-lime-100 mb-6">My Orders</h2>
     </div>
 
-    {/* Order Cards */}
     {activeOrders.length === 0 ? (
       <p className="text-center text-lime-200">Loading orders...</p>
     ) : error ? (
@@ -252,7 +246,6 @@ const setMessages = (newMessages) => {
       </button>
       <h2 className="text-xl font-semibold text-center mb-4">Chat with Seller</h2>
       
-      {/* Chat Messages */}
       <div className="h-72 overflow-y-auto border-b mb-4 p-2 flex flex-col space-y-2">
         {messages.map((msg, index) => (
           <div
@@ -261,7 +254,7 @@ const setMessages = (newMessages) => {
               msg.senderId === userId || msg.user === "buyer"
               ? "bg-green-500 text-white self-end"
 
-              :"bg-gray-300 text-black self-start" // Buyer messages on the left
+              :"bg-gray-300 text-black self-start"
 
             }`}
           >
@@ -273,7 +266,6 @@ const setMessages = (newMessages) => {
         ))}
       </div>
 
-      {/* Message Input */}
       <div className="flex items-center space-x-2">
         <input
           type="text"
@@ -295,7 +287,6 @@ const setMessages = (newMessages) => {
 
 
 
-    {/* Popup for Order Details */}
     {isPopupVisible && selectedOrder && (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div className="bg-gradient-to-br from-lime-500 via-green-600 to-emerald-700 rounded-lg shadow-2xl p-6 max-w-md w-full text-white relative">

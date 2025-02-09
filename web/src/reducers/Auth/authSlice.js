@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../axios/config";
-import { jwtDecode } from "jwt-decode"; // Import jwtDecode as a named export
+import { jwtDecode } from "jwt-decode";
 
 const initialState = {
   user: null,
@@ -12,7 +12,7 @@ const initialState = {
 };
 
 
-const TOKEN_EXPIRATION_TIME = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+const TOKEN_EXPIRATION_TIME = 2 * 60 * 60 * 1000;
 
 const loadStateFromLocalStorage = () => {
   if (typeof window !== "undefined") {
@@ -59,7 +59,6 @@ export const loginUser = createAsyncThunk(
         const decodedToken = jwtDecode(accessToken);
         const expirationTime = new Date().getTime() + TOKEN_EXPIRATION_TIME;
 
-        // Store in localStorage with expiry time
         localStorage.setItem("access_token", accessToken);
         localStorage.setItem("user_role", decodedToken.role);
         localStorage.setItem("userId", decodedToken.Id);
@@ -75,16 +74,14 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// Updated logout function
 
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post("/signup", userData);
-      console.log("Backend Response:", response.data); // Debug response
+      console.log("Backend Response:", response.data);
 
-      // Extract user details from the response
       const { event } = response.data;
 
       if (!event) {
@@ -113,7 +110,6 @@ export const registerUser = createAsyncThunk(
 
 
 
-// **Thunk to fetch all users**
 export const fetchUsers = createAsyncThunk(
   "auth/fetchUsers",
   async (_, { rejectWithValue }) => {
@@ -126,7 +122,6 @@ export const fetchUsers = createAsyncThunk(
   }
 );
 
-// **Thunk to update a user**
 export const updateUser = createAsyncThunk(
   "auth/updateUser",
   async ({ userId, userData }, { rejectWithValue }) => {
@@ -139,7 +134,6 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-// **Thunk to delete a user**
 export const deleteUser = createAsyncThunk(
   "auth/deleteUser",
   async (userId, { rejectWithValue }) => {
@@ -157,7 +151,6 @@ export const logout = createAsyncThunk("/logout", async (_, { dispatch, rejectWi
   try {
     await axios.post("/logout");
 
-    // Clear localStorage
     localStorage.removeItem("access_token");
     localStorage.removeItem("user_role");
     localStorage.removeItem("userId");

@@ -20,12 +20,10 @@ const ProductTable = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   
-  // Search state
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
 
-  // Fetch products by user ID
   useEffect(() => {
     if (user?.userId) {
       dispatch(getProductByUserId(user.userId)).then((res) => {
@@ -35,7 +33,6 @@ const ProductTable = () => {
     }
   }, [dispatch, user?.userId]);
 
-  // Search function
   useEffect(() => {
     if (searchQuery.trim() === "") {
       setFilteredProducts(products);
@@ -46,17 +43,15 @@ const ProductTable = () => {
       );
       setFilteredProducts(searchResults);
 
-      // Update suggestions
       const productNames = products
         .map((product) => product.name)
         .filter((name) =>
           name.toLowerCase().includes(searchQuery.toLowerCase())
         );
-      setSuggestions(productNames.slice(0, 5)); // Limit suggestions to top 5
+      setSuggestions(productNames.slice(0, 5));
     }
   }, [searchQuery, products]);
 
-  // Handle delete confirmation
   const confirmDelete = () => {
     if (deleteId) {
       dispatch(deleteProduct(deleteId))
@@ -77,14 +72,12 @@ const ProductTable = () => {
 
   return (
     <div className="p-6">
-      {/* Header with Search */}
       <div className="mb-6 flex flex-col md:flex-row items-center justify-between px-6 py-8 bg-gradient-to-r from-green-500 via-lime-400 to-emerald-600 text-white rounded-3xl shadow-lg">
         <div>
           <h3 className="text-3xl font-bold">Products List</h3>
           <p className="text-sm">Manage all your products here.</p>
         </div>
 
-        {/* Search Box */}
         <div className="relative w-full md:w-96 mt-4 md:mt-0">
           <div className="flex items-center bg-white rounded-lg shadow-md">
             <input
@@ -106,7 +99,6 @@ const ProductTable = () => {
                   onClick={() => {
                     setSearchQuery(suggestion);
                     setTimeout(() => setSuggestions([]), 100);
-                    // Hide suggestions after selection
                   }}
                 >
                   {suggestion}
@@ -128,7 +120,6 @@ const ProductTable = () => {
         </button>
       </div>
 
-      {/* Table */}
       <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 shadow-lg rounded-3xl overflow-hidden">
         <table className="min-w-full text-sm">
           <thead className="bg-gradient-to-r from-green-500 to-emerald-700 text-white">
@@ -194,7 +185,6 @@ const ProductTable = () => {
         </table>
       </div>
 
-      {/* Modals */}
       {showAddProduct && (
         <CreateProduct
           showAddProduct={showAddProduct}

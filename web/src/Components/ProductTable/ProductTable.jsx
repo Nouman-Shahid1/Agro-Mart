@@ -26,27 +26,24 @@ const ProductTable = ({ name = "Products", category }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    let filtered = products || []; // Ensure products is always an array
+    let filtered = products || [];
   
-    // Filter by category if provided
     if (category) {
       filtered = filtered.filter((product) => product.categoryName === category);
     }
   
-    // Apply search query filter
     if (searchQuery.trim() !== "") {
       filtered = filtered.filter((product) =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
   
-      // Generate suggestions based on filtered results
       const productNames = filtered.map((product) => product.name);
       setSuggestions(productNames.slice(0, 5));
     } else {
       setSuggestions([]);
     }
   
-    setFilteredProducts(filtered); // ✅ Update state correctly
+    setFilteredProducts(filtered);
   }, [searchQuery, products, category]);
   
   const confirmDelete = () => {
@@ -69,7 +66,6 @@ const ProductTable = ({ name = "Products", category }) => {
 
   return (
     <div className="p-6">
-      {/* Header Section */}
       <div className="mb-6 flex flex-col lg:flex-row items-center justify-between px-6 py-8 bg-gradient-to-r from-green-500 via-lime-400 to-emerald-600 text-white rounded-3xl shadow-lg">
         <div>
           <h3 className="text-3xl font-bold">Products List</h3>
@@ -87,7 +83,6 @@ const ProductTable = ({ name = "Products", category }) => {
             <span>Add New Product</span>
           </button>
 
-          {/* Search Input */}
           <div className="flex items-center mt-3 md:mt-0">
           <div className="relative w-full md:w-96 mt-4 md:mt-0">
           <div className="flex items-center bg-white rounded-lg shadow-md">
@@ -125,7 +120,6 @@ const ProductTable = ({ name = "Products", category }) => {
         </div>
       </div>
 
-      {/* Table Section */}
       <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 shadow-lg rounded-3xl overflow-hidden">
         <table className="min-w-full text-sm">
           <thead className="bg-gradient-to-r from-green-500 to-emerald-700 text-white">
@@ -191,7 +185,6 @@ const ProductTable = ({ name = "Products", category }) => {
         </table>
       </div>
 
-      {/* Add/Edit Product Modal */}
       {showAddProduct && (
         <CreateProduct
           showAddProduct={showAddProduct}
@@ -200,7 +193,6 @@ const ProductTable = ({ name = "Products", category }) => {
         />
       )}
 
-      {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <DeleteModal
           showDeleteModal={showDeleteModal}

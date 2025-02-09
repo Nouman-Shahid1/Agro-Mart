@@ -11,7 +11,6 @@ const CreateMachine = ({ showAddMachine, setShowAddMachine }) => {
       }`}
     >
       <form className="relative max-w-4xl w-[600px] bg-gradient-to-br from-green-900 via-emerald-700 to-lime-500 text-white rounded-xl shadow-2xl p-8 space-y-6 animate-fade-in">
-        {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-gray-300 hover:text-white transition-colors"
           onClick={handleAddMachine}
@@ -19,12 +18,10 @@ const CreateMachine = ({ showAddMachine, setShowAddMachine }) => {
           X
         </button>
 
-        {/* Header */}
         <h2 className="text-3xl font-bold text-center text-green-300">
           Add Machine
         </h2>
 
-        {/* Machine Name */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Machine Name</label>
           <input
@@ -34,7 +31,6 @@ const CreateMachine = ({ showAddMachine, setShowAddMachine }) => {
           />
         </div>
 
-        {/* Description */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Description</label>
           <textarea
@@ -44,7 +40,6 @@ const CreateMachine = ({ showAddMachine, setShowAddMachine }) => {
           ></textarea>
         </div>
 
-        {/* Type */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Type</label>
           <select className="w-full p-3 bg-white bg-opacity-20 text-white rounded-lg border border-gray-400 outline-none focus:ring-2 focus:ring-yellow-400 focus:bg-opacity-30 transition-all">
@@ -55,7 +50,6 @@ const CreateMachine = ({ showAddMachine, setShowAddMachine }) => {
           </select>
         </div>
 
-        {/* Manufacturer */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Manufacturer</label>
           <input
@@ -65,7 +59,6 @@ const CreateMachine = ({ showAddMachine, setShowAddMachine }) => {
           />
         </div>
 
-        {/* Machine Image */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Machine Image</label>
           <input
@@ -75,7 +68,6 @@ const CreateMachine = ({ showAddMachine, setShowAddMachine }) => {
           />
         </div>
 
-        {/* Submit Button */}
         <div className="text-end">
           <button
             type="submit"

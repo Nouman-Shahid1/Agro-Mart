@@ -126,7 +126,6 @@ const loadingMessages = useSelector((state) => state.chat.loading);
       <h2 className="text-3xl font-bold text-lime-100 mb-6">My Orders</h2>
     </div>
 
-    {/* Order Cards */}
     {loading ? (
       <p className="text-center text-lime-200">Loading orders...</p>
     ) : error ? (
@@ -199,7 +198,6 @@ const loadingMessages = useSelector((state) => state.chat.loading);
 {isChatVisible && (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div className="bg-green-700 p-6 rounded-lg text-white w-full max-w-lg relative shadow-lg">
-      {/* Close Button */}
       <button
         onClick={() => setChatVisible(false)}
         className="absolute top-3 right-3 text-white hover:text-gray-300 text-lg"
@@ -209,10 +207,8 @@ const loadingMessages = useSelector((state) => state.chat.loading);
 
       </button>
 
-      {/* Chat Header */}
       <h2 className="text-xl font-semibold text-center mb-4">Chat with Buyer</h2>
 
-      {/* Chat Messages */}
       <div className="h-80 overflow-y-auto border-b mb-4 p-2 flex flex-col space-y-2 scrollbar-thin scrollbar-thumb-gray-400">
         {messages.map((msg, index) => (
           <div
@@ -235,7 +231,6 @@ const loadingMessages = useSelector((state) => state.chat.loading);
         ))}
       </div>
 
-      {/* Message Input */}
       <div className="flex items-center space-x-2">
         <input
           type="text"
@@ -257,7 +252,6 @@ const loadingMessages = useSelector((state) => state.chat.loading);
 
 
 
-    {/* Popup for Order Details */}
     {isPopupVisible && selectedOrder && (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div className="bg-gradient-to-br from-lime-500 via-green-600 to-emerald-700 rounded-lg shadow-2xl p-6 max-w-md w-full text-white relative">

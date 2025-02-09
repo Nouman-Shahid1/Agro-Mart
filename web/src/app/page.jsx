@@ -21,8 +21,8 @@ export default function Page() {
     (state) => state.product
   );
   useEffect(() => {
-    dispatch(fetchCategories()); // Fetch categories on component mount
-    dispatch(getProducts()); // Fetch products on component mount
+    dispatch(fetchCategories());
+    dispatch(getProducts());
   }, [dispatch]);
   return (
     <>
@@ -120,7 +120,6 @@ export default function Page() {
                 <CategoryCard
                   key={category.id}
                   name={category.name}
-                  // src={category.imageUrl}
                   src={`http://localhost:8080/${category.imagepath}`}
 
                   description={category.description}

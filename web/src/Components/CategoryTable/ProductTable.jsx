@@ -22,31 +22,26 @@ const ProductTable = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-  // Fetch categories on component load
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  // Update filtered categories when search term changes
   useEffect(() => {
     if (!categories) return;
 
-    // Filter categories based on search term
     const results = categories.filter((category) =>
       category?.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     setFilteredCategories(results);
 
-    // Generate search suggestions only if searchTerm is typed
     if (searchTerm.length > 0) {
       setSuggestions(results.map((category) => category.name).slice(0, 5));
     } else {
-      setSuggestions([]); // Hide suggestions if search is empty
+      setSuggestions([]);
     }
   }, [searchTerm, categories]);
 
-  // Handle delete confirmation
   const confirmDelete = () => {
     if (deleteId) {
       dispatch(deleteCategory(deleteId))
@@ -67,7 +62,6 @@ const ProductTable = () => {
 
   return (
     <div className="p-6">
-      {/* Header Section */}
       <div className="mb-6 flex flex-col lg:flex-row items-center justify-between px-6 py-8 bg-gradient-to-r from-green-500 via-lime-400 to-emerald-600 text-white rounded-3xl shadow-lg">
         <div>
           <h3 className="text-3xl font-bold">Categories List</h3>
@@ -86,7 +80,6 @@ const ProductTable = () => {
             <span>Add New Category</span>
           </button>
 
-          {/* Search Box with Suggestions */}
           <div className="relative">
             <div className="flex items-center">
               <input
@@ -101,7 +94,6 @@ const ProductTable = () => {
               </button>
             </div>
 
-            {/* Suggestions Dropdown */}
             {suggestions.length > 0 && (
               <ul className="absolute z-10 bg-white border rounded-lg shadow-md w-full mt-1">
                 {suggestions.map((suggestion, index) => (
@@ -122,10 +114,8 @@ const ProductTable = () => {
         </div>
       </div>
 
-      {/* Table Section */}
       <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 shadow-lg rounded-3xl overflow-hidden">
         <table className="min-w-full text-sm">
-          {/* Header */}
           <thead className="bg-gradient-to-r from-green-500 to-emerald-700 text-white">
             <tr>
               <th className="py-4 px-6 text-left font-semibold">Icon</th>
@@ -135,7 +125,6 @@ const ProductTable = () => {
             </tr>
           </thead>
 
-          {/* Table Body */}
           <tbody>
             {filteredCategories.length > 0 ? (
               filteredCategories.map((category) => (
@@ -154,7 +143,6 @@ const ProductTable = () => {
                   <td className="py-4 px-6">{category.description}</td>
                   <td className="py-4 px-6 text-center">
                     <div className="flex justify-center items-center gap-4">
-                      {/* Edit Button */}
                       <button
                         className="bg-green-500 text-white p-2 rounded-full shadow-lg hover:bg-green-600 hover:shadow-xl transition duration-300"
                         onClick={() => {
@@ -165,7 +153,6 @@ const ProductTable = () => {
                         <CiEdit size={18} />
                       </button>
 
-                      {/* Delete Button */}
                       <button
                         className="bg-red-500 text-white p-2 rounded-full shadow-lg hover:bg-red-600 hover:shadow-xl transition duration-300"
                         onClick={() => {
@@ -190,14 +177,12 @@ const ProductTable = () => {
         </table>
       </div>
 
-      {/* Add/Edit Category Modal */}
       <CreateCategory
         showAddCategory={showAddCategory}
         setShowAddCategory={setShowAddCategory}
         initialCategory={editCategory}
       />
 
-      {/* Delete Confirmation Modal */}
       <DeleteModal
         showDeleteModal={showDeleteModal}
         setShowDeleteModal={setShowDeleteModal}
