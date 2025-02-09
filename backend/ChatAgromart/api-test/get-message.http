@@ -1,2 +1,2 @@
-GET http://localhost:8081/message/messages?receiverId=1&limit=20&offset=0
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzg2NzgwMzEsInJvbGUiOiJhZG1pbiIsInVzZXJJZCI6MiwidXNlcm5hbWUiOiJ6b3JvIn0.LtdKeV2vJ8xv80WS8pZbFJbzUhMiLZimoLQfq2_C6I4
+GET http://localhost:8081/message/messages?receiverId=2&limit=20&offset=0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzg3OTUxMDEsInJvbGUiOiJhZG1pbiIsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJUZXN0ZXIifQ.Grq-FXCq6B5PqBtzs6CV_35BmiZh2QeuC5rbIV3-3e8

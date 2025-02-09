@@ -20,6 +20,7 @@ func RegisterRoutes(server *gin.Engine) {
 	server.POST("/login", login)   
 	server.POST("/refresh-token", refreshToken)
 	server.POST("/logout", logout)
+	server.POST("/contact-us", contactUs)
 
 	server.GET("/search-bar", searchProduct)
 	server.GET("/getallcategories", getProductsCategories)

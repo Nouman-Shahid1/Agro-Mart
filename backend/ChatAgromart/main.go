@@ -20,6 +20,7 @@ type Client struct {
 	senderID   int64
 	receiverID int64
 	send       chan []byte
+	//messageBuffer []models.Message 
 }
 
 var clients = make(map[*Client]bool)
@@ -70,7 +71,7 @@ func wsEndpoint(c *gin.Context) {
 		return
 	}
 
-	client := &Client{conn: ws, senderID: senderID, receiverID: receiverID, send: make(chan []byte)}
+	client := &Client{conn: ws, senderID: senderID, receiverID: receiverID, send: make(chan []byte)} //messageBuffer: []models.Message{},
 
 	mutex.Lock()
 	clients[client] = true
@@ -87,6 +88,13 @@ func handleMessages(client *Client) {
 		delete(clients, client)
 		mutex.Unlock()
 		client.conn.Close()
+
+		// if len(client.messageBuffer) > 0 {
+		// 	err := models.BatchInsertMessages(client.messageBuffer)
+		// 	if err != nil {
+		// 		log.Printf("Error inserting batch messages: %v", err)
+		// 	}
+		// }
 	}()
 
 	for {
@@ -103,6 +111,7 @@ func handleMessages(client *Client) {
 			Time:       time.Now().Unix(),
 		}
 		message.CreateMessage()
+		// client.messageBuffer = append(client.messageBuffer, message)
 
 		// Send message to the intended recipient
 		broadcast <- &message

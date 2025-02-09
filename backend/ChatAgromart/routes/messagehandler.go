@@ -64,3 +64,6 @@ func GetMessages(context *gin.Context) {
 
 	context.JSON(http.StatusOK, gin.H{"messages": formattedMessages})
 }
+
+
+
