@@ -214,6 +214,7 @@ const Sidebar = ({ role }) => {
                 >
                   <div className="text-2xl">{item.icon}</div>
                   <span className="text-lg font-medium">{item.label}</span>
+                  
                 </div>
               </Link>
             </li>

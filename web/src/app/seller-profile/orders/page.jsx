@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchSellerOrders, fetchOrderDetail,updateOrderStatus } from "@/reducers/Order/orderSlice";
 import Profile from "@/Components/ProfileCard/ProfileCard";
 import { fetchMessages } from "@/reducers/Chat/chatSlice";
+import { AiOutlineClose } from "react-icons/ai";
+
 export default function Orders() {
   const dispatch = useDispatch();
   const { sellerOrders, loading, error } = useSelector((state) => state.orders);
@@ -196,30 +198,39 @@ const loadingMessages = useSelector((state) => state.chat.loading);
     )}
 {isChatVisible && (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-green-700 p-6 rounded-lg text-white w-full max-w-lg relative">
+    <div className="bg-green-700 p-6 rounded-lg text-white w-full max-w-lg relative shadow-lg">
+      {/* Close Button */}
       <button
         onClick={() => setChatVisible(false)}
-        className="absolute top-3 right-3 text-white hover:text-gray-300"
+        className="absolute top-3 right-3 text-white hover:text-gray-300 text-lg"
       >
-        ❌
+
+<AiOutlineClose className="w-6 h-6 cursor-pointer" />
+
       </button>
+
+      {/* Chat Header */}
       <h2 className="text-xl font-semibold text-center mb-4">Chat with Buyer</h2>
-      
+
       {/* Chat Messages */}
-      <div className="h-72 overflow-y-auto border-b mb-4 p-2 flex flex-col space-y-2">
+      <div className="h-80 overflow-y-auto border-b mb-4 p-2 flex flex-col space-y-2 scrollbar-thin scrollbar-thumb-gray-400">
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-2 px-4 rounded-lg max-w-[75%] ${
-              msg.senderId === userId || msg.user === "Seller"
-                ? "bg-green-500 text-white self-end" // Seller messages on the right
-                : "bg-gray-300 text-black self-start" // Buyer messages on the left
+            className={`flex ${
+              msg.senderId === userId || msg.user === "Seller" ? "justify-end" : "justify-start"
             }`}
           >
-            <strong className="block text-sm mb-1">
-              {msg.user}
-            </strong>
-            <span>{msg.content}</span>
+            <div
+              className={`p-3 px-4 rounded-lg max-w-[75%] shadow ${
+                msg.senderId === userId || msg.user === "Seller"
+                  ? "bg-green-500 text-white"
+                  : "bg-gray-300 text-black"
+              }`}
+            >
+              <strong className="block text-sm mb-1">{msg.user}</strong>
+              <span>{msg.content}</span>
+            </div>
           </div>
         ))}
       </div>
@@ -230,12 +241,12 @@ const loadingMessages = useSelector((state) => state.chat.loading);
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="flex-1 border p-2 rounded-lg text-black"
+          className="flex-1 border p-2 rounded-lg text-black outline-none"
           placeholder="Type a message..."
         />
         <button
           onClick={sendMessage}
-          className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700"
+          className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition"
         >
           📩
         </button>

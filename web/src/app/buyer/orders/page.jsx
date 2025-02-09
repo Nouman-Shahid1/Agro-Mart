@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchBuyerOrders, fetchOrderDetail,deleteOrder } from "@/reducers/Order/orderSlice";
 import Profile from "@/Components/ProfileCard/ProfileCard";
 import { fetchMessages, } from "@/reducers/Chat/chatSlice";
+import { AiOutlineClose } from "react-icons/ai";
+
 export default function Orders() {
   const dispatch = useDispatch();
   const { buyerOrders, loading, error } = useSelector((state) => state.orders);
@@ -16,6 +18,9 @@ export default function Orders() {
   const [isChatVisible, setChatVisible] = useState(false);
   const [chatMessage, setChatMessage] = useState("");
   const [selectedSellerId, setSelectedSellerId] = useState(null);
+  const completedOrders = buyerOrders.filter(order => order.orderStatus === "completed");
+const activeOrders = buyerOrders.filter(order => order.orderStatus !== "completed");
+
   useEffect(() => {
     if (userId) {
       dispatch(fetchBuyerOrders(userId));
@@ -62,6 +67,7 @@ export default function Orders() {
   const [localMessages, setLocalMessages] = useState([]);
   const [input, setInput] = useState("");
   const [ws, setWs] = useState(null);
+  const [newMessage, setNewMessage] = useState(false);
   const messages = useSelector((state) => state.chat.messages);
 const setMessages = (newMessages) => {
   console.warn("setMessages is not used. Messages are managed via Redux.");
@@ -93,7 +99,28 @@ const setMessages = (newMessages) => {
 
     if (buyerOrders.length > 0) fetchProductDetails();
   }, [buyerOrders, dispatch]);
+  useEffect(() => {
+    if (!userId) return;
 
+    const websocket = new WebSocket(`ws://localhost:8081/ws?senderID=${userId}`);
+    setWs(websocket);
+
+    websocket.onmessage = (event) => {
+      const receivedMessage = JSON.parse(event.data);
+      dispatch({ type: "chat/addMessage", payload: receivedMessage });
+
+      // ✅ Show notification only if the chat is NOT open
+      if (!isChatVisible) {
+        setNewMessage(true);
+      }
+    };
+
+    websocket.onclose = () => setWs(null);
+
+    return () => {
+      if (websocket) websocket.close();
+    };
+  }, [userId, dispatch, isChatVisible]);
 
   const handleOpenChat = (sellerId) => {
     if (!token) {
@@ -103,6 +130,7 @@ const setMessages = (newMessages) => {
 
     setSelectedSellerId(sellerId);
     setChatVisible(true);
+    setNewMessage(false);
 
     dispatch(fetchMessages({ receiverId: sellerId }));
 
@@ -114,6 +142,9 @@ const setMessages = (newMessages) => {
     websocket.onmessage = (event) => {
       const receivedMessage = JSON.parse(event.data);
       dispatch({ type: "chat/addMessage", payload: receivedMessage });
+      if (!isChatVisible) {
+        setNewMessage(true); // Set new message notification if chat is not open
+      }
     };
 
     websocket.onclose = () => setWs(null);
@@ -147,13 +178,19 @@ const setMessages = (newMessages) => {
     </div>
 
     {/* Order Cards */}
-    {loading ? (
+    {activeOrders.length === 0 ? (
       <p className="text-center text-lime-200">Loading orders...</p>
     ) : error ? (
       <p className="text-center text-red-400">Failed to load orders: {error}</p>
     ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {buyerOrders.map((order) => (
+{newMessage && (
+        <div className="fixed bottom-10 right-10 bg-red-500 text-white p-3 rounded-lg shadow-md animate-bounce">
+          New message received! 📩
+        </div>
+      )}
+
+    {activeOrders.map((order) => (
           <div
             key={order.id}
             className="bg-gradient-to-br from-green-700 via-emerald-600 to-lime-600 p-6 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300"
@@ -209,7 +246,9 @@ const setMessages = (newMessages) => {
         onClick={() => setChatVisible(false)}
         className="absolute top-3 right-3 text-white hover:text-gray-300"
       >
-        ❌
+
+<AiOutlineClose className="w-6 h-6 cursor-pointer"  />
+
       </button>
       <h2 className="text-xl font-semibold text-center mb-4">Chat with Seller</h2>
       
@@ -219,10 +258,11 @@ const setMessages = (newMessages) => {
           <div
             key={index}
             className={`p-2 px-4 rounded-lg max-w-[75%] ${
-              msg.senderId === userId || msg.user === "Seller"
-              ?"bg-gray-300 text-black self-start" // Buyer messages on the left
+              msg.senderId === userId || msg.user === "buyer"
+              ? "bg-green-500 text-white self-end"
 
-                : "bg-green-500 text-white self-end" // Seller messages on the right
+              :"bg-gray-300 text-black self-start" // Buyer messages on the left
+
             }`}
           >
             <strong className="block text-sm mb-1">
