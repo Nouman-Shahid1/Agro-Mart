@@ -51,7 +51,7 @@ export default function SignupPage() {
 
     try {
       const result = await dispatch(registerUser(userData)).unwrap();
-      console.log("Registration Success:", result); // Log success
+      console.log("Registration Success:", result);
 
       toast.success("Registration successful! Redirecting to login...", {
         position: "top-right",
@@ -60,7 +60,7 @@ export default function SignupPage() {
 
       router.push("/login");
     } catch (err) {
-      console.error("Registration Failed:", err); // Log error
+      console.error("Registration Failed:", err);
 
       toast.error(err?.message || "Registration failed. Please try again.", {
         position: "top-right",
@@ -77,7 +77,6 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden font-sans bg-gray-900">
-      {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-fixed filter brightness-50"
         style={{
@@ -92,9 +91,7 @@ export default function SignupPage() {
 
       <div className="relative">
         <div className="relative z-20 pt-[30px] my-8 flex flex-col items-center justify-center min-h-[80vh]">
-          {/* Form Switcher */}
           <div className="flex mb-4 bg-gradient-to-r from-white/10 to-transparent backdrop-blur-sm rounded-full p-1 shadow-md relative">
-            {/* Buyer Button */}
             <button
               onClick={() => setActiveForm("buyer")}
               className={`relative flex-1 px-4 py-2 rounded-full text-center font-semibold text-sm transition-all duration-300 ease-in-out transform flex items-center justify-center gap-2 ${
@@ -107,7 +104,6 @@ export default function SignupPage() {
               <span>Buyer</span>
             </button>
 
-            {/* Seller Button */}
             <button
               onClick={() => setActiveForm("seller")}
               className={`relative flex-1 px-4 py-2 rounded-full text-center text-sm transition-all font-bold duration-300 ease-in-out transform flex items-center justify-center gap-2 ${
@@ -121,7 +117,6 @@ export default function SignupPage() {
             </button>
           </div>
 
-          {/* Animated Form */}
           <motion.div
             className="bg-gradient-to-r from-white/10 to-transparent backdrop-blur-sm border border-white/18 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] space-y-4 p-8 max-w-[500px] w-full text-center space-y-2 transform hover:shadow-xl transition-shadow"
             key={activeForm}

@@ -64,7 +64,6 @@ export default function CombinedDashboard() {
 
       <div className="flex justify-center">
         <main className="w-full bg-gradient-to-br from-green-700 via-green-600 to-lime-600 shadow-xl rounded-xl p-8 mt-10 text-gray-100">
-          {/* Profile Picture */}
           <div className="text-center mb-8 relative">
             <img
               src={editableInfo.profilePicture}
@@ -84,7 +83,6 @@ export default function CombinedDashboard() {
             )}
           </div>
 
-          {/* Store Information */}
           <section className="mb-8">
             <h3 className="text-2xl font-bold text-lime-200 mb-6">Store Information</h3>
             <div className="space-y-4">
@@ -93,7 +91,6 @@ export default function CombinedDashboard() {
                 return (
                   <div key={field}>
                     {isEditing ? (
-                      // Editable Mode
                       <>
                         <label
                           htmlFor={field}
@@ -111,7 +108,6 @@ export default function CombinedDashboard() {
                         />
                       </>
                     ) : (
-                      // Non-Editable Mode
                       <div className="flex items-center space-x-4">
                         <Icon className="text-emerald-400 text-xl" />
                         <div>
@@ -126,7 +122,6 @@ export default function CombinedDashboard() {
                 );
               })}
 
-              {/* Categories Field */}
               <div>
                 <label
                   htmlFor="categories"
@@ -138,11 +133,11 @@ export default function CombinedDashboard() {
                 {isEditing ? (
                   <textarea
                     name="categories"
-                    value={editableInfo.category.join(", ")} // Join array into a string
+                    value={editableInfo.category.join(", ")}
                     onChange={(e) =>
                       setEditableInfo({
                         ...editableInfo,
-                        category: e.target.value.split(",").map((cat) => cat.trim()), // Split string back into an array
+                        category: e.target.value.split(",").map((cat) => cat.trim()),
                       })
                     }
                     className="w-full px-4 py-2 rounded-lg text-gray-800 border border-lime-300 focus:ring-2 focus:ring-lime-500"

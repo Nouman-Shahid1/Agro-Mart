@@ -42,7 +42,6 @@ const Testimonials = () => {
           "url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920')",
       }}
     >
-      {/* Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-green-900 via-green-700 to-transparent opacity-90"></div>
 
       <div className="relative z-10 max-w-screen-xl mx-auto px-6 sm:px-12 text-center">
@@ -65,7 +64,6 @@ const Testimonials = () => {
               <p className="text-gray-600 italic mb-6 leading-relaxed">
                 &ldquo;{testimonial.feedback}&rdquo;
               </p>
-              {/* Star Rating */}
               <div className="flex items-center justify-center mb-4">
                 {Array(Math.floor(testimonial.rating))
                   .fill()
@@ -76,7 +74,6 @@ const Testimonials = () => {
                   <FaStar className="text-yellow-400 text-xl opacity-50" />
                 )}
               </div>
-              {/* Customer Info */}
               <div className="flex flex-col items-center">
                 <img
                   src={testimonial.image}

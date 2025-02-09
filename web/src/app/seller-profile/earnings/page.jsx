@@ -14,7 +14,7 @@ import {
   Legend,
 } from "chart.js";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSellerMonthlyStats } from "@/reducers/Order/orderSlice"; // API Call
+import { fetchSellerMonthlyStats } from "@/reducers/Order/orderSlice";
 
 ChartJS.register(
   CategoryScale,
@@ -31,45 +31,37 @@ const Earnings = () => {
   const { user } = useSelector((state) => state.auth);
   const { sellerMonthlyStats, loading, error } = useSelector((state) => state.orders);
 
-  // Fetch API Data
   useEffect(() => {
     if (user?.userId) {
       dispatch(fetchSellerMonthlyStats(user.userId));
     }
   }, [dispatch, user?.userId]);
 
-  // Ensure API returns an object before mapping
   const stats = sellerMonthlyStats || {};
   const monthlyStats = Array.isArray(stats.monthly_stats) ? stats.monthly_stats : [];
   const yearlyStats = Array.isArray(stats.yearly_stats) ? stats.yearly_stats : [];
 
-  // Extract Monthly & Yearly Revenue
   const currentMonthRevenue = stats.current_month_revenue || 0;
   const currentYearRevenue = stats.current_year_revenue || 0;
 
-  // Extract Chart Labels & Data
   const labels = monthlyStats.map(stat => `${stat.month}-${stat.year}`);
   const earningsDataPoints = monthlyStats.map(stat => stat.total_revenue);
 
-  // Current & Previous Month Stats
   const lastMonthStats = monthlyStats.length > 0 ? monthlyStats[monthlyStats.length - 1] : {};
   const prevMonthStats = monthlyStats.length > 1 ? monthlyStats[monthlyStats.length - 2] : {};
 
-  // Current & Previous Year Stats
   const lastYearStats = yearlyStats.length > 0 ? yearlyStats[yearlyStats.length - 1] : {};
   const prevYearStats = yearlyStats.length > 1 ? yearlyStats[yearlyStats.length - 2] : {};
 
-  // Calculate Growth % (Avoid division by zero)
   const calculateGrowth = (current, previous) => {
-    if (previous === 0 && current > 0) return 100; // First-time earnings, assume 100% growth
-    if (previous === 0) return 0; // No previous data, no growth
+    if (previous === 0 && current > 0) return 100;
+    if (previous === 0) return 0;
     return ((current - previous) / previous) * 100;
   };
 
   const monthlyGrowth = calculateGrowth(currentMonthRevenue, prevMonthStats.total_revenue || 0);
   const yearlyGrowth = calculateGrowth(currentYearRevenue, prevYearStats.total_revenue || 0);
 
-  // Sales Breakdown
   const salesBreakdown = lastMonthStats.sales_breakdown || {
     Fruits: 0,
     Vegetables: 0,
@@ -95,10 +87,8 @@ const Earnings = () => {
     },
   };
   
-  // Recent Transactions
   const recentTransactions = lastMonthStats.recent_transactions || [];
 
-  // ** Earnings Over Time Chart Data **
   const earningsData = {
     labels,
     datasets: [
@@ -138,7 +128,6 @@ const Earnings = () => {
         </div>
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {/* Monthly Earnings */}
           <div className="bg-gradient-to-br from-emerald-500 to-green-700 px-6 py-8 rounded-3xl hover:scale-105 shadow-2xl transition-transform">
             <FaMoneyBillAlt className="text-4xl text-white mb-3" />
             <h4 className="text-2xl font-semibold text-white">
@@ -151,7 +140,6 @@ const Earnings = () => {
             </div>
           </div>
 
-          {/* Yearly Earnings */}
           <div className="bg-gradient-to-br from-green-700 to-emerald-500 px-6 py-8 rounded-3xl hover:scale-105 shadow-2xl transition-transform">
             <FaMoneyBillAlt className="text-4xl text-white mb-3" />
             <h4 className="text-2xl font-semibold text-white">
@@ -164,20 +152,18 @@ const Earnings = () => {
             </div>
           </div>
 
-          {/* Sales Breakdown */}
           <div className="bg-gradient-to-br from-emerald-500 to-green-700 px-6 py-8 rounded-3xl hover:scale-105 shadow-2xl transition-transform">
   <FaMoneyBillAlt className="text-4xl text-white mb-3" />
   <h4 className="text-2xl font-semibold text-white">
     Completed Orders
   </h4>
   <p className="text-3xl mt-3 font-bold text-white">
-    {lastMonthStats.completed_orders || 0} {/* Display completed orders */}
+    {lastMonthStats.completed_orders || 0}
   </p>
 </div>
 
         </div>
 
-        {/* Earnings Over Time Chart */}
         <div className="mt-10 bg-white p-8 rounded-3xl shadow-lg">
           <h3 className="text-2xl font-semibold text-green-800 mb-6">
             Earnings Over Time

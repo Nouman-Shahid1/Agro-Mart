@@ -2,7 +2,7 @@
 
 import React, { useEffect ,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "@/reducers/product/productSlice"; // Redux action to fetch products
+import { getProducts } from "@/reducers/product/productSlice";
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/Footer";
 import ProductCard from "@/Components/ProductCard/ProductCard";
@@ -111,7 +111,6 @@ export default function PesticidesPage() {
         <div className="absolute bottom-0 w-full h-64 bg-gradient-to-t from-black to-transparent"></div>
       </div>
 
-      {/* Products Section */}
       <div className="py-16 bg-white">
         <div className="w-[85%] mx-auto text-center">
           <h2 className="text-3xl md:text-5xl font-extrabold text-[#2c6e49] mb-4">
@@ -171,7 +170,7 @@ export default function PesticidesPage() {
                 <ProductCard
                   key={product.id}
                 id={product.id}
-                  src={`http://localhost:8080/${product.imagepath}`} // Assuming product.imagepath contains the image path
+                  src={`http://localhost:8080/${product.imagepath}`}
                   title={product.name}
                   cat={product.categoryName}
                   price={product.price}
@@ -185,7 +184,6 @@ export default function PesticidesPage() {
         </div>
       </div>
 
-      {/* Footer */}
       <Footer />
     </>
   );

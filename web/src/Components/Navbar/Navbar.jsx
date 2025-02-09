@@ -219,7 +219,6 @@ const HandleOrder=()=>{
     )}
   </button>
 
-  {/* Dropdown Menu */}
   {showDropdown && (
     <div
       ref={dropdownRef}
@@ -234,7 +233,6 @@ const HandleOrder=()=>{
 </div>
 
 
-            {/* Show Username */}
           
               <div className="relative" ref={cartRef}>
   <FaShoppingCart
@@ -248,7 +246,6 @@ const HandleOrder=()=>{
   )}
   {showCart && (
     <div className="absolute right-0 mt-2 w-96 bg-gradient-to-b from-green-100 via-white to-green-50 shadow-2xl rounded-lg p-6 z-50 border-4 border-green-400">
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-2xl font-bold text-green-700 flex items-center gap-2">
           <svg
@@ -275,7 +272,6 @@ const HandleOrder=()=>{
         </button>
       </div>
 
-      {/* Cart Items */}
       {cartItems.length > 0 ? (
         <>
           <div className="max-h-60 overflow-y-auto space-y-4">
@@ -284,7 +280,6 @@ const HandleOrder=()=>{
                 key={item.id}
                 className="flex justify-between items-center p-3 bg-white rounded-lg shadow-md"
               >
-                {/* Product Info */}
                 <div className="flex items-center gap-4">
                   <img
                     src={item.image}
@@ -299,7 +294,6 @@ const HandleOrder=()=>{
                   </div>
                 </div>
 
-                {/* Quantity and Remove */}
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => decreaseQuantity(item.id, item.price)}
@@ -325,14 +319,12 @@ const HandleOrder=()=>{
             ))}
           </div>
 
-          {/* Total Section */}
           <div className="mt-6 p-4 bg-green-100 rounded-lg shadow-md">
             <p className="text-right font-bold text-green-800 text-lg">
               Total: ${totalPrice.toFixed(2)}
             </p>
           </div>
 
-          {/* Actions */}
           <div className="flex justify-between mt-6">
             <button
               onClick={handleClearCart}

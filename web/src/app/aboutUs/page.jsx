@@ -89,7 +89,6 @@ const AboutUs = () => {
   return (
     <>
       <div className="min-h-screen relative overflow-hidden font-sans">
-        {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-fixed filter brightness-50"
           style={{
@@ -98,7 +97,6 @@ const AboutUs = () => {
           }}
         ></div>
 
-        {/* Gradient Layers */}
         <div className="absolute inset-0 z-10">
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-800/30 to-black opacity-80"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 to-transparent opacity-40 animate-gradient-x"></div>
@@ -106,18 +104,14 @@ const AboutUs = () => {
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-400 rounded-full blur-3xl opacity-20 animate-bounce-slow-reverse"></div>
         </div>
 
-        {/* Navbar */}
         <div className="relative z-30">
           <Navbar  />
         </div>
 
-        {/* Hero Content */}
         <div className="relative mt-56 z-20 flex flex-col items-center justify-center h-full text-center px-6 space-y-12">
-          {/* Animations */}
           <div className="absolute top-10 left-10 w-12 h-12 bg-green-400 rounded-full blur-lg opacity-50 animate-ping"></div>
           <div className="absolute bottom-20 right-20 w-16 h-16 bg-green-500 rounded-full blur-lg opacity-30 animate-pulse"></div>
 
-          {/* Title Section */}
           <div className="flex items-center justify-center space-x-6">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-green-400 animate-fade-in">
               About Us 🌱
@@ -146,7 +140,6 @@ const AboutUs = () => {
             consumers alike.
           </p>
 
-          {/* Divider */}
           <div className="flex items-center space-x-6">
             <div className="w-16 h-1 bg-green-500 rounded-full animate-pulse"></div>
             <span className="text-green-400 font-bold text-lg tracking-wider uppercase animate-bounce">
@@ -155,7 +148,6 @@ const AboutUs = () => {
             <div className="w-16 h-1 bg-green-500 rounded-full animate-pulse"></div>
           </div>
 
-          {/* Buttons */}
           <div className="flex flex-col sm:flex-row items-center gap-8 mt-6 pb-8">
             <button className="bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-16 rounded-full shadow-2xl transition-transform transform hover:scale-110 hover:shadow-green-500/50 animate-fade-up">
               Learn Our Story
@@ -166,13 +158,11 @@ const AboutUs = () => {
           </div>
         </div>
 
-        {/* Bottom Gradients */}
         <div className="absolute top-0 w-full h-64 bg-gradient-to-b from-black to-transparent"></div>
         <div className="absolute bottom-0 w-full h-64 bg-gradient-to-t from-black to-transparent"></div>
       </div>
 
       <div className="bg-gradient-to-b from-green-50 to-white">
-        {/* Mission Section */}
         <section className="py-20">
           <div className="max-w-screen-xl mx-auto text-center px-6">
             <h2 className="text-5xl font-extrabold text-gray-800 mb-8">
@@ -186,7 +176,6 @@ const AboutUs = () => {
           </div>
         </section>
 
-        {/* Key Elements Section */}
         <section className="py-20">
           <div className="max-w-screen-xl mx-auto text-center px-6">
             <h2 className="text-5xl font-extrabold text-gray-800 mb-8">
@@ -200,7 +189,6 @@ const AboutUs = () => {
           </div>
         </section>
 
-        {/* What We Offer Section */}
         <section className="py-20">
           <div className="max-w-screen-xl mx-auto text-center px-6">
             <h2 className="text-5xl font-extrabold text-gray-800 mb-8">
@@ -220,7 +208,6 @@ const AboutUs = () => {
   );
 };
 
-// Card Component
 const Card = ({ card }) => (
   <div className="relative bg-white p-8 rounded-2xl shadow-md hover:shadow-lg transform hover:-translate-y-2 transition-all duration-300 group overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-tr from-green-50 to-transparent opacity-40 group-hover:opacity-60 transition duration-300 rounded-2xl"></div>

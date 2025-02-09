@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { CiSearch, CiEdit } from "react-icons/ci";
 import { FaTrash, FaPlusCircle  } from "react-icons/fa";
-import CreateRentals from '../CreateRentals/CreateRentals'; // Modal for adding/editing rentals
-import DeleteProduct from '../DeleteProduct/DeleteProduct'; // Modal for confirming deletion
+import CreateRentals from '../CreateRentals/CreateRentals';
+import DeleteProduct from '../DeleteProduct/DeleteProduct';
 
 const RentalTable = () => {
   const [showAddRental, setShowAddRental] = useState(false);
@@ -54,7 +54,6 @@ const RentalTable = () => {
             </span>
           </button>
 
-          {/* Search Input */}
           <div className="flex items-center mt-3 md:mt-0">
             <input
               type="text"

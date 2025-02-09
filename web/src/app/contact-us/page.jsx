@@ -11,7 +11,6 @@ const ContactUs = () => {
   const dispatch = useDispatch();
   const { loading, success, error } = useSelector((state) => state.contact);
 
-  // State for form fields
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,21 +18,19 @@ const ContactUs = () => {
     message: "",
   });
 
-  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
   
     const formattedData = {
       ...formData,
-      number: parseInt(formData.number, 10), // Ensure number is an integer
+      number: parseInt(formData.number, 10),
     };
   
-    console.log("Sending data:", formattedData); // Debugging log
+    console.log("Sending data:", formattedData);
   
     dispatch(sendContactMessage(formattedData));
   };
@@ -43,7 +40,6 @@ const ContactUs = () => {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
 
-      {/* Hero Section */}
       <div className="min-h-screen relative overflow-hidden font-sans">
         <div
           className="absolute inset-0 bg-cover bg-center bg-fixed filter brightness-50"
@@ -54,7 +50,6 @@ const ContactUs = () => {
         ></div>
 
         <div className="absolute inset-0 z-10">
-          {/* Background effects */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-800/30 to-black opacity-80"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 to-transparent opacity-40 animate-gradient-x"></div>
           <div className="absolute top-0 left-0 w-96 h-96 bg-green-500 rounded-full blur-3xl opacity-20 animate-bounce-slow"></div>
@@ -101,9 +96,7 @@ const ContactUs = () => {
         <div className="absolute bottom-0 w-full h-64 bg-gradient-to-t from-black to-transparent"></div>
       </div>
 
-      {/* Contact Section */}
       <div className="py-16 relative bg-white overflow-hidden">
-        {/* Background Decorative Circles */}
         <div className="absolute top-[-50px] right-[-50px] w-72 h-72 bg-[#f3fdf5] rounded-full blur-3xl opacity-50"></div>
         <div className="absolute bottom-[-50px] left-[-50px] w-96 h-96 bg-[#e2f9e9] rounded-full blur-3xl opacity-40"></div>
         <div className="container mx-auto px-6 lg:px-20 relative z-10 text-center mb-12">
@@ -118,7 +111,6 @@ const ContactUs = () => {
         </div>
         <div className="container mx-auto px-6 lg:px-20 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
             <div
               id="contact-form"
               className="bg-transparent shadow-lg rounded-xl p-8"
@@ -128,7 +120,6 @@ const ContactUs = () => {
               </h2>
               <form className="space-y-6" onSubmit={handleSubmit}>
                 
-                {/* Name Input */}
                 <div className="relative">
                   <label htmlFor="name" className="block text-gray-700 font-medium mb-1">
                     Name <span className="text-red-500">*</span>
@@ -144,7 +135,6 @@ const ContactUs = () => {
                   />
                 </div>
 
-                {/* Email Input */}
                 <div className="relative">
                   <label htmlFor="email" className="block text-gray-700 font-medium mb-1">
                     Email <span className="text-red-500">*</span>
@@ -160,7 +150,6 @@ const ContactUs = () => {
                   />
                 </div>
 
-                {/* Number Input */}
                 <div className="relative">
                   <label htmlFor="number" className="block text-gray-700 font-medium mb-1">
                     Number <span className="text-red-500">*</span>
@@ -176,7 +165,6 @@ const ContactUs = () => {
                   />
                 </div>
 
-                {/* Message Textarea */}
                 <div className="relative">
                   <label htmlFor="message" className="block text-gray-700 font-medium mb-1">
                     Message <span className="text-red-500">*</span>
@@ -192,7 +180,6 @@ const ContactUs = () => {
                   ></textarea>
                 </div>
 
-                {/* Submit Button */}
                 <div className="pt-4">
                   <button
                     type="submit"
@@ -203,7 +190,6 @@ const ContactUs = () => {
                   </button>
                 </div>
                 
-                {/* Success or Error Message */}
                 {success && (
                   <p className="text-green-600 text-center mt-4">Message sent successfully!</p>
                 )}
@@ -212,9 +198,6 @@ const ContactUs = () => {
                 )}
               </form>
             </div>
-            {/* </div> */}
-
-            {/* Map */}
             <div className="rounded-lg overflow-hidden shadow-lg">
               <iframe
                 title="AgroMart Location"

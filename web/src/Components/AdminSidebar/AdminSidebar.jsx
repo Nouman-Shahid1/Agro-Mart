@@ -20,7 +20,7 @@ const AdminSidebar = () => {
   const dispatch = useDispatch();
 
   const handleSignOut = async () => {
-    if (isLoggingOut) return; // Prevent multiple clicks
+    if (isLoggingOut) return;
     setIsLoggingOut(true);
 
     try {
@@ -68,20 +68,17 @@ const AdminSidebar = () => {
         </button>
       </div>
 
-      {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 z-40 h-screen md:w-80 bg-gradient-to-b from-green-100 to-green-300 shadow-lg  transform transition-transform duration-300 ${
           isSidebarVisible ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0`}
       >
-        {/* Header */}
         <div className="py-6 px-4">
           <div className="flex items-center">
             <Image src={Logo} alt="logo" />
           </div>
         </div>
 
-        {/* Dashboard Link */}
         <Link href="/admin" passHref>
           <div className="rounded-lg w-[90%] m-auto text-lg font-semibold py-4 px-4 flex items-center gap-4 bg-green-600 text-white hover:bg-green-700 transition-all duration-300 shadow-xl transform hover:scale-105">
             <FaHome className="text-2xl" />
@@ -89,7 +86,6 @@ const AdminSidebar = () => {
           </div>
         </Link>
 
-        {/* Menu Section */}
         <nav className="flex-1 mt-4">
           <ul className="space-y-2 w-[90%] mx-auto">
             {menuItems.map((item) => (
@@ -134,7 +130,6 @@ const AdminSidebar = () => {
         </div>
       </aside>
 
-      {/* Overlay */}
       {isSidebarVisible && (
         <div
           className="fixed inset-0 bg-black bg-opacity-40 z-30 md:hidden"
