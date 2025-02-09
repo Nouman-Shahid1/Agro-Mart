@@ -3,16 +3,19 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchBuyerOrders, fetchOrderDetail,deleteOrder } from "@/reducers/Order/orderSlice";
 import Profile from "@/Components/ProfileCard/ProfileCard";
-
+import { fetchMessages, } from "@/reducers/Chat/chatSlice";
 export default function Orders() {
   const dispatch = useDispatch();
   const { buyerOrders, loading, error } = useSelector((state) => state.orders);
+  // const { messages, loading: chatLoading } = useSelector((state) => state.chat);
   const userId = useSelector((state) => state.auth.user?.userId);
+  const token = useSelector((state) => state.auth.token);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [products, setProducts] = useState({});
-
-  // Fetch seller orders on component mount
+  const [isChatVisible, setChatVisible] = useState(false);
+  const [chatMessage, setChatMessage] = useState("");
+  const [selectedSellerId, setSelectedSellerId] = useState(null);
   useEffect(() => {
     if (userId) {
       dispatch(fetchBuyerOrders(userId));
@@ -54,6 +57,86 @@ export default function Orders() {
     setSelectedOrder(null);
     setPopupVisible(false);
   };
+  // const messages = useSelector((state) => state.chat.messages);
+  const loadingMessages = useSelector((state) => state.chat.loading);
+  const [localMessages, setLocalMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [ws, setWs] = useState(null);
+  const messages = useSelector((state) => state.chat.messages);
+const setMessages = (newMessages) => {
+  console.warn("setMessages is not used. Messages are managed via Redux.");
+}; // Dummy function to avoid errors
+
+  // ✅ Fetch Orders
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchBuyerOrders(userId));
+    }
+  }, [dispatch, userId]);
+
+  // ✅ Fetch Product Details for Orders
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      const productData = {};
+      for (const order of buyerOrders) {
+        try {
+          const response = await dispatch(fetchOrderDetail(order.id));
+          if (response.meta.requestStatus === "fulfilled") {
+            productData[order.id] = response.payload.Product;
+          }
+        } catch (error) {
+          console.error("Failed to fetch product details:", error);
+        }
+      }
+      setProducts(productData);
+    };
+
+    if (buyerOrders.length > 0) fetchProductDetails();
+  }, [buyerOrders, dispatch]);
+
+
+  const handleOpenChat = (sellerId) => {
+    if (!token) {
+      alert("Unauthorized! Please log in again.");
+      return;
+    }
+
+    setSelectedSellerId(sellerId);
+    setChatVisible(true);
+
+    dispatch(fetchMessages({ receiverId: sellerId }));
+
+    const websocket = new WebSocket(
+      `ws://localhost:8081/ws?senderID=${userId}&receiverID=${sellerId}`
+    );
+    setWs(websocket);
+
+    websocket.onmessage = (event) => {
+      const receivedMessage = JSON.parse(event.data);
+      dispatch({ type: "chat/addMessage", payload: receivedMessage });
+    };
+
+    websocket.onclose = () => setWs(null);
+  };
+
+   
+  const sendMessage = () => {
+    if (!ws || !input.trim()) return;
+
+    const messageData = { senderId: userId, receiverId: selectedSellerId, content: input };
+    ws.send(JSON.stringify(messageData));
+    setInput("");
+  };
+
+ 
+  
+  const allMessages = [...messages, ...localMessages];
+
+  useEffect(() => {
+    console.log("Messages from Redux:", messages);
+  }, [messages]);
+  
+
 
   return (
     <div className="bg-gradient-to-br from-green-900 via-emerald-700 to-lime-500 min-h-screen p-6 text-white">
@@ -109,10 +192,68 @@ export default function Orders() {
             >
               View Details
             </button>
+            <button
+                className="mt-4 w-full bg-lime-600 text-white py-2 rounded-lg hover:bg-lime-700 transition shadow-md"
+                onClick={() => handleOpenChat(order.sellerId)}
+              >
+                Chat with Seller
+              </button>
           </div>
         ))}
       </div>
     )}
+{isChatVisible && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-green-700 p-6 rounded-lg text-white w-full max-w-lg relative">
+      <button
+        onClick={() => setChatVisible(false)}
+        className="absolute top-3 right-3 text-white hover:text-gray-300"
+      >
+        ❌
+      </button>
+      <h2 className="text-xl font-semibold text-center mb-4">Chat with Seller</h2>
+      
+      {/* Chat Messages */}
+      <div className="h-72 overflow-y-auto border-b mb-4 p-2 flex flex-col space-y-2">
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`p-2 px-4 rounded-lg max-w-[75%] ${
+              msg.senderId === userId || msg.user === "Seller"
+              ?"bg-gray-300 text-black self-start" // Buyer messages on the left
+
+                : "bg-green-500 text-white self-end" // Seller messages on the right
+            }`}
+          >
+            <strong className="block text-sm mb-1">
+              {msg.senderId === userId || msg.user}
+            </strong>
+            <span>{msg.content}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Message Input */}
+      <div className="flex items-center space-x-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="flex-1 border p-2 rounded-lg text-black"
+          placeholder="Type a message..."
+        />
+        <button
+          onClick={sendMessage}
+          className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700"
+        >
+          📩
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
 
     {/* Popup for Order Details */}
     {isPopupVisible && selectedOrder && (

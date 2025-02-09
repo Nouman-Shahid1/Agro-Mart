@@ -8,6 +8,7 @@ import (
 func RegisterRoutes(server *gin.Engine) {
 	authenticated := server.Group("/message")
 	authenticated.Use(middleware.Authenticate)
-	authenticated.GET("messages", GetMessages)
+	// authenticated.POST("/new", NewMessage)
+	authenticated.GET("/messages", GetMessages)
 
 }

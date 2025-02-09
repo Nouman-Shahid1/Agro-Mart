@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchSellerOrders, fetchOrderDetail,updateOrderStatus } from "@/reducers/Order/orderSlice";
 import Profile from "@/Components/ProfileCard/ProfileCard";
-
+import { fetchMessages } from "@/reducers/Chat/chatSlice";
 export default function Orders() {
   const dispatch = useDispatch();
   const { sellerOrders, loading, error } = useSelector((state) => state.orders);
@@ -11,8 +11,19 @@ export default function Orders() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [products, setProducts] = useState({});
+  const [input, setInput] = useState("");
+  const [ws, setWs] = useState(null);
+  const messages = useSelector((state) => state.chat.messages);
+const setMessages = (newMessages) => {
+  console.warn("setMessages is not used. Messages are managed via Redux.");
+}; // Dummy function to avoid errors
 
-  // Fetch seller orders on component mount
+const loadingMessages = useSelector((state) => state.chat.loading);
+
+    const token = useSelector((state) => state.auth.token);
+    const [isChatVisible, setChatVisible] = useState(false);
+    const [chatMessage, setChatMessage] = useState("");
+  const [selectedBuyerId, setSelectedBuyerId] = useState(null);
   useEffect(() => {
     if (userId) {
       dispatch(fetchSellerOrders(userId));
@@ -55,6 +66,44 @@ export default function Orders() {
     setSelectedOrder(null);
     setPopupVisible(false);
   };
+
+  const handleOpenChat = (buyerId) => {
+    if (!token) {
+      alert("Unauthorized! Please log in again.");
+      return;
+    }
+  
+    setSelectedBuyerId(buyerId);
+    setChatVisible(true);
+  
+    dispatch(fetchMessages({receiverId: buyerId }));
+  
+    const websocket = new WebSocket(
+      `ws://localhost:8081/ws?senderID=${userId}&receiverID=${buyerId}`
+    );
+    setWs(websocket);
+  
+    websocket.onmessage = (event) => {
+      const receivedMessage = JSON.parse(event.data);
+      dispatch({ type: "chat/addMessage", payload: receivedMessage });
+    };
+  
+    websocket.onclose = () => setWs(null);
+  };
+  
+  const sendMessage = () => {
+    if (!ws || !input.trim()) return;
+  
+    const messageData = { senderId: userId, receiverId: selectedBuyerId, content: input };
+    console.log("🔹 Sending Message:", messageData);
+  
+    ws.send(JSON.stringify(messageData)); // Send the message as a JSON string
+  
+    setMessages((prev) => [...prev, messageData]); // Add message directly to state
+    setInput(""); // Clear input field
+
+  };
+
 
   return (
     <div
@@ -134,10 +183,68 @@ export default function Orders() {
                 <option value="completed">completed</option>
                 <option value="Cancelled">Cancelled</option>
               </select>
+              <button
+                className="mt-4 w-full bg-lime-600 text-white py-2 rounded-lg hover:bg-lime-700 transition shadow-md"
+                onClick={() => handleOpenChat(order.buyerId)}
+              >
+                Chat with Buyer
+              </button>
           </div>
+          
         ))}
       </div>
     )}
+{isChatVisible && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-green-700 p-6 rounded-lg text-white w-full max-w-lg relative">
+      <button
+        onClick={() => setChatVisible(false)}
+        className="absolute top-3 right-3 text-white hover:text-gray-300"
+      >
+        ❌
+      </button>
+      <h2 className="text-xl font-semibold text-center mb-4">Chat with Buyer</h2>
+      
+      {/* Chat Messages */}
+      <div className="h-72 overflow-y-auto border-b mb-4 p-2 flex flex-col space-y-2">
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`p-2 px-4 rounded-lg max-w-[75%] ${
+              msg.senderId === userId || msg.user === "Seller"
+                ? "bg-green-500 text-white self-end" // Seller messages on the right
+                : "bg-gray-300 text-black self-start" // Buyer messages on the left
+            }`}
+          >
+            <strong className="block text-sm mb-1">
+              {msg.user}
+            </strong>
+            <span>{msg.content}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Message Input */}
+      <div className="flex items-center space-x-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="flex-1 border p-2 rounded-lg text-black"
+          placeholder="Type a message..."
+        />
+        <button
+          onClick={sendMessage}
+          className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700"
+        >
+          📩
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
 
     {/* Popup for Order Details */}
     {isPopupVisible && selectedOrder && (
