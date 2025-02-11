@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/smtp"
+	"os"
 
 	"fyp.com/m/models"
 	"github.com/gin-gonic/gin"
@@ -38,8 +39,10 @@ func contactUs(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Couldn't parse request data"})
 		return
 	}
+	senderEmail := os.Getenv("SMTP_USER")
+	senderPassword := os.Getenv("SMTP_PASS")
 
-	err = sendEmail(contact)
+	err = sendEmail(contact, senderEmail, senderPassword)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to send email", "error": err.Error()})
 		return
@@ -48,25 +51,25 @@ func contactUs(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"message": "Email sent successfully!"})
 }
 
-func sendEmail(contact Contact) error {
+func sendEmail(contact Contact, email string, pass string) error {
 	// SMTP Server Configuration
 	smtpHost := "smtp.mailersend.net"
 	smtpPort := "587"
-	senderEmail := ""
-	senderPassword := ""
-    adminEmail := "admin@test.com"
+
+    adminEmail := "itachi.uchiha3130@gmail.com"
+
 
 	subject := fmt.Sprintf("New Contact Form Submission from %s", contact.Name)
 	body := fmt.Sprintf(
 		"Name: %s\nEmail: %s\nNumber: %d\nMessage: %s",
 		contact.Name, contact.Email, contact.Number, contact.Message,
 	)
+	message := []byte("From: " + email + "\r\n" + 
+	"Subject: " + subject + "\r\n\r\n" +
+	body)
 
-	message := []byte("From: " + contact.Name + " <" + contact.Email + ">\r\n" +
-		"Subject: " + subject + "\r\n\r\n" +
-		body)
-	auth := smtp.PlainAuth("", senderEmail, senderPassword, smtpHost)
-	// Send the email
-	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, senderEmail, []string{adminEmail}, message)
+	auth := smtp.PlainAuth("", email, pass, smtpHost)
+	// Send the emai
+	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, email, []string{adminEmail}, message)
 	return err
 }

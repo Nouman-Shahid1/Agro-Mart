@@ -1,6 +1,7 @@
 package main
 
 import (
+
 	"fyp.com/m/db"
 	"fyp.com/m/routes"
 	"github.com/gin-contrib/cors"
@@ -20,4 +21,5 @@ func main() {
 	}))
 	routes.RegisterRoutes(server)
 	server.Run(":8080")
+
 }
