@@ -37,7 +37,7 @@ func GetAllMessages(senderID, receiverID, limit, offset int) ([]Message, error) 
 	query := `
 		SELECT * FROM messages
 		WHERE (senderid = ? AND recieverid = ?) OR (senderid = ? AND recieverid = ?)
-		ORDER BY time ASC
+		ORDER BY time DESC
 		LIMIT ? OFFSET ?
 	`
 	rows, err := db.DB.Query(query, senderID, receiverID, receiverID, senderID, limit, offset)
