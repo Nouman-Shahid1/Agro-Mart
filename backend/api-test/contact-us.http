@@ -2,7 +2,7 @@ POST http://localhost:8080/contact-us
 Content-type: application/json
 
 {
-    "name": "Max",
+    "name": "Max@test.com",
     "email": "fertilizers",
     "number": 2,
     "message":"there is a problem"

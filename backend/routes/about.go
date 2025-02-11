@@ -52,10 +52,10 @@ func contactUs(context *gin.Context) {
 
 func sendEmail(contact Contact) error {
 	// SMTP Server Configuration
-	smtpHost := "smtp-relay.brevo.com"
-	smtpPort := "2525"
-	senderEmail := "85514c001@smtp-brevo.com"
-	senderPassword := "VgHn4QUPpyJFT9Wr"
+	smtpHost := "smtp.mailersend.net"
+	smtpPort := "587"
+	senderEmail := ""
+	senderPassword := ""
     adminEmail := "admin@test.com"
 
 	subject := "New Contact Us Message"
