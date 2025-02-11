@@ -39,8 +39,14 @@ func contactUs(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Couldn't parse request data"})
 		return
 	}
+
 	senderEmail := os.Getenv("SMTP_USER")
 	senderPassword := os.Getenv("SMTP_PASS")
+
+	if senderEmail == "" || senderPassword == "" {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "SMTP credentials are missing"})
+		return
+	}
 
 	err = sendEmail(contact, senderEmail, senderPassword)
 	if err != nil {
@@ -51,26 +57,28 @@ func contactUs(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"message": "Email sent successfully!"})
 }
 
-func sendEmail(contact Contact, email string, pass string) error {
+func sendEmail(contact Contact, senderEmail, senderPassword string) error {
 	// SMTP Server Configuration
 	smtpHost := "smtp.mailersend.net"
 	smtpPort := "587"
+	adminEmail := "muhammadnoumansha140@gmail.com"
 
-    adminEmail := ""
-
-
+	// Email Subject & Body
 	subject := fmt.Sprintf("New Contact Form Submission from %s", contact.Name)
 	body := fmt.Sprintf(
 		"Name: %s\nEmail: %s\nNumber: %d\nMessage: %s",
 		contact.Name, contact.Email, contact.Number, contact.Message,
 	)
-	message := []byte("From: " + email + "\r\n" + 
-	"Subject: " + subject + "\r\n\r\n" +
-	body)
 
-	auth := smtp.PlainAuth("", email, pass, smtpHost)
-	// Send the emai
-	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, email, []string{adminEmail}, message)
+	message := fmt.Sprintf(
+		"From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n%s",
+		senderEmail, adminEmail, subject, body,
+	)
+
+	auth := smtp.PlainAuth("", senderEmail, senderPassword, smtpHost)
+
+	// Send the email
+	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, senderEmail, []string{adminEmail}, []byte(message))
 	return err
 }
 
