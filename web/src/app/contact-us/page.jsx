@@ -14,7 +14,7 @@ const ContactUs = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    number: "",
+    number: 0,
     message: "",
   });
 
@@ -26,9 +26,12 @@ const ContactUs = () => {
     e.preventDefault();
   
     const formattedData = {
-      ...formData,
-      number: parseInt(formData.number, 10),
+      name: formData.name,
+      email: formData.email,
+      number: Number(formData.number),  // Ensure it's a number
+      message: formData.message,
     };
+    
   
     console.log("Sending data:", formattedData);
   
