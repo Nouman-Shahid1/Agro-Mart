@@ -25,7 +25,7 @@ export default function Page() {
               key={category.label}
               details={{
                 name: category.label,
-                icon: category.icon, // Ensure proper rendering
+                icon: category.icon,
                 url: category.path,
               }}
             />

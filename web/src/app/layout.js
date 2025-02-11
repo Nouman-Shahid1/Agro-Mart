@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import localFont from "next/font/local";
 import store from "../store/store";
 import "./globals.css";
-import Authentication from "../Components/Authentication"; // Import the Authentication component
+import Authentication from "../Components/Authentication";
 import { CartProvider } from '../utilities/CartContext';
 import { ToastContainer } from "react-toastify";
 const geistSans = localFont({

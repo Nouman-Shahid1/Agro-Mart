@@ -32,7 +32,7 @@ const Sidebar = ({ role }) => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
-    if (isLoggingOut) return; // Prevent multiple clicks
+    if (isLoggingOut) return;
     setIsLoggingOut(true);
   
     try {
@@ -145,7 +145,6 @@ const Sidebar = ({ role }) => {
 
   return (
     <>
-      {/* Sidebar toggle button */}
       <button
         aria-controls="sidebar"
         type="button"
@@ -168,7 +167,6 @@ const Sidebar = ({ role }) => {
         </svg>
       </button>
 
-      {/* Sidebar */}
       <aside
         id="sidebar"
         className={`fixed top-0 left-0 z-40 h-screen flex flex-col transition-transform ${
@@ -182,7 +180,6 @@ const Sidebar = ({ role }) => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        {/* Logo */}
         <div className="flex items-center justify-center mb-8">
           <Image
             src={Logo}
@@ -214,16 +211,15 @@ const Sidebar = ({ role }) => {
                 >
                   <div className="text-2xl">{item.icon}</div>
                   <span className="text-lg font-medium">{item.label}</span>
+                  
                 </div>
               </Link>
             </li>
           ))}
         </ul>
 
-        {/* Divider */}
         <div className="border-t border-green-700 my-4"></div>
 
-        {/* Logout Button */}
         <div className="mt-auto">
           <button
            onClick={handleLogout}

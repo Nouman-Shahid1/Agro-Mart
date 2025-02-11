@@ -54,7 +54,7 @@ export const saveOrder = createAsyncThunk(
     async (orderData, { rejectWithValue }) => {
       try {
         const response = await axios.post("/order/new-order", orderData);
-        return response.data; // Ensure this matches the response structure
+        return response.data;
       } catch (error) {
         return rejectWithValue(error.response?.data || { message: error.message });
       }
@@ -62,7 +62,6 @@ export const saveOrder = createAsyncThunk(
   );
   
 
-// **Update an order**
 export const updateOrder = createAsyncThunk(
   "orders/updateOrder",
   async ({ id, orderData }, { rejectWithValue }) => {
@@ -72,7 +71,7 @@ export const updateOrder = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
-      return { id, ...response.data }; // Return the updated order
+      return { id, ...response.data };
     } catch (error) {
       return rejectWithValue(error.response?.data || { message: error.message });
     }
@@ -112,42 +111,39 @@ export const updateOrderStatus = createAsyncThunk(
   }
 );
 
-// **Delete an order**
 export const deleteOrder = createAsyncThunk(
   "orders/deleteOrder",
   async (id, { rejectWithValue }) => {
     try {
       await axios.delete(`/order/delete-order/${id}`);
-      return id; // Return the ID of the deleted order
+      return id;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-// **Orders Slice**
 const ordersSlice = createSlice({
   name: "orders",
   initialState: {
-    orders: [], // List of orders
+    orders: [],
     sellerOrders: [],
     buyerOrders: [],
-    sellerStats: null, // Store overall seller stats
+    sellerStats: null,
     sellerMonthlyStats: [],
-    loading: false, // Loading state
-    error: null, // Error state
+    loading: false,
+    error: null,
   },
-  reducers: {}, // Additional reducers if needed
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetch All Orders
       .addCase(fetchOrders.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders = action.payload; // Update state with fetched orders
+        state.orders = action.payload;
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.loading = false;
@@ -159,7 +155,7 @@ const ordersSlice = createSlice({
       })
       .addCase(fetchOrderDetail.fulfilled, (state, action) => {
         state.loading = false;
-        state.orderDetail = action.payload; // Update state with fetched order detail
+        state.orderDetail = action.payload;
       })
       .addCase(fetchOrderDetail.rejected, (state, action) => {
         state.loading = false;
@@ -183,21 +179,20 @@ const ordersSlice = createSlice({
       })
       .addCase(fetchSellerStats.fulfilled, (state, action) => {
         state.loading = false;
-        state.sellerStats = action.payload; // Store overall seller stats
+        state.sellerStats = action.payload;
       })
       .addCase(fetchSellerStats.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
       
-      // Fetch Seller Monthly Stats
       .addCase(fetchSellerMonthlyStats.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchSellerMonthlyStats.fulfilled, (state, action) => {
         state.loading = false;
-        state.sellerMonthlyStats = action.payload; // Store monthly stats
+        state.sellerMonthlyStats = action.payload;
       })
       .addCase(fetchSellerMonthlyStats.rejected, (state, action) => {
         state.loading = false;
@@ -231,21 +226,19 @@ const ordersSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // Save a New Order
       .addCase(saveOrder.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(saveOrder.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders.push(action.payload); // Add new order to the list
+        state.orders.push(action.payload);
       })
       .addCase(saveOrder.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
-      // Update an Order
       .addCase(updateOrder.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -254,7 +247,7 @@ const ordersSlice = createSlice({
         state.loading = false;
         const index = state.orders.findIndex((order) => order.id === action.payload.id);
         if (index !== -1) {
-          state.orders[index] = action.payload; // Update the order in the list
+          state.orders[index] = action.payload;
         }
       })
       .addCase(updateOrder.rejected, (state, action) => {
@@ -262,14 +255,13 @@ const ordersSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Delete an Order
       .addCase(deleteOrder.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(deleteOrder.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders = state.orders.filter((order) => order.id !== action.payload); // Remove the order from the list
+        state.orders = state.orders.filter((order) => order.id !== action.payload);
       })
       .addCase(deleteOrder.rejected, (state, action) => {
         state.loading = false;

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Profile from "@/Components/ProfileCard/ProfileCard";
-import { FaRegEdit, FaTrashAlt, FaTimes } from "react-icons/fa"; // Icons for the UI
+import { FaRegEdit, FaTrashAlt, FaTimes } from "react-icons/fa";
 
 export default function SavedAddresses() {
   const [addresses, setAddresses] = useState([]);
@@ -61,7 +61,6 @@ export default function SavedAddresses() {
 
   return (
     <div className="bg-gradient-to-br from-green-900 via-emerald-700 to-lime-500 min-h-screen p-6 text-white">
-      {/* Profile Section */}
       <Profile />
 
       <div className="text-center mt-8">
@@ -71,7 +70,6 @@ export default function SavedAddresses() {
         </p>
       </div>
 
-      {/* Address List or No Address Message */}
       {addresses.length === 0 ? (
         <div className="text-lime-100 text-center mt-10">
           <p className="text-xl">You have no saved addresses yet.</p>
@@ -93,11 +91,9 @@ export default function SavedAddresses() {
                 key={address.id}
                 className="bg-gradient-to-br from-green-700 via-green-500 to-lime-500 p-6 rounded-xl shadow-xl border border-green-400/30 hover:shadow-2xl transform hover:scale-105 transition duration-300"
               >
-                {/* Name */}
                 <h2 className="text-2xl font-bold mb-3 text-lime-50">
                   {address.name}
                 </h2>
-                {/* Address Details */}
                 <p className="text-lime-200 mb-2">
                   {address.addressLine}, {address.city}, {address.state} -{" "}
                   {address.zipCode}
@@ -106,7 +102,6 @@ export default function SavedAddresses() {
                   <span className="font-semibold text-lime-100">Phone:</span>{" "}
                   {address.phone}
                 </p>
-                {/* Buttons */}
                 <div className="flex gap-4 mt-5">
                   <button
                     className="flex-1 bg-green-600 text-white py-2 rounded-md shadow-md hover:bg-green-700 transition"
@@ -124,7 +119,6 @@ export default function SavedAddresses() {
               </div>
             ))}
 
-            {/* Add New Address Button */}
             <div className="flex flex-col items-center justify-center bg-gradient-to-br from-lime-600 via-green-500 to-emerald-500 text-white rounded-xl shadow-xl p-6 hover:shadow-2xl transform hover:scale-105 transition duration-300">
               <button
                 onClick={() => {

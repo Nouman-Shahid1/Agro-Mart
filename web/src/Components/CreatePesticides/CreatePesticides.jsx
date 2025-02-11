@@ -11,7 +11,6 @@ const CreatePesticide = ({ showAddPesticide, setShowAddPesticide }) => {
       }`}
     >
       <form className="relative max-w-4xl w-[600px] bg-gradient-to-br from-green-900 via-emerald-700 to-lime-500 text-white rounded-xl shadow-2xl p-8 space-y-6 animate-fade-in">
-        {/* Close Button */}
         <button
           type="button"
           className="absolute top-4 right-4 text-gray-300 hover:text-white transition-colors"
@@ -20,12 +19,10 @@ const CreatePesticide = ({ showAddPesticide, setShowAddPesticide }) => {
           X
         </button>
 
-        {/* Header */}
         <h2 className="text-3xl font-bold text-center text-green-300">
           Add Pesticide
         </h2>
 
-        {/* Pesticide Name */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Pesticide Name</label>
           <input
@@ -35,7 +32,6 @@ const CreatePesticide = ({ showAddPesticide, setShowAddPesticide }) => {
           />
         </div>
 
-        {/* Description */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Description</label>
           <textarea
@@ -45,7 +41,6 @@ const CreatePesticide = ({ showAddPesticide, setShowAddPesticide }) => {
           ></textarea>
         </div>
 
-        {/* Category */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Category</label>
           <select className="w-full p-3 bg-white bg-opacity-20 text-white rounded-lg border border-gray-400 outline-none focus:ring-2 focus:ring-yellow-400 focus:bg-opacity-30 transition-all">
@@ -55,7 +50,6 @@ const CreatePesticide = ({ showAddPesticide, setShowAddPesticide }) => {
           </select>
         </div>
 
-        {/* Pesticide Image */}
         <div className="space-y-2">
           <label className="block text-sm font-semibold">Pesticide Image</label>
           <input
@@ -65,7 +59,6 @@ const CreatePesticide = ({ showAddPesticide, setShowAddPesticide }) => {
           />
         </div>
 
-        {/* Submit Button */}
         <div className="text-end">
           <button
             type="submit"

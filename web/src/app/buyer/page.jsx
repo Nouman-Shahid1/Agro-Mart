@@ -15,10 +15,8 @@ export default function Dashboard() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black/50"></div>
 
-      {/* Content */}
       <div className="relative z-10">
         <div className="px-2">
           <Profile />

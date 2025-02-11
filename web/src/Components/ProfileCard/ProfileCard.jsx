@@ -41,17 +41,13 @@ const Profile = () => {
 
   return (
     <div className="relative bg-gradient-to-br from-green-900 via-emerald-700 to-lime-500 shadow-xl px-6 py-8 rounded-[32px] flex flex-col md:flex-row items-center justify-between backdrop-blur-lg border border-green-400/30 overflow-hidden">
-      {/* Glow Border */}
       <div className="absolute inset-0 rounded-[32px] bg-gradient-to-r from-lime-400 via-green-500 to-emerald-500 opacity-20 blur-lg pointer-events-none"></div>
 
-      {/* Welcome Text */}
       <h1 className="relative z-10 text-3xl md:text-4xl font-bold text-white drop-shadow-lg mb-4 md:mb-0">
         Welcome, {user?.username || "Guest"}!
       </h1>
 
-      {/* Profile Section */}
       <div className="relative z-10 flex items-center gap-4">
-        {/* Profile Image */}
         <Image
           src={ProfileImage}
           alt="Profile"
@@ -61,7 +57,6 @@ const Profile = () => {
         />
 
         <div>
-          {/* Dropdown Button */}
           <div className="flex items-center gap-3">
             <button
               onClick={toggleDropdown}
@@ -89,7 +84,6 @@ const Profile = () => {
               </svg>
             </button>
 
-            {/* Dropdown Menu */}
             <div
               id="dropdown"
               className={`${
@@ -109,7 +103,6 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* User Role */}
           <p className="text-sm font-normal text-lime-300 mt-1">
             {role || "Role not assigned"}
           </p>

@@ -25,7 +25,7 @@ const Checkout = () => {
   const { cartItems } = useCart();
   const router = useRouter();
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth); // Get user from auth state
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const storedBuyerId = localStorage.getItem("userId");
@@ -47,17 +47,17 @@ const Checkout = () => {
 
   const handlePlaceOrder = async () => {
     const orderData = {
-      buyerId: parseInt(user?.userId || localStorage.getItem("userId"), 10), // Ensure buyerId is an integer
-      sellerId: parseInt(cartItems[0]?.sellerId, 10), // Ensure sellerId is an integer
-      productId: parseInt(cartItems[0]?.id, 10), // Convert productId to an integer
+      buyerId: parseInt(user?.userId || localStorage.getItem("userId"), 10),
+      sellerId: parseInt(cartItems[0]?.sellerId, 10),
+      productId: parseInt(cartItems[0]?.id, 10),
       name: formData.name,
       email: formData.email,
       shippingAddress: formData.address,
       country: formData.country,
       state: formData.state,
       city: formData.city,
-      postalCode: parseInt(formData.postalCode, 10), // Ensure postalCode is an integer
-      phoneNumber: parseInt(formData.phoneNumber, 10), // Ensure phoneNumber is an integer
+      postalCode: parseInt(formData.postalCode, 10),
+      phoneNumber: parseInt(formData.phoneNumber, 10),
       deliveryOption: formData.deliveryMethod,
       checkoutPrice: calculateTotal(),
       orderStatus: "Pending",
@@ -66,16 +66,16 @@ const Checkout = () => {
     };
     
   
-    console.log("Order Data:", orderData); // Debug the payload
+    console.log("Order Data:", orderData);
     try {
       const response = await dispatch(saveOrder(orderData)).unwrap();
-      console.log("Response from server:", response); // Debug the response
+      console.log("Response from server:", response);
       toast.success("Order placed successfully!", {
         position: "top-right",
         autoClose: 3000,
       });
       setTimeout(() => {
-        router.push("/products"); // Redirect after success
+        router.push("/products");
       }, 3000);
     } catch (error) {
       console.error("Error placing order:", error);
@@ -112,7 +112,6 @@ const Checkout = () => {
         </p>
 
         <form className="space-y-8">
-          {/* Personal Information */}
           <div>
             <h2 className="text-2xl font-semibold text-gray-100 mb-4">
               Personal Information
@@ -137,7 +136,6 @@ const Checkout = () => {
             </div>
           </div>
 
-          {/* Shipping Address */}
           <div>
             <h2 className="text-2xl font-semibold text-gray-100 mb-4">
               Shipping Address
@@ -196,7 +194,6 @@ const Checkout = () => {
             </div>
           </div>
 
-          {/* Delivery Method */}
           <div>
             <h2 className="text-2xl font-semibold text-gray-100 mb-4">
               Delivery Method
@@ -241,7 +238,6 @@ const Checkout = () => {
             </div>
           </div>
 
-          {/* Payment Method */}
           <div>
             <h2 className="text-2xl font-semibold text-gray-100 mb-4">
               Payment Method
@@ -300,7 +296,6 @@ const Checkout = () => {
           </div>
         </form>
 
-        {/* Order Summary */}
         <div className="mt-8 text-gray-100">
           <h3 className="text-lg font-bold mb-4">Order Summary</h3>
           <ul className="space-y-2">

@@ -7,7 +7,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { loginUser } from "../../reducers/Auth/authSlice"; // Adjust the path as per your structure
+import { loginUser } from "../../reducers/Auth/authSlice";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,13 +22,12 @@ export default function LoginPage() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setError(""); // Clear error when user modifies input
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate the form
     if (!formData.email || !formData.password) {
       toast.error("Please fill in both email and password.", {
         position: "top-right",
@@ -81,7 +80,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden font-sans bg-gray-900">
-      {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-fixed filter brightness-50"
         style={{
@@ -95,7 +93,6 @@ export default function LoginPage() {
       </div>
 
       <div className="relative z-20 pt-30 my-8 flex flex-col items-center justify-center min-h-[80vh]">
-        {/* Login Form */}
         <motion.div
           className="bg-gradient-to-r from-white/10 to-transparent backdrop-blur-sm border border-white/18 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] p-8 max-w-[400px] w-full text-center space-y-8 transform hover:shadow-xl transition-shadow"
           variants={formVariants}
@@ -107,7 +104,6 @@ export default function LoginPage() {
           <p className="text-white">Log in to access your account.</p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email */}
             <div>
               <label className="block text-left text-white font-medium mb-1">
                 Email Address
@@ -121,7 +117,6 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* Password */}
             <div className="relative">
               <label className="block text-left text-white font-medium mb-1">
                 Password
@@ -147,7 +142,6 @@ export default function LoginPage() {
               </button>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               className="w-full py-3 bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold rounded-md shadow hover:bg-green-600 focus:ring-2 focus:ring-green-500 transition-transform transform hover:scale-105"
@@ -156,7 +150,6 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Footer */}
           <div className="flex justify-between items-center text-sm text-white">
             <Link href="#" className="hover:text-green-500">
               Forgot Password?

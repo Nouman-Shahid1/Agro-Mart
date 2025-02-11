@@ -35,7 +35,6 @@ const CartCard = ({ name = "Product Name", price = 100, quantity = 1, onIncremen
                 </div>
             </div>
 
-            {/* Price and Remove Icon */}
             <div className="text-right">
                 <div className="mb-4">
                     <FaTrashAlt 

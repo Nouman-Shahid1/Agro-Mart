@@ -12,8 +12,8 @@ const UserTable = () => {
   const dispatch = useDispatch();
   const { users, loading } = useSelector((state) => state.auth);
   const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState(""); // 'create' or 'update'
-  const [selectedUser, setSelectedUser] = useState(null); // User for update
+  const [modalType, setModalType] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -67,7 +67,6 @@ const UserTable = () => {
             <span>Add User</span>
           </button>
 
-          {/* Search Input */}
           <div className="flex items-center mt-3 md:mt-0">
             <input
               type="text"

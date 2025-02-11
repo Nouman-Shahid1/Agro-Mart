@@ -1,26 +1,21 @@
-// LiveChat.js
 import React, { useState } from "react";
 
 const LiveChat = () => {
-  // State to toggle chat window
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([
     { sender: "support", text: "Hello! How can we assist you today?" }
   ]);
   const [userMessage, setUserMessage] = useState("");
 
-  // Handle sending a message
   const handleSendMessage = () => {
     if (userMessage.trim() === "") return;
 
-    // Add user message
     setMessages((prevMessages) => [
       ...prevMessages,
       { sender: "user", text: userMessage }
     ]);
     setUserMessage("");
 
-    // Simulate a response from the support
     setTimeout(() => {
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -31,7 +26,6 @@ const LiveChat = () => {
 
   return (
     <div>
-      {/* Floating Chat Icon */}
       <button
         onClick={() => setIsChatOpen(!isChatOpen)}
         className="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700 transition focus:outline-none"
@@ -40,7 +34,6 @@ const LiveChat = () => {
         💬
       </button>
 
-      {/* Chat Window */}
       {isChatOpen && (
         <div className="fixed bottom-16 right-6 w-80 bg-white shadow-lg rounded-lg border border-gray-300 p-4">
           <div className="flex justify-between items-center mb-4">

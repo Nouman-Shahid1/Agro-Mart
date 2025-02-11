@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../../axios/config";
 
-// **Create a category**
 export const createCategory = createAsyncThunk(
   "category/createCategory",
   async (categoryData, { rejectWithValue }) => {
@@ -37,44 +36,40 @@ export const updateCategory = createAsyncThunk(
 
 
 
-// **Fetch all categories**
 export const fetchCategories = createAsyncThunk(
   "category/fetchCategories",
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get("/getallcategories");
-      return response.data; // Assuming response contains an array of categories
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-// **Delete a category**
 export const deleteCategory = createAsyncThunk(
   "category/deleteCategory",
   async (id, { rejectWithValue }) => {
     try {
       await axios.delete(`/category/delete-category/${id}`);
-      return id; // Return the ID of the deleted category
+      return id;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-// **Category Slice**
 const categorySlice = createSlice({
   name: "category",
   initialState: {
-    categories: [], // List of categories
-    loading: false, // Loading state
-    error: null, // Error state
+    categories: [],
+    loading: false,
+    error: null,
   },
-  reducers: {}, // Reducers if needed
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      // Create Category
       .addCase(createCategory.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -88,21 +83,19 @@ const categorySlice = createSlice({
         state.error = action.payload;
       })
 
-      // Fetch All Categories
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.loading = false;
-        state.categories = action.payload; // Update state with fetched categories
+        state.categories = action.payload;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
-      // Update Category
       .addCase(updateCategory.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -120,7 +113,6 @@ const categorySlice = createSlice({
         state.error = action.payload;
       })
 
-      // Delete Category
       .addCase(deleteCategory.pending, (state) => {
         state.loading = true;
         state.error = null;

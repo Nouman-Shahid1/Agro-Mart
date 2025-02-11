@@ -5,7 +5,7 @@ import React from "react";
 import Rental1 from "../../Assets/images/rent1.jpg";
 
 const RentalDetails = () => {
-  console.log(Rental1); // Debug the image path
+  console.log(Rental1);
 
   return (
     <>
@@ -20,14 +20,13 @@ const RentalDetails = () => {
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
-              position: "relative", // Added for absolute positioning to work
+              position: "relative",
             }}
           >
             <h1 className="absolute left-8 bottom-14 text-3xl font-bold font-serif text-white bg-green-500 hover:bg-green-400 p-5 rounded-xl transition-transform transform hover:scale-105 ">
               NEW HOLLAND RENTAL EQUIPMENT
             </h1>
           </div>
-          {/* main sec */}
           <div className=" bg-gradient-to-tr to-green-400 via-white  from-green-100  p-14  text-lg font-serif leading-relaxed z-20 border rounded-xl m-14">
             <div>
               <p className="text-sm md:text-lg">
@@ -97,7 +96,6 @@ const RentalDetails = () => {
                 </li>
               </ul>
 
-              {/* why choose us */}
               <h1 className="text-xl md:text-3xl font-bold p-3 text-green-700">
                 Why Choose for New Holland Rentals?
               </h1>
@@ -161,7 +159,6 @@ const RentalDetails = () => {
               </p>
             </div>
           </div>
-          {/* price sec */}
           <div>
             <div>
               <h1> </h1>

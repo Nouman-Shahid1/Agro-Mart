@@ -8,7 +8,6 @@ const CreateRental = ({ showAddRental, setShowAddRental }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle form submission logic
   };
 
   return (
@@ -21,7 +20,6 @@ const CreateRental = ({ showAddRental, setShowAddRental }) => {
         className="relative max-w-4xl w-[600px] bg-gradient-to-br from-green-900 via-emerald-700 to-lime-500 text-white rounded-lg shadow-2xl p-6 space-y-4 animate-fade-in"
         onSubmit={handleSubmit}
       >
-        {/* Close Button */}
         <button
           type="button"
           className="absolute top-4 right-4 text-gray-300 hover:text-white transition-colors"
@@ -30,14 +28,11 @@ const CreateRental = ({ showAddRental, setShowAddRental }) => {
           X
         </button>
 
-        {/* Header */}
         <h2 className="text-2xl font-bold text-center text-green-300">
           Add Rental Machine
         </h2>
 
-        {/* Compact Layout */}
         <div className="grid grid-cols-2 gap-4">
-          {/* Machine Name */}
           <div className="space-y-1">
             <label className="block text-sm font-semibold">Machine Name</label>
             <input
@@ -48,7 +43,6 @@ const CreateRental = ({ showAddRental, setShowAddRental }) => {
             />
           </div>
 
-          {/* Rental Price */}
           <div className="space-y-1">
             <label className="block text-sm font-semibold">Rental Price</label>
             <input
@@ -59,7 +53,6 @@ const CreateRental = ({ showAddRental, setShowAddRental }) => {
             />
           </div>
 
-          {/* Availability */}
           <div className="space-y-1">
             <label className="block text-sm font-semibold">Availability</label>
             <input
@@ -70,7 +63,6 @@ const CreateRental = ({ showAddRental, setShowAddRental }) => {
             />
           </div>
 
-          {/* Rental Location */}
           <div className="space-y-1">
             <label className="block text-sm font-semibold">Location</label>
             <input
@@ -81,7 +73,6 @@ const CreateRental = ({ showAddRental, setShowAddRental }) => {
             />
           </div>
 
-          {/* Machine Category */}
           <div className="space-y-1">
             <label className="block text-sm font-semibold">Category</label>
             <select
@@ -95,7 +86,6 @@ const CreateRental = ({ showAddRental, setShowAddRental }) => {
             </select>
           </div>
 
-          {/* Image */}
           <div className="space-y-1">
             <label className="block text-sm font-semibold">Image</label>
             <input
@@ -107,7 +97,6 @@ const CreateRental = ({ showAddRental, setShowAddRental }) => {
           </div>
         </div>
 
-        {/* Description */}
         <div className="space-y-1">
           <label className="block text-sm font-semibold">Description</label>
           <textarea
@@ -118,7 +107,6 @@ const CreateRental = ({ showAddRental, setShowAddRental }) => {
           ></textarea>
         </div>
 
-        {/* Submit Button */}
         <div className="text-right">
           <button
             type="submit"
