@@ -54,7 +54,7 @@ func sendEmail(contact Contact) error {
 	smtpPort := "587"
 	senderEmail := ""
 	senderPassword := ""
-    adminEmail := "admin@test.com"
+	adminEmail := "muhammadnoumansha140@gmail.com"
 
 	subject := fmt.Sprintf("New Contact Form Submission from %s", contact.Name)
 	body := fmt.Sprintf(
@@ -66,7 +66,6 @@ func sendEmail(contact Contact) error {
 		"Subject: " + subject + "\r\n\r\n" +
 		body)
 	auth := smtp.PlainAuth("", senderEmail, senderPassword, smtpHost)
-	// Send the email
 	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, senderEmail, []string{adminEmail}, message)
 	return err
 }
