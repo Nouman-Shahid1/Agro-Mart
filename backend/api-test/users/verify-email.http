@@ -1,0 +1,7 @@
+POST http://localhost:8080/verify
+Content-type: application/json
+
+{
+    "email":"itachi.uchiha3130@gmail.com",
+    "code":"216013"
+}

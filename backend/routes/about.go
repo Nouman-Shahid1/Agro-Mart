@@ -73,3 +73,17 @@ func sendEmail(contact Contact, email string, pass string) error {
 	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, email, []string{adminEmail}, message)
 	return err
 }
+
+
+func SendVerificationEmail(email, code, smEmail, smPass string) error {
+	smtpHost := "smtp.mailersend.net"
+	smtpPort := "587"
+	smtpUser := smEmail
+	smtpPass := smPass
+
+	msg := []byte(fmt.Sprintf("Subject: Verify Your Account\r\n\r\nYour verification code is: %s", code))
+	auth := smtp.PlainAuth("", smtpUser, smtpPass, smtpHost)
+
+	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, smtpUser, []string{email}, msg)
+	return err
+}
