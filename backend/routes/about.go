@@ -49,18 +49,12 @@ func contactUs(context *gin.Context) {
 }
 
 func sendEmail(contact Contact) error {
-<<<<<<< HEAD
 	// SMTP Server Configuration
 	smtpHost := "smtp.mailersend.net"
 	smtpPort := "587"
 	senderEmail := ""
 	senderPassword := ""
     adminEmail := "admin@test.com"
-=======
-	smtpHost := "localhost"
-	smtpPort := "1025"
-	recipientEmail := "admin@example.com"
->>>>>>> 5cbd2f48d615622fbc1d8952e3767ba1a6bdb691
 
 	subject := fmt.Sprintf("New Contact Form Submission from %s", contact.Name)
 	body := fmt.Sprintf(
@@ -69,11 +63,10 @@ func sendEmail(contact Contact) error {
 	)
 
 	message := []byte("From: " + contact.Name + " <" + contact.Email + ">\r\n" +
-		"To: " + recipientEmail + "\r\n" +
 		"Subject: " + subject + "\r\n\r\n" +
 		body)
-
+	auth := smtp.PlainAuth("", senderEmail, senderPassword, smtpHost)
 	// Send the email
-	err := smtp.SendMail(smtpHost+":"+smtpPort, nil, contact.Email, []string{recipientEmail}, message)
+	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, senderEmail, []string{adminEmail}, message)
 	return err
 }
