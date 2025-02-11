@@ -7,7 +7,6 @@ const Pesticides = () => {
     <div className="p-2 md:p-8 min-h-screen">
       <Profile />
       <div className="z-20">
-        {/* Passing the category as "pesticides" for filtering */}
         <ProductTable name="Pesticides" category="Pesticides" />
       </div>
     </div>

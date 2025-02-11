@@ -7,7 +7,6 @@ const Seeds = () => {
     <div className="p-2 md:p-8 min-h-screen">
       <Profile />
       <div className="z-20">
-        {/* Passing the category as "seeds" for filtering */}
         <ProductTable name="Seeds" category="Seeds" />
       </div>
     </div>

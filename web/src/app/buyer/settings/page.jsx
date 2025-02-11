@@ -67,7 +67,6 @@ export default function CombinedDashboard() {
 
       <div className="flex justify-center">
         <main className="w-full bg-gradient-to-br from-green-700 via-green-600 to-lime-600 shadow-xl rounded-xl p-8 mt-10 text-gray-100">
-          {/* Profile Picture */}
           <div className="text-center mb-8 relative">
             <img
               src={editableInfo.profilePicture}
@@ -87,7 +86,6 @@ export default function CombinedDashboard() {
             )}
           </div>
 
-          {/* Account Information */}
           <section className="mb-8">
             <h3 className="text-2xl font-bold text-lime-200 mb-6">
               Account Information
@@ -125,7 +123,6 @@ export default function CombinedDashboard() {
             </div>
           </section>
 
-          {/* Contact Information */}
           <section className="mb-8">
             <h3 className="text-2xl font-bold text-lime-200 mb-6">
               Contact Information
@@ -163,7 +160,6 @@ export default function CombinedDashboard() {
             </div>
           </section>
 
-          {/* Security Settings */}
           <section className="mb-8">
             <h3 className="text-2xl font-bold text-lime-200 mb-6">Security</h3>
             <div className="flex items-center space-x-4">
@@ -185,7 +181,6 @@ export default function CombinedDashboard() {
             </div>
           </section>
 
-          {/* Edit/Save Button */}
           <div className="flex justify-end mt-6">
             <button
               className={`px-6 py-3 rounded-lg shadow-md font-medium flex items-center space-x-2 ${
