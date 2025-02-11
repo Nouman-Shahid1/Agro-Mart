@@ -2,11 +2,17 @@ package routes
 
 import (
 	"net/http"
+	"os"
 	"strconv"
+	"sync"
+
 	"fyp.com/m/models"
 	"fyp.com/m/utils"
 	"github.com/gin-gonic/gin"
 )
+
+var verificationCodes = sync.Map{}
+var UserInfo = sync.Map{}
 
 func getUsers(context *gin.Context) {
 	users, err := models.GetAllUsers()
@@ -24,13 +30,65 @@ func signUp(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Couldnt parse request data"})
 		return
 	}
-	err = user.Save()
+	Email := os.Getenv("SMTP_USER")
+	Password := os.Getenv("SMTP_PASS")
+	verificationCode := utils.GenerateVerificationCode()
+
+	verificationCodes.Store(user.Email, verificationCode)
+	UserInfo.Store(user.Email, user)
+	SendVerificationEmail(user.Email, verificationCode, Email, Password )
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to send verification email", "error": err.Error()})
+		return
+	}
+
+
+	context.JSON(http.StatusOK, gin.H{"message": "Verification email sent"})
+}
+
+func verifyEmail(context *gin.Context) {
+	var request struct {
+		Email string `json:"email" binding:"required"`
+		Code  string `json:"code" binding:"required"`
+	}
+
+	if err := context.ShouldBindJSON(&request); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request"})
+		return
+	}
+
+	// Retrieve stored verification code
+	storedCode, ok := verificationCodes.Load(request.Email)
+	if !ok || storedCode != request.Code {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid verification code"})
+		return
+	}
+	userData, exists := UserInfo.Load(request.Email)
+	if !exists {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "User data not found"})
+		return
+	}
+
+	// Type assert userData to User struct
+	user, ok := userData.(models.User)
+	if !ok {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to parse user data"})
+		return
+	}
+	// Remove verification code after use
+	verificationCodes.Delete(request.Email)
+	UserInfo.Delete(request.Email)
+
+
+	err := user.Save()
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt save user", "error": err.Error()})
 		return
 	}
-	context.JSON(http.StatusCreated, gin.H{"message": "User created", "event": user})
+
+	context.JSON(http.StatusOK, gin.H{"message": "User verified and registered", "event": user})
 }
+
 
 func login(context *gin.Context) {
 	var user models.User

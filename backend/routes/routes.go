@@ -16,7 +16,8 @@ func RegisterRoutes(server *gin.Engine) {
 	}
 
 	// Authentication routes
-	server.POST("/signup", signUp) 
+	server.POST("/signup", signUp)
+	server.POST("/verify", verifyEmail) 
 	server.POST("/login", login)   
 	server.POST("/refresh-token", refreshToken)
 	server.POST("/logout", logout)
