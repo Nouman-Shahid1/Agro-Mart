@@ -56,7 +56,7 @@ func sendEmail(contact Contact, email string, pass string) error {
 	smtpHost := "smtp.mailersend.net"
 	smtpPort := "587"
 
-    adminEmail := "itachi.uchiha3130@gmail.com"
+    adminEmail := ""
 
 
 	subject := fmt.Sprintf("New Contact Form Submission from %s", contact.Name)
