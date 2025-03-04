@@ -128,7 +128,9 @@ export default function Page() {
             </div>
           )}
           <div className="mt-16">
-            <button className="bg-[#47b881] hover:bg-[#3a9149] text-white font-bold py-4 px-14 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 hover:shadow-[#66bb6a]/50">
+            <button 
+              onClick={() => window.location.href = '/categories'}
+            className="bg-[#47b881] hover:bg-[#3a9149] text-white font-bold py-4 px-14 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 hover:shadow-[#66bb6a]/50">
               View All Categories
             </button>
           </div>
@@ -169,6 +171,7 @@ export default function Page() {
                 title={product.name}
                 cat={product.category}
                 price={product.price}
+                description={product.description}
                 rating={product.rating}
                 sellerId={product.userId}
               />
@@ -177,7 +180,9 @@ export default function Page() {
         )}
           </div>
           <div className="mt-16">
-            <button className="bg-[#47b881] hover:bg-[#3a9149] text-white font-bold py-4 px-8 md:px-14 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 hover:shadow-[#66bb6a]/50">
+            <button 
+            onClick={() => window.location.href = '/products'}
+            className="bg-[#47b881] hover:bg-[#3a9149] text-white font-bold py-4 px-8 md:px-14 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 hover:shadow-[#66bb6a]/50">
               View All Products
             </button>
           </div>

@@ -185,7 +185,7 @@ const HandleOrder=()=>{
             {[
               { label: "Become a Buyer", href: "/login" },
               { label: "Become a Seller", href: "/login" },
-              { label: "Rent a Machine", href: "/" },
+              // { label: "Rent a Machine", href: "/" },
             ].map((item) => (
               <Link
                 key={item.label}
@@ -414,7 +414,7 @@ const HandleOrder=()=>{
             {[
               { label: "Become a Buyer", href: "/login" },
               { label: "Become a Seller", href: "/login" },
-              { label: "Rent a Machine", href: "/" },
+              // { label: "Rent a Machine", href: "/" },
             ].map((item) => (
               <Link
                 key={item.label}
@@ -458,11 +458,11 @@ const HandleOrder=()=>{
                 <strong>MACHINES</strong>
               </li>
             </Link>
-            <Link href="/rental-machines">
+            {/* <Link href="/rental-machines">
               <li className="hover:border-b-2 border-current p-2">
                 <strong>RENTAL MACHINES</strong>
               </li>
-            </Link>
+            </Link> */}
             <Link href="/aboutUs">
               <li className="hover:border-b-2 border-current p-2">
                 <strong>ABOUT US</strong>
