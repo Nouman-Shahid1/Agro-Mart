@@ -3,21 +3,25 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FaEye, FaEyeSlash, FaShoppingCart, FaStore } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaShoppingCart, FaStore, FaCheckCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { registerUser } from "../../reducers/Auth/authSlice";
+import { registerUser, verifyEmail } from "../../reducers/Auth/authSlice";
 
 export default function SignupPage() {
   const [activeForm, setActiveForm] = useState("buyer");
   const [showPassword, setShowPassword] = useState(false);
+  const [verificationStep, setVerificationStep] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -28,6 +32,10 @@ export default function SignupPage() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleCodeChange = (e) => {
+    setVerificationCode(e.target.value);
   };
 
   const handleSubmit = async (e) => {
@@ -53,16 +61,39 @@ export default function SignupPage() {
       const result = await dispatch(registerUser(userData)).unwrap();
       console.log("Registration Success:", result);
 
-      toast.success("Registration successful! Redirecting to login...", {
+      toast.success("Verification email sent! Enter the code to verify.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+
+      // Switch to verification step
+      setVerificationStep(true);
+    } catch (err) {
+      console.error("Registration Failed:", err);
+      toast.error(err?.message || "Registration failed. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const handleVerifyEmail = async (e) => {
+    e.preventDefault();
+
+    try {
+      const result = await dispatch(verifyEmail({ email: formData.email, code: verificationCode })).unwrap();
+
+      console.log("Email Verification Success:", result);
+
+      toast.success("Email verified! Redirecting to login...", {
         position: "top-right",
         autoClose: 3000,
       });
 
       router.push("/login");
     } catch (err) {
-      console.error("Registration Failed:", err);
-
-      toast.error(err?.message || "Registration failed. Please try again.", {
+      console.error("Verification Failed:", err);
+      toast.error(err?.message || "Invalid code. Please try again.", {
         position: "top-right",
         autoClose: 3000,
       });
@@ -91,33 +122,35 @@ export default function SignupPage() {
 
       <div className="relative">
         <div className="relative z-20 pt-[30px] my-8 flex flex-col items-center justify-center min-h-[80vh]">
-          <div className="flex mb-4 bg-gradient-to-r from-white/10 to-transparent backdrop-blur-sm rounded-full p-1 shadow-md relative">
-            <button
-              onClick={() => setActiveForm("buyer")}
-              className={`relative flex-1 px-4 py-2 rounded-full text-center font-semibold text-sm transition-all duration-300 ease-in-out transform flex items-center justify-center gap-2 ${
-                activeForm === "buyer"
-                  ? "bg-green-700 text-white shadow-lg scale-105"
-                  : "bg-transparent text-white hover:bg-white/20"
-              }`}
-            >
-              <FaShoppingCart size={20} />
-              <span>Buyer</span>
-            </button>
+          {!verificationStep ? (
+            <>
+              <div className="flex mb-4 bg-gradient-to-r from-white/10 to-transparent backdrop-blur-sm rounded-full p-1 shadow-md relative">
+                <button
+                  onClick={() => setActiveForm("buyer")}
+                  className={`relative flex-1 px-4 py-2 rounded-full text-center font-semibold text-sm transition-all duration-300 ease-in-out transform flex items-center justify-center gap-2 ${
+                    activeForm === "buyer"
+                      ? "bg-green-700 text-white shadow-lg scale-105"
+                      : "bg-transparent text-white hover:bg-white/20"
+                  }`}
+                >
+                  <FaShoppingCart size={20} />
+                  <span>Buyer</span>
+                </button>
 
-            <button
-              onClick={() => setActiveForm("seller")}
-              className={`relative flex-1 px-4 py-2 rounded-full text-center text-sm transition-all font-bold duration-300 ease-in-out transform flex items-center justify-center gap-2 ${
-                activeForm === "seller"
-                  ? "bg-green-700 text-white shadow-lg scale-105"
-                  : "bg-transparent text-white hover:bg-white/20"
-              }`}
-            >
-              <FaStore size={20} />
-              <span>Seller</span>
-            </button>
-          </div>
+                <button
+                  onClick={() => setActiveForm("seller")}
+                  className={`relative flex-1 px-4 py-2 rounded-full text-center text-sm transition-all font-bold duration-300 ease-in-out transform flex items-center justify-center gap-2 ${
+                    activeForm === "seller"
+                      ? "bg-green-700 text-white shadow-lg scale-105"
+                      : "bg-transparent text-white hover:bg-white/20"
+                  }`}
+                >
+                  <FaStore size={20} />
+                  <span>Seller</span>
+                </button>
+              </div>
 
-          <motion.div
+              <motion.div
             className="bg-gradient-to-r from-white/10 to-transparent backdrop-blur-sm border border-white/18 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] space-y-4 p-8 max-w-[500px] w-full text-center space-y-2 transform hover:shadow-xl transition-shadow"
             key={activeForm}
             variants={formVariants}
@@ -128,7 +161,7 @@ export default function SignupPage() {
             <h2 className="text-4xl font-extrabold text-green-400">
               {activeForm === "buyer" ? "Join as a Buyer" : "Join as a Seller"}
             </h2>
-            <form className="space-y-3" onSubmit={handleSubmit}>
+                <form className="space-y-3" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-left text-white font-semibold mb-1">
                   User Name
@@ -207,7 +240,25 @@ export default function SignupPage() {
                 Already have an account? Log in
               </Link>
             </div>
-          </motion.div>
+              </motion.div>
+            </>
+          ) : (
+            <motion.div className="bg-white p-8 rounded-md shadow-lg">
+              <h2 className="text-2xl font-semibold text-green-600">
+                Enter Verification Code
+              </h2>
+              <input
+                type="text"
+                value={verificationCode}
+                onChange={handleCodeChange}
+                className="w-full p-2 border rounded-md"
+                placeholder="Enter Code"
+              />
+              <button onClick={handleVerifyEmail} className="w-full mt-3 py-2 bg-green-500 text-white rounded-md">
+                Verify Email
+              </button>
+            </motion.div>
+          )}
         </div>
       </div>
     </div>
