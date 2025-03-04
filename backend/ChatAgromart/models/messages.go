@@ -106,3 +106,38 @@ func BatchInsertMessages(messages []Message) error {
 
 	return tx.Commit()
 }
+
+func GetAllUsers(userID int64) ([]User, error) {
+	query := `
+		SELECT DISTINCT u.id, u.username
+		FROM users u
+		JOIN messages m ON u.id = m.senderid
+		WHERE m.recieverid = ?
+	`
+
+	rows, err := db.DB.Query(query, userID)
+	if err != nil {
+		return nil, fmt.Errorf("error fetching users: %w", err)
+	}
+	defer rows.Close()
+
+	var users []User
+	for rows.Next() {
+		var user User
+		if err := rows.Scan(&user.ID, &user.Username); err != nil {
+			return nil, fmt.Errorf("error scanning user row: %w", err)
+		}
+		users = append(users, user)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating user rows: %w", err)
+	}
+
+	return users, nil
+}
+
+type User struct {
+	ID       int
+	Username string
+}

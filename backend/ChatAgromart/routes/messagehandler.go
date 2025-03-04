@@ -67,3 +67,17 @@ func GetMessages(context *gin.Context) {
 
 
 
+func getUsers(context *gin.Context) {
+	id, err := strconv.ParseInt(context.Param("id"), 10, 64)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt convert parse user id for get"})
+		return
+	}
+	users, err := models.GetAllUsers(id)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt fetch user"})
+		return
+	}
+	context.JSON(http.StatusOK, users)
+
+}
