@@ -80,13 +80,15 @@ const Benefits = () => {
           ))}
         </div>
 
-        <div className="mt-16">
-          <Link
-            href="#shop-now"
+        <div className="mt-16" 
+            onClick={() => window.location.href = '/products'}
+        
+        >
+          <button
             className="inline-block bg-gradient-to-r from-green-500 to-green-600 text-white py-4 px-12 rounded-full text-sm md:text-lg font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300"
           >
             Shop Fresh Produce
-          </Link>
+          </button>
         </div>
       </div>
     </section>
