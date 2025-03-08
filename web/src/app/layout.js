@@ -8,6 +8,7 @@ import "./globals.css";
 import Authentication from "../Components/Authentication";
 import { CartProvider } from '../utilities/CartContext';
 import { ToastContainer } from "react-toastify";
+import LiveChatbot from "@/Components/LiveChat/LiveChat";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -66,6 +67,7 @@ export default function RootLayout({ children }) {
         <CartProvider>
           <Authentication>
             {children}
+            <LiveChatbot/>
           </Authentication>
           </CartProvider>
         </Provider>

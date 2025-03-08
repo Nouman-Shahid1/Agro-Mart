@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fyp.com/m/controllers"
 	"fyp.com/m/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -17,8 +18,8 @@ func RegisterRoutes(server *gin.Engine) {
 
 	// Authentication routes
 	server.POST("/signup", signUp)
-	server.POST("/verify", verifyEmail) 
-	server.POST("/login", login)   
+	server.POST("/verify", verifyEmail)
+	server.POST("/login", login)
 	server.POST("/refresh-token", refreshToken)
 	server.POST("/logout", logout)
 	server.POST("/contact-us", contactUs)
@@ -26,7 +27,7 @@ func RegisterRoutes(server *gin.Engine) {
 	server.GET("/search-bar", searchProduct)
 	server.GET("/getallcategories", getProductsCategories)
 	server.GET("/getallproducts", getProducts)
-	server.GET("Product/:id", getProductbyID)
+	server.GET("/Product/:id", getProductbyID)
 
 	authenticated := server.Group("/products")
 	authenticated.Use(middleware.Authenticate)
@@ -34,14 +35,12 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticated.PUT("/update-product/:id", updateProduct)
 	authenticated.DELETE("/delete-product/:id", deleteProduct)
 	authenticated.GET("/get-Product/:id", getProductsbyuserid)
-	
 
 	categoryRoutes := server.Group("/category")
-	//categoryRoutes.Use(middleware.Authenticate)
 	{
 		categoryRoutes.POST("/new-category", createProductCategory)
 		categoryRoutes.PUT("/update-category/:id", updateProductCategory)
-		categoryRoutes.DELETE("delete-category/:id", deleteProductCategory)
+		categoryRoutes.DELETE("/delete-category/:id", deleteProductCategory)
 		categoryRoutes.GET("/get-Category/:id", getProductCategorybyuserid)
 	}
 
@@ -64,4 +63,7 @@ func RegisterRoutes(server *gin.Engine) {
 		ReviewRoutes.GET("product-review/:id", getReviewsByProductId)
 		ReviewRoutes.POST("new-review", saveReview)
 	}
+
+	// Chatbot Route for LLaMA 3
+	server.POST("/api/chatbot", controllers.ChatbotHandler)
 }
