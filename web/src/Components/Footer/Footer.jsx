@@ -55,7 +55,7 @@ const Footer = () => {
             </h3>
             <ul className="space-y-2 text-sm">
               <li>📍 Address: 123 Green Field, Agriculture City</li>
-              <li>📞 Phone: +123-456-7890</li>
+              <li>📞 Phone: +92-346-756220</li>
               <li>✉ Email: info@agriculture.com</li>
             </ul>
            
