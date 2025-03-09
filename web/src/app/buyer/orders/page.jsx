@@ -97,62 +97,114 @@ const setMessages = (newMessages) => {
   }, [buyerOrders, dispatch]);
   useEffect(() => {
     if (!userId) return;
-
-    const websocket = new WebSocket(`ws://localhost:8081/ws?senderID=${userId}`);
+  
+    console.log("🚀 Initializing WebSocket...");
+    let websocket = new WebSocket(`ws://localhost:8081/ws?senderID=${userId}`);
     setWs(websocket);
-
-    websocket.onmessage = (event) => {
-      const receivedMessage = JSON.parse(event.data);
-      dispatch({ type: "chat/addMessage", payload: receivedMessage });
-
-      if (!isChatVisible) {
-        setNewMessage(true);
-      }
+  
+    websocket.onopen = () => console.log("✅ WebSocket Connected");
+  
+    websocket.onerror = (error) => {
+      console.error("❌ WebSocket Error:", error);
+      setTimeout(() => {
+        console.log("🔄 Retrying WebSocket connection...");
+        websocket = new WebSocket(`ws://localhost:8081/ws?senderID=${userId}`);
+        setWs(websocket);
+      }, 5000); // Retry after 5 seconds
     };
-
-    websocket.onclose = () => setWs(null);
-
+  
+    websocket.onclose = () => console.log("🔹 WebSocket Closed");
+  
     return () => {
-      if (websocket) websocket.close();
+      console.log("🔄 Cleaning up WebSocket...");
+      websocket.close();
     };
-  }, [userId, dispatch, isChatVisible]);
+  }, [userId]);
+  
+
 
   const handleOpenChat = (sellerId) => {
     if (!token) {
       alert("Unauthorized! Please log in again.");
       return;
     }
-
+  
     setSelectedSellerId(sellerId);
     setChatVisible(true);
     setNewMessage(false);
-
+  
     dispatch(fetchMessages({ receiverId: sellerId }));
-
-    const websocket = new WebSocket(
-      `ws://localhost:8081/ws?senderID=${userId}&receiverID=${sellerId}`
-    );
-    setWs(websocket);
-
-    websocket.onmessage = (event) => {
-      const receivedMessage = JSON.parse(event.data);
-      dispatch({ type: "chat/addMessage", payload: receivedMessage });
-      if (!isChatVisible) {
-        setNewMessage(true);
-      }
-    };
-
-    websocket.onclose = () => setWs(null);
+  
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      console.log("🔹 Establishing WebSocket connection...");
+      const websocket = new WebSocket(
+        `ws://localhost:8081/ws?senderID=${userId}&receiverID=${sellerId}`
+      );
+  
+      websocket.onopen = () => {
+        console.log("✅ WebSocket Connected in Orders Page");
+        setWs(websocket);
+      };
+  
+      websocket.onmessage = (event) => {
+        const receivedMessage = JSON.parse(event.data);
+        console.log("🔹 Message received:", receivedMessage);
+        dispatch({ type: "chat/addMessage", payload: receivedMessage });
+  
+        if (!isChatVisible) {
+          setNewMessage(true);
+        }
+      };
+  
+      websocket.onerror = (error) => {
+        console.error("❌ WebSocket Error:", error);
+      };
+  
+      websocket.onclose = () => {
+        console.log("🔹 WebSocket Closed in Orders Page");
+        setWs(null);
+      };
+    }
   };
+  
+  
 
    
   const sendMessage = () => {
-    if (!ws || !input.trim()) return;
-
-    const messageData = { senderId: userId, receiverId: selectedSellerId, content: input };
-    ws.send(JSON.stringify(messageData));
-    setInput("");
+    if (!ws) {
+      console.error("❌ WebSocket is not initialized.");
+      return;
+    }
+  
+    if (ws.readyState === WebSocket.CONNECTING) {
+      console.warn("⏳ WebSocket is still connecting, retrying...");
+      setTimeout(sendMessage, 1000); // Retry after 1 second
+      return;
+    }
+  
+    if (ws.readyState !== WebSocket.OPEN) {
+      console.error("❌ WebSocket is not connected, cannot send message");
+      return;
+    }
+  
+    if (!input.trim()) return;
+  
+    const messageData = {
+      senderId: userId,
+      receiverId: selectedSellerId,
+      content: input,
+    };
+  
+    try {
+      ws.send(JSON.stringify(messageData));
+      console.log("📩 Message Sent:", messageData);
+      setInput(""); 
+    } catch (error) {
+      console.error("❌ Error sending message:", error);
+    }
   };
+  
+  
 
  
   
@@ -235,48 +287,54 @@ const setMessages = (newMessages) => {
     )}
 {isChatVisible && (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-green-700 p-6 rounded-lg text-white w-full max-w-lg relative">
+    <div className="bg-green-700 p-6 rounded-lg text-white w-full max-w-lg relative shadow-lg">
+      
       <button
         onClick={() => setChatVisible(false)}
-        className="absolute top-3 right-3 text-white hover:text-gray-300"
+        className="absolute top-3 right-3 text-white hover:text-gray-300 text-lg"
       >
-
-<AiOutlineClose className="w-6 h-6 cursor-pointer"  />
-
+        <AiOutlineClose className="w-6 h-6 cursor-pointer" />
       </button>
+
       <h2 className="text-xl font-semibold text-center mb-4">Chat with Seller</h2>
-      
-      <div className="h-72 overflow-y-auto border-b mb-4 p-2 flex flex-col space-y-2">
+
+      {/* Messages Section */}
+      <div className="h-72 overflow-y-auto border-b mb-4 p-2 flex flex-col space-y-2 scrollbar-thin scrollbar-thumb-gray-400">
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-2 px-4 rounded-lg max-w-[75%] ${
-              msg.senderId === userId || msg.user === "buyer"
-              ? "bg-green-500 text-white self-end"
-
-              :"bg-gray-300 text-black self-start"
-
+            className={`flex ${
+              msg.senderId === userId || msg.user === "buyer" || msg.user ==="Phaninder" ? "justify-end" : "justify-start"
             }`}
           >
-            <strong className="block text-sm mb-1">
-              {msg.senderId === userId || msg.user}
-            </strong>
-            <span>{msg.content}</span>
+            <div
+              className={`p-3 px-4 rounded-lg max-w-[75%] shadow ${
+                msg.senderId === userId || msg.user === "buyer"|| msg.user ==="Phaninder"
+                  ? "bg-green-500 text-white" // Buyer messages (right)
+                  : "bg-gray-300 text-black" // Seller messages (left)
+              }`}
+            >
+              <strong className="block text-sm mb-1">
+                {msg.user ? msg.user : "Unknown"}
+              </strong>
+              <span>{msg.content}</span>
+            </div>
           </div>
         ))}
       </div>
 
+      {/* Input Field */}
       <div className="flex items-center space-x-2">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="flex-1 border p-2 rounded-lg text-black"
+          className="flex-1 border p-2 rounded-lg text-black outline-none"
           placeholder="Type a message..."
         />
         <button
           onClick={sendMessage}
-          className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700"
+          className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition"
         >
           📩
         </button>
@@ -284,6 +342,8 @@ const setMessages = (newMessages) => {
     </div>
   </div>
 )}
+
+
 
 
 
