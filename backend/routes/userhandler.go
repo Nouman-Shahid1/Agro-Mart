@@ -1,9 +1,11 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 
 	"fyp.com/m/models"
@@ -36,12 +38,11 @@ func signUp(context *gin.Context) {
 
 	verificationCodes.Store(user.Email, verificationCode)
 	UserInfo.Store(user.Email, user)
-	SendVerificationEmail(user.Email, verificationCode, Email, Password )
+	SendVerificationEmail(user.Email, verificationCode, Email, Password)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to send verification email", "error": err.Error()})
 		return
 	}
-
 
 	context.JSON(http.StatusOK, gin.H{"message": "Verification email sent"})
 }
@@ -57,38 +58,44 @@ func verifyEmail(context *gin.Context) {
 		return
 	}
 
-	// Retrieve stored verification code
 	storedCode, ok := verificationCodes.Load(request.Email)
-	if !ok || storedCode != request.Code {
+	if !ok {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "No verification code found"})
+		return
+	}
+
+	// Convert both to strings and trim any spaces
+	storedCodeStr := fmt.Sprintf("%v", storedCode)
+	inputCodeStr := strings.TrimSpace(request.Code)
+
+	if storedCodeStr != inputCodeStr {
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid verification code"})
 		return
 	}
+
 	userData, exists := UserInfo.Load(request.Email)
 	if !exists {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "User data not found"})
 		return
 	}
 
-	// Type assert userData to User struct
 	user, ok := userData.(models.User)
 	if !ok {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to parse user data"})
 		return
 	}
-	// Remove verification code after use
+
 	verificationCodes.Delete(request.Email)
 	UserInfo.Delete(request.Email)
 
-
 	err := user.Save()
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt save user", "error": err.Error()})
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Could not save user", "error": err.Error()})
 		return
 	}
 
 	context.JSON(http.StatusOK, gin.H{"message": "User verified and registered", "event": user})
 }
-
 
 func login(context *gin.Context) {
 	var user models.User
@@ -103,7 +110,7 @@ func login(context *gin.Context) {
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "Couldnt authenticate user"})
 		return
 	}
-	accesstoken, refreshtoken , err := utils.GenerateToken(user.Username, user.ID, user.Role)
+	accesstoken, refreshtoken, err := utils.GenerateToken(user.Username, user.ID, user.Role)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "Couldnt generate user token"})
 	}
@@ -168,7 +175,6 @@ func getUser(context *gin.Context) {
 
 }
 
-
 func refreshToken(context *gin.Context) {
 	var body struct {
 		RefreshToken string `json:"refreshToken"`
@@ -202,6 +208,6 @@ func refreshToken(context *gin.Context) {
 }
 
 func logout(context *gin.Context) {
-    // Clear the token from the client (done client-side, just confirming the action on the server)
-    context.JSON(http.StatusOK, gin.H{"message": "Logout successful"})
+	// Clear the token from the client (done client-side, just confirming the action on the server)
+	context.JSON(http.StatusOK, gin.H{"message": "Logout successful"})
 }

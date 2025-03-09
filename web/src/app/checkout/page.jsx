@@ -247,36 +247,7 @@ const Checkout = () => {
               your convenience.
             </p>
             <div className="flex gap-6">
-              <div
-                className={`p-6 rounded-lg border flex items-center gap-4 ${
-                  formData.paymentMethod === "credit-card"
-                    ? "border-green-700 bg-green-400 shadow-md"
-                    : "bg-emerald-200"
-                } cursor-pointer transition-all hover:shadow-xl`}
-                onClick={() =>
-                  setFormData({ ...formData, paymentMethod: "credit-card" })
-                }
-              >
-                <FaCreditCard className="text-xl text-emerald-700" />
-                <div>
-                  <h4 className="font-bold">Credit Card</h4>
-                </div>
-              </div>
-              <div
-                className={`p-6 rounded-lg border flex items-center gap-4 ${
-                  formData.paymentMethod === "paypal"
-                    ? "border-green-700 bg-green-400 shadow-md"
-                    : "bg-emerald-200"
-                } cursor-pointer transition-all hover:shadow-xl`}
-                onClick={() =>
-                  setFormData({ ...formData, paymentMethod: "paypal" })
-                }
-              >
-                <FaPaypal className="text-xl text-emerald-700" />
-                <div>
-                  <h4 className="font-bold">PayPal</h4>
-                </div>
-              </div>
+              
               <div
                 className={`p-6 rounded-lg border flex items-center gap-4 ${
                   formData.paymentMethod === "cash-on-delivery"
