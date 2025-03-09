@@ -48,7 +48,7 @@ export default function Dashboard() {
             />
             <DashboardCard
               details={{
-                name: "Settings",
+                name: "Support",
                 src: Amenities,
                 url: "/buyer/",
               }}

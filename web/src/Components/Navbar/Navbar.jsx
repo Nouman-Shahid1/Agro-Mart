@@ -173,6 +173,8 @@ const HandleOrder=()=>{
               src="/logo.png"
               alt="Logo"
               width="170px"
+            onClick={() => window.location.href = '/'}
+
               className={`transition-all duration-300 ease-in-out drop-shadow-md ${
                 bg
                   ? "hover:drop-shadow-[0_4px_20px_rgba(76,175,80,1)] "
