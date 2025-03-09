@@ -74,15 +74,11 @@ const Sidebar = ({ role }) => {
         icon: <FaChartLine />,
         path: "/seller-profile/analytics",
       },
+      
       {
-        label: "Chats",
-        icon: <FaComments />,
-        path: "/seller-profile/chat",
-      },
-      {
-        label: "Settings",
+        label: "Support",
         icon: <FaTools />,
-        path: "/seller-profile/settings",
+        path: "/seller-profile/support",
       },
     ],
     buyer: [
@@ -102,8 +98,7 @@ const Sidebar = ({ role }) => {
         icon: <FaAddressBook />,
         path: "/buyer/saved-addresses",
       },
-      { label: "Chats", icon: <FaComments />, path: "/buyer/chats" },
-      { label: "Settings", icon: <FaCog />, path: "/buyer/settings" },
+      { label: "Support", icon: <FaCog />, path: "/buyer/support" },
     ],
 
   };
