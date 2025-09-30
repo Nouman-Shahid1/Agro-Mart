@@ -6,7 +6,7 @@ import { ImCross } from "react-icons/im";
 import { FaUser, FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../../utilities/CartContext";
 import { logout } from "@/reducers/Auth/authSlice";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Navbar = () => {
@@ -18,7 +18,9 @@ const Navbar = () => {
   const dispatch =useDispatch();
   const { username,role,token } = useSelector((state) => state.auth);
   const user = useSelector((state) => state.auth.user || {});
-const router=useRouter();
+  const router=useRouter();
+  const pathname = usePathname();
+
     const cartRef = useRef(null);
     useEffect(() => {
       const handleClickOutside = (event) => {
@@ -125,22 +127,22 @@ const router=useRouter();
     };
   }, [showCart]);
 const HandleProfile=()=>{
-  if (role === "Admin") {
+  const normalizedRole = role?.toLowerCase();
+  if (normalizedRole === "admin") {
     router.push("/admin");
-  } else if (role === "Buyer" || role === "buyer") {
+  } else if (normalizedRole === "buyer") {
     router.push("/buyer");
-  } else if (role === "Seller" || role === "seller") {
+  } else if (normalizedRole === "seller") {
     router.push("/seller-profile");
   }
-
 }
 const HandleOrder=()=>{
-  if (role === "Buyer" || role === "buyer") {
+  const normalizedRole = role?.toLowerCase();
+  if (normalizedRole === "buyer") {
     router.push("/buyer/orders");
-  } else if (role === "Seller" || role === "seller") {
+  } else if (normalizedRole === "seller") {
     router.push("/seller-profile/orders");
   }
-
 }
   const handleClearCart = () => {
     clearCart();
@@ -227,11 +229,11 @@ const HandleOrder=()=>{
                 {showDropdown && (
                   <div
                     ref={dropdownRef}
-                    className="absolute top-full right-0 mt-2 w-40 py-3 px-4 bg-white text-gray-800 rounded-lg shadow-lg border border-gray-300 z-50"
+                    className="absolute top-full right-0 mt-2 w-40 py-2 bg-white text-gray-800 rounded-lg shadow-lg border border-gray-300 z-50"
                   >
-                    <p className="cursor-pointer hover:text-black py-1" onClick={HandleProfile}>My Profile</p>
-                    <p className="cursor-pointer hover:text-black py-1" onClick={HandleOrder}>Orders</p>
-                    <p onClick={handleLogout} className="cursor-pointer hover:text-black py-1">Logout</p>
+                    <p className="cursor-pointer hover:bg-green-50 hover:text-green-700 py-2 px-4 transition-colors duration-200" onClick={HandleProfile}>My Profile</p>
+                    <p className="cursor-pointer hover:bg-green-50 hover:text-green-700 py-2 px-4 transition-colors duration-200" onClick={HandleOrder}>Orders</p>
+                    <p onClick={handleLogout} className="cursor-pointer hover:bg-red-50 hover:text-red-700 py-2 px-4 transition-colors duration-200">Logout</p>
                   </div>
                 )}
               </div>
@@ -439,42 +441,37 @@ const HandleOrder=()=>{
             }`}
           >
             <Link href="/">
-              <li className="hover:border-b-2 border-current p-2">
+              <li className={`hover:border-b-2 border-current p-2 ${pathname === '/' ? 'border-b-2 border-green-500 text-green-600' : ''}`}>
                 <strong>HOME</strong>
               </li>
             </Link>
             <Link href="/pesticides">
-              <li className="hover:border-b-2 border-current p-2">
+              <li className={`hover:border-b-2 border-current p-2 ${pathname === '/pesticides' ? 'border-b-2 border-green-500 text-green-600' : ''}`}>
                 <strong>PESTICIDES</strong>
               </li>
             </Link>
             <Link href="/seeds">
-              <li className="hover:border-b-2 border-current p-2">
+              <li className={`hover:border-b-2 border-current p-2 ${pathname === '/seeds' ? 'border-b-2 border-green-500 text-green-600' : ''}`}>
                 <strong>SEEDS</strong>
               </li>
             </Link>
             <Link href="/fertilizers">
-              <li className="hover:border-b-2 border-current p-2">
+              <li className={`hover:border-b-2 border-current p-2 ${pathname === '/fertilizers' ? 'border-b-2 border-green-500 text-green-600' : ''}`}>
                 <strong>FERTILIZERS</strong>
               </li>
             </Link>
             <Link href="/machines">
-              <li className="hover:border-b-2 border-current p-2">
+              <li className={`hover:border-b-2 border-current p-2 ${pathname === '/machines' ? 'border-b-2 border-green-500 text-green-600' : ''}`}>
                 <strong>MACHINES</strong>
               </li>
             </Link>
-            {/* <Link href="/rental-machines">
-              <li className="hover:border-b-2 border-current p-2">
-                <strong>RENTAL MACHINES</strong>
-              </li>
-            </Link> */}
             <Link href="/aboutUs">
-              <li className="hover:border-b-2 border-current p-2">
+              <li className={`hover:border-b-2 border-current p-2 ${pathname === '/aboutUs' ? 'border-b-2 border-green-500 text-green-600' : ''}`}>
                 <strong>ABOUT US</strong>
               </li>
             </Link>
             <Link href="/contact-us">
-              <li className="hover:border-b-2 border-current p-2">
+              <li className={`hover:border-b-2 border-current p-2 ${pathname === '/contact-us' ? 'border-b-2 border-green-500 text-green-600' : ''}`}>
                 <strong>CONTACT US</strong>
               </li>
             </Link>
