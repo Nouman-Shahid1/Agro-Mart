@@ -24,32 +24,40 @@ const Authentication = ({ children }) => {
    */
   useEffect(() => {
     const savedToken = localStorage.getItem("access_token");
-    const savedRole = localStorage.getItem("user_role");
 
     if (savedToken) {
-      dispatch(setToken(savedToken)); // Restore token to Redux
+      dispatch(setToken(savedToken)); // This will decode token and set role automatically
     }
 
-    setLoading(false); // Stop loading after initial check
+    // Add a small delay to show the loading screen
+    setTimeout(() => setLoading(false), 1000);
   }, [dispatch]);
 
   /**
-   * Redirect users to login if they try to access restricted routes without authentication
+   * Handle authentication and role-based routing
    */
   useEffect(() => {
-    if (!token && restrictedRoutes.includes(pathname)) {
+    if (loading) return; // Wait for initial load to complete
+
+    const isRestrictedRoute = restrictedRoutes.includes(pathname);
+
+    if (!token && isRestrictedRoute) {
       router.push("/login");
-    } else if (token && role) {
-      // Ensure role-based navigation
+      return;
+    }
+
+    if (token && role) {
       const normalizedRole = role.toLowerCase();
       const allowedRoutes = roleBasedRoutes[normalizedRole] || [];
-      const isProtectedRoute = Object.values(roleBasedRoutes).flat().includes(pathname);
+      const isProtectedRoute = Object.values(roleBasedRoutes)
+        .flat()
+        .includes(pathname);
 
       if (isProtectedRoute && !allowedRoutes.includes(pathname)) {
         router.push(allowedRoutes[0] || "/");
       }
     }
-  }, [token, role, pathname, router]);
+  }, [loading, token, role, pathname, router]);
 
   /**
    * Show loading screen during initial authentication
@@ -65,11 +73,21 @@ const Authentication = ({ children }) => {
       >
         <div className="absolute inset-0 bg-black bg-opacity-60"></div>
         <div className="relative z-10 flex flex-col items-center text-center p-8 rounded-lg">
-          <div className="relative flex items-center justify-center h-32 w-32 mb-6">
-            <div className="absolute h-full w-full rounded-full border-8 border-green-400 border-t-transparent animate-spin-slow"></div>
+          <div className="relative flex items-center flex-col gap-12 justify-center h-32 w-32 mb-6">
             <h1 className="text-3xl font-extrabold text-green-200">
               Authenticating AgroMart...
             </h1>
+            <div className="flex space-x-2">
+              <div className="w-4 h-4 bg-green-400 rounded-full animate-bounce"></div>
+              <div
+                className="w-4 h-4 bg-green-400 rounded-full animate-bounce"
+                style={{ animationDelay: "0.1s" }}
+              ></div>
+              <div
+                className="w-4 h-4 bg-green-400 rounded-full animate-bounce"
+                style={{ animationDelay: "0.2s" }}
+              ></div>
+            </div>
           </div>
         </div>
       </div>

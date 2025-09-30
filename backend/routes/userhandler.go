@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -32,13 +34,11 @@ func signUp(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Couldnt parse request data"})
 		return
 	}
-	Email := os.Getenv("SMTP_USER")
-	Password := os.Getenv("SMTP_PASS")
 	verificationCode := utils.GenerateVerificationCode()
 
 	verificationCodes.Store(user.Email, verificationCode)
 	UserInfo.Store(user.Email, user)
-	SendVerificationEmail(user.Email, verificationCode, Email, Password)
+	err = SendVerificationEmailBrevo(user.Email, verificationCode)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to send verification email", "error": err.Error()})
 		return
@@ -210,4 +210,43 @@ func refreshToken(context *gin.Context) {
 func logout(context *gin.Context) {
 	// Clear the token from the client (done client-side, just confirming the action on the server)
 	context.JSON(http.StatusOK, gin.H{"message": "Logout successful"})
+}
+
+func SendVerificationEmailBrevo(email, code string) error {
+	apiKey := os.Getenv("BREVO_API_KEY")
+	fromEmail := os.Getenv("BREVO_FROM_EMAIL")
+	fromName := os.Getenv("BREVO_FROM_NAME")
+
+	payload := map[string]interface{}{
+		"sender": map[string]string{
+			"name":  fromName,
+			"email": fromEmail,
+		},
+		"to": []map[string]string{
+			{"email": email},
+		},
+		"subject": "AgroMart Email Verification",
+		"htmlContent": fmt.Sprintf(`
+			<h2>Welcome to AgroMart!</h2>
+			<p>Your verification code is: <strong>%s</strong></p>
+			<p>Please enter this code to complete your registration.</p>
+		`, code),
+	}
+
+	jsonData, _ := json.Marshal(payload)
+	req, _ := http.NewRequest("POST", "https://api.brevo.com/v3/smtp/email", bytes.NewBuffer(jsonData))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("api-key", apiKey)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 201 {
+		return fmt.Errorf("failed to send email, status: %d", resp.StatusCode)
+	}
+	return nil
 }

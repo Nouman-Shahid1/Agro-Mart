@@ -1,0 +1,9 @@
+-- Insert products with categories and descriptions
+INSERT INTO products (name, description, imagepath, user_id, category_name, price) VALUES 
+('Urea Fertilizer', 'High-quality urea fertilizer with 46% nitrogen content. Ideal for promoting healthy plant growth and increasing crop yield.', 'static/images/1738464687873814900_npk-fertilizer-2kg-500x500.webp', 1, 'Fertilizers', 850),
+('Rotavator', 'Heavy-duty rotavator for soil preparation and cultivation. Perfect for breaking hard soil and preparing seedbeds efficiently.', 'static/images/1738463720132688400_machine.jpeg', 1, 'Machines', 45000),
+('NPK Fertilizer', 'Balanced NPK fertilizer containing nitrogen, phosphorus, and potassium. Essential nutrients for complete plant nutrition.', 'static/images/1738464687873814900_npk-fertilizer-2kg-500x500.webp', 1, 'Fertilizers', 1200),
+('Mini Tractor', 'Compact and efficient mini tractor suitable for small to medium farms. Easy to operate with excellent fuel efficiency.', 'static/images/1738463720132688400_machine.jpeg', 1, 'Machines', 350000),
+('Harvester', 'Modern combine harvester for efficient crop harvesting. Reduces labor costs and increases harvesting speed significantly.', 'static/images/1738465114131062200_ch-crossover-harvesting.webp', 1, 'Machines', 1200000),
+('Bio Shield Pesticide', 'Organic bio-shield pesticide for eco-friendly pest control. Safe for crops and environment while effectively controlling pests.', 'static/images/1738464153700045000_pasticide.jpeg', 1, 'Pesticides', 650),
+('Nor Ad YSM 8108 Seeds', 'Premium quality YSM 8108 hybrid seeds with high germination rate. Suitable for various soil conditions and weather patterns.', 'static/images/1738463962983071700_seads.jpg', 1, 'Seeds', 2500);

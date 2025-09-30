@@ -16,7 +16,8 @@ const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
   const dispatch =useDispatch();
-  const { username,role } = useSelector((state) => state.auth.user || {});
+  const { username,role,token } = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.auth.user || {});
 const router=useRouter();
     const cartRef = useRef(null);
     useEffect(() => {
@@ -183,60 +184,63 @@ const HandleOrder=()=>{
             />
           </div>
 
-          <div className="hidden md:flex flex-col md:flex-row gap-3 text-base pt-4 items-center">
-            {[
-              { label: "Become a Buyer", href: "/login" },
-              { label: "Become a Seller", href: "/login" },
-              // { label: "Rent a Machine", href: "/" },
-            ].map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="relative inline-block py-2.5 px-6 text-base font-medium text-white rounded-full bg-gradient-to-r from-green-500 to-green-700 shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:bg-gradient-to-br focus:ring-2 focus:ring-teal-300 focus:outline-none"
-              >
-                <span className="absolute inset-0 w-full h-full bg-white opacity-0 rounded-full transition-opacity duration-300 hover:opacity-10"></span>
-                <span className="relative z-10">{item.label}</span>
-              </Link>
-            ))}
+          {!token && (
+            <div className="hidden md:flex flex-col md:flex-row gap-3 text-base pt-4 items-center">
+              {[
+                { label: "Become a Buyer", href: "/login" },
+                { label: "Become a Seller", href: "/login" },
+              ].map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="relative inline-block py-2.5 px-6 text-base font-medium text-white rounded-full bg-gradient-to-r from-green-500 to-green-700 shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:bg-gradient-to-br focus:ring-2 focus:ring-teal-300 focus:outline-none"
+                >
+                  <span className="absolute inset-0 w-full h-full bg-white opacity-0 rounded-full transition-opacity duration-300 hover:opacity-10"></span>
+                  <span className="relative z-10">{item.label}</span>
+                </Link>
+              ))}
             </div>
+          )}
             <div className="flex items-center gap-4 md:gap-6">
-            <div className="relative group flex items-center gap-4">
-  <button
-    onClick={() => setShowDropdown((prev) => !prev)}
-    className="flex items-center gap-2 cursor-pointer"
-  >
-    <FaUser
-      className={`text-2xl ${
-        bg ? "text-black" : "text-white"
-      } hover:scale-110 transition-transform`}
-    />
-    {username && (
-      <span
-        className={`${
-          bg ? "text-black" : "text-white"
-        } font-medium text-sm`}
-      >
-        {username}
-      </span>
-    )}
-  </button>
+            {token && (
+              <div className="relative group flex items-center gap-4">
+                <button
+                  onClick={() => setShowDropdown((prev) => !prev)}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <FaUser
+                    className={`text-2xl ${
+                      bg ? "text-black" : "text-white"
+                    } hover:scale-110 transition-transform`}
+                  />
+                  {user.username && (
+                    <span
+                      className={`${
+                        bg ? "text-black" : "text-white"
+                      } font-medium text-sm`}
+                    >
+                      {user.username}
+                    </span>
+                  )}
+                </button>
 
-  {showDropdown && (
-    <div
-      ref={dropdownRef}
-      className="absolute top-full right-0 mt-2 w-40 py-3 px-4 bg-white text-gray-800 rounded-lg shadow-lg border border-gray-300 z-50"
-    >
-      <p className="cursor-pointer hover:text-black py-1" onClick={HandleProfile}>My Profile</p>
-      
-      <p className="cursor-pointer hover:text-black py-1" onClick={HandleOrder}>Orders</p>
-      <p onClick={handleLogout} className="cursor-pointer hover:text-black py-1">Logout</p>
-    </div>
-  )}
-</div>
+                {showDropdown && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute top-full right-0 mt-2 w-40 py-3 px-4 bg-white text-gray-800 rounded-lg shadow-lg border border-gray-300 z-50"
+                  >
+                    <p className="cursor-pointer hover:text-black py-1" onClick={HandleProfile}>My Profile</p>
+                    <p className="cursor-pointer hover:text-black py-1" onClick={HandleOrder}>Orders</p>
+                    <p onClick={handleLogout} className="cursor-pointer hover:text-black py-1">Logout</p>
+                  </div>
+                )}
+              </div>
+            )}
 
 
           
-              <div className="relative" ref={cartRef}>
+              {token && (
+                <div className="relative" ref={cartRef}>
   <FaShoppingCart
     onClick={toggleCart}
     className={`text-2xl cursor-pointer ${bg ? "text-black" : "text-white"}`}
@@ -366,9 +370,7 @@ const HandleOrder=()=>{
     </div>
   )}
 </div>
-
-
-
+              )}
             </div>
           
 
@@ -408,26 +410,27 @@ const HandleOrder=()=>{
           >
             <ImCross style={{ color: "#017d29", fontSize: "20px" }} />
           </div>
-          <div
-            className={`${
-              showNav ? "flex" : "hidden"
-            }  flex-wrap flex-rows mb-6  gap-3 text-base pt-4 items-center justify-center`}
-          >
-            {[
-              { label: "Become a Buyer", href: "/login" },
-              { label: "Become a Seller", href: "/login" },
-              // { label: "Rent a Machine", href: "/" },
-            ].map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="relative inline-block py-2.5 px-6 text-base font-medium text-white rounded-full bg-gradient-to-r from-green-500 to-green-700 shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:bg-gradient-to-br focus:ring-2 focus:ring-teal-300 focus:outline-none"
-              >
-                <span className="absolute inset-0 w-full h-full bg-white opacity-0 rounded-full transition-opacity duration-300 hover:opacity-10"></span>
-                <span className="relative z-10">{item.label}</span>
-              </Link>
-            ))}
-          </div>
+          {!token && (
+            <div
+              className={`${
+                showNav ? "flex" : "hidden"
+              }  flex-wrap flex-rows mb-6  gap-3 text-base pt-4 items-center justify-center`}
+            >
+              {[
+                { label: "Become a Buyer", href: "/login" },
+                { label: "Become a Seller", href: "/login" },
+              ].map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="relative inline-block py-2.5 px-6 text-base font-medium text-white rounded-full bg-gradient-to-r from-green-500 to-green-700 shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:bg-gradient-to-br focus:ring-2 focus:ring-teal-300 focus:outline-none"
+                >
+                  <span className="absolute inset-0 w-full h-full bg-white opacity-0 rounded-full transition-opacity duration-300 hover:opacity-10"></span>
+                  <span className="relative z-10">{item.label}</span>
+                </Link>
+              ))}
+            </div>
+          )}
           <ul
             className={`${
               showNav ? "block" : "hidden"

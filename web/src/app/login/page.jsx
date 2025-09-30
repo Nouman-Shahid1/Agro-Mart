@@ -51,11 +51,12 @@ export default function LoginPage() {
         autoClose: 3000,
       });
 
-      if (role === "Admin") {
+      const normalizedRole = role.toLowerCase();
+      if (normalizedRole === "admin") {
         router.push("/admin");
-      } else if (role === "Buyer" || role === "buyer") {
+      } else if (normalizedRole === "buyer") {
         router.push("/buyer");
-      } else if (role === "Seller" || role === "seller") {
+      } else if (normalizedRole === "seller") {
         router.push("/seller-profile");
       } else {
         toast.error("Unauthorized role. Please contact support.", {
@@ -65,7 +66,9 @@ export default function LoginPage() {
       }
     } catch (err) {
       console.error("Login failed:", err);
-      toast.error(err.message || "Login failed. Please check your credentials.", {
+      // Extract error message from backend response
+      const errorMessage = err?.response?.data?.message || err?.message || "Login failed. Please check your credentials.";
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 3000,
       });

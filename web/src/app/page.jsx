@@ -116,15 +116,18 @@ export default function Page() {
             <p className="text-red-500">{categoriesError}</p>
           ) : (
             <div className="flex flex-wrap gap-10 justify-center">
-              {categories.map((category) => (
-                <CategoryCard
-                  key={category.id}
-                  name={category.name}
-                  src={`http://localhost:8080/${category.imagepath}`}
-
-                  description={category.description}
-                />
-              ))}
+              {categories && categories.length > 0 ? (
+                categories.map((category) => (
+                  <CategoryCard
+                    key={category.id}
+                    name={category.name}
+                    src={`http://localhost:8080/${category.imagepath}`}
+                    description={category.description}
+                  />
+                ))
+              ) : (
+                <p className="text-gray-500">No categories found</p>
+              )}
             </div>
           )}
           <div className="mt-16">
@@ -163,19 +166,23 @@ export default function Page() {
           <p className="text-red-500">{ productsError}</p>
         ) : (
           <div className="flex flex-wrap gap-10 justify-center">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                src={`http://localhost:8080/${product.imagepath}`}
-                title={product.name}
-                cat={product.category}
-                price={product.price}
-                description={product.description}
-                rating={product.rating}
-                sellerId={product.userId}
-              />
-            ))}
+            {products && products.length > 0 ? (
+              products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  src={`http://localhost:8080/${product.imagepath}`}
+                  title={product.name}
+                  cat={product.category}
+                  price={product.price}
+                  description={product.description}
+                  rating={product.rating}
+                  sellerId={product.userId}
+                />
+              ))
+            ) : (
+              <p className="text-gray-500">No products found</p>
+            )}
           </div>
         )}
           </div>
