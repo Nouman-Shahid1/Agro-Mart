@@ -160,8 +160,6 @@ const HandleOrder=()=>{
     });
   };
 
-
-
   return (
     <div
       className={`${

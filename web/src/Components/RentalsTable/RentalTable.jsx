@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { CiSearch, CiEdit } from "react-icons/ci";
 import { FaTrash, FaPlusCircle  } from "react-icons/fa";
-// import CreateRentals from '../CreateRentals/CreateRentals';
+import CreateRentals from '../CreateRentals/CreateRentals';
 import DeleteProduct from '../DeleteProduct/DeleteProduct';
 
 const RentalTable = () => {
@@ -119,7 +119,7 @@ const RentalTable = () => {
           </tbody>
         </table>
 
-        {/* <CreateRentals showAddRental={showAddRental} setShowAddRental={setShowAddRental} /> */}
+        <CreateRentals showAddRental={showAddRental} setShowAddRental={setShowAddRental} />
         <DeleteProduct showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal} />
       </div>
     </div>

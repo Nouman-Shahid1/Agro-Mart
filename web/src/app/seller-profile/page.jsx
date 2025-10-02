@@ -1,7 +1,7 @@
 import Profile from "../../Components/ProfileCard/ProfileCard";
 import DashboardCard from "../../Components/DashboardCard/DashboardCard";
-// import Services from "../../assets/images/services.png";
-// import Amenities from "../../assets/images/amenities.png";
+import Services from "../../assets/images/services.png";
+import Amenities from "../../assets/images/amenities.png";
 
 export default function Dashboard() {
   return (
@@ -24,14 +24,14 @@ export default function Dashboard() {
           <DashboardCard
             details={{
               name: "My Products",
-              src: "/logo.png",
+              src: Services,
               url: "/seller-profile/",
             }}
           />
           <DashboardCard
             details={{
               name: "Orders",
-              src: "/logo.png",
+              src: Amenities,
               url: "/seller-profile/",
             }}
           />
@@ -40,14 +40,14 @@ export default function Dashboard() {
           <DashboardCard
             details={{
               name: "Earnings",
-              src: "/logo.png",
+              src: Services,
               url: "/seller-profile/",
             }}
           />
           <DashboardCard
             details={{
               name: "Analytics",
-              src: "/logo.png",
+              src: Amenities,
               url: "/seller-profile/",
             }}
           />
@@ -56,7 +56,7 @@ export default function Dashboard() {
           <DashboardCard
             details={{
               name: "Support",
-              src: "/logo.png",
+              src: Services,
               url: "/seller-profile/",
             }}
           />
