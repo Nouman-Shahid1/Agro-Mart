@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
-import ProfileImage from "../../assets/images/blank.png";
+// import ProfileImage from "../../assets/images/blank.png";
 import { logout } from "../../reducers/Auth/authSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -48,13 +48,9 @@ const Profile = () => {
       </h1>
 
       <div className="relative z-10 flex items-center gap-4">
-        <Image
-          src={ProfileImage}
-          alt="Profile"
-          height={60}
-          width={60}
-          className="rounded-full border-4 border-lime-300 shadow-lg group-hover:shadow-xl transition-shadow duration-300"
-        />
+        <div className="w-[60px] h-[60px] bg-gray-300 rounded-full border-4 border-lime-300 shadow-lg flex items-center justify-center text-white font-bold">
+          {user?.username?.[0] || "U"}
+        </div>
 
         <div>
           <div className="flex items-center gap-3">
