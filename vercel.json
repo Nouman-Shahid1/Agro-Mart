@@ -1,25 +1,15 @@
 {
   "version": 2,
-  "buildCommand": "cd web && npm run build",
-  "outputDirectory": "web/.next",
-  "installCommand": "cd web && npm install --legacy-peer-deps",
   "builds": [
     {
-      "src": "api/index.go",
-      "use": "@vercel/go"
+      "src": "web/package.json",
+      "use": "@vercel/next"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.go"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/web/$1"
+      "dest": "web/$1"
     }
   ]
 }
