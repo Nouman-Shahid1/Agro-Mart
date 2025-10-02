@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "web/package.json",
-      "use": "@vercel/next"
+      "use": "@vercel/next",
+      "config": {
+        "installCommand": "npm install --legacy-peer-deps"
+      }
     },
     {
       "src": "api/index.go",
@@ -19,5 +22,6 @@
       "src": "/(.*)",
       "dest": "/web/$1"
     }
-  ]
+  ],
+  "installCommand": "cd web && npm install --legacy-peer-deps"
 }
