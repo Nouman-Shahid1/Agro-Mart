@@ -19,7 +19,7 @@ import {
 
 } from "react-icons/fa";
 
-import Logo from "../../assets/images/logo.png";
+// import Logo from "../../assets/images/logo.png";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
@@ -176,8 +176,8 @@ const Sidebar = ({ role }) => {
         }}
       >
         <div className="flex items-center justify-center mb-8">
-          <Image
-            src={Logo}
+          <img
+            src="/logo.png"
             height={60}
             width={200}
             alt="Agro Mart Logo"
